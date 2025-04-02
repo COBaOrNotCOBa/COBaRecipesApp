@@ -20,22 +20,20 @@
 
         <Button
             android:id="@+id/button"
-            style="@style/StyleNavButton"
+            style="@style/StyleNavButton.Categories"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:backgroundTint="@color/button_categories"
             android:text="@string/categories"
             app:layout_constraintStart_toStartOf="parent">
         </Button>
 
         <com.google.android.material.button.MaterialButton
-            style="@style/StyleNavButton"
+            style="@style/StyleNavButton.Favourites"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginStart="4dp"
             android:layout_weight="1"
-            android:backgroundTint="@color/button_favourites"
             android:text="@string/favourites"
             app:icon="@drawable/ic_heart_empty"
             app:iconGravity="textEnd"
