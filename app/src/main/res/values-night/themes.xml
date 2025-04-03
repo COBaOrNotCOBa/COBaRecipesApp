@@ -3,10 +3,10 @@
     <style name="Base.Theme.COBaRecipesApp" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
-        <item name="android:statusBarColor">@color/main_background</item>
+        <item name="android:statusBarColor">@color/main_background_color</item>
         <item name="android:windowLightStatusBar">true</item>
 
-        <item name="android:navigationBarColor">@color/main_background</item>
+        <item name="android:navigationBarColor">@color/main_background_color</item>
         <item name="android:windowLightNavigationBar">true</item>
 
     </style>
