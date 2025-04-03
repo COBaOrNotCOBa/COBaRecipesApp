@@ -13,5 +13,6 @@ class CategoriesListFragment : Fragment(R.layout.fragment_list_categories) {
         binding = FragmentListCategoriesBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+
     }
 }
