@@ -11,15 +11,6 @@
     <style name="StyleNavButton" parent="Widget.Material3.Button">
         <item name="android:textAppearance">@style/StyleTitle14</item>
         <item name="cornerRadius">@dimen/button_corner_radius</item>
-        <item name="android:background">@null</item>
     </style>
 
-    <style name="StyleNavButton.Categories" parent="StyleNavButton">
-        <item name="backgroundTint">@color/button_categories</item>
-    </style>
-
-    <style name="StyleNavButton.Favourites" parent="StyleNavButton">
-        <item name="backgroundTint">@color/button_favourites</item>
-    </style>
-    
 </resources>
