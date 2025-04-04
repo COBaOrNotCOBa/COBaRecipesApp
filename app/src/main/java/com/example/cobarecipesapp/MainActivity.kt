@@ -3,6 +3,7 @@ package com.example.cobarecipesapp
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
+import androidx.fragment.app.replace
 import com.example.cobarecipesapp.databinding.ActivityMainBinding
 import java.lang.IllegalStateException
 
@@ -26,13 +27,18 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.btnCategories.setOnClickListener {
-
+            supportFragmentManager.commit {
+                setReorderingAllowed(true)
+                addToBackStack(null)
+                replace<CategoriesListFragment>(R.id.mainContainer)
+            }
         }
 
         binding.btnFavourites.setOnClickListener {
             supportFragmentManager.commit {
                 setReorderingAllowed(true)
-                replace(R.id.mainContainer, FavoritesFragment())
+                addToBackStack(null)
+                replace<FavoritesFragment>(R.id.mainContainer)
             }
         }
     }
