@@ -5,9 +5,10 @@
     android:backgroundTint="@color/main_background_color">
 
     <TextView
-        android:id="@+id/fragmentTextViewCategories"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Фрагмент категорий"/>
+        android:text="Фрагмент избранное">
+
+    </TextView>
 
 </LinearLayout>
