@@ -33,17 +33,17 @@ class CategoriesListAdapter(private val dataSet: List<Category>) :
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemCategoryBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
+            LayoutInflater.from(viewGroup.context),
+            viewGroup,
             false
         )
         return ViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(dataSet[position])
+    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
+        viewHolder.bind(dataSet[position])
     }
 
     override fun getItemCount() = dataSet.size
