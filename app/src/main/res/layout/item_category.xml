@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginHorizontal="@dimen/padding_half"
     android:layout_marginVertical="@dimen/padding_half"
     android:clickable="true"
@@ -22,11 +22,12 @@
             android:layout_height="130dp"
             android:scaleType="centerCrop"
             tools:src="@drawable/bcg_categories">
+
         </ImageView>
 
         <TextView
-            style="@style/StyleItemTitle14"
             android:id="@+id/tv_title"
+            style="@style/StyleItemTitle14"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/padding_half"
@@ -34,12 +35,12 @@
             tools:text="Category Name" />
 
         <TextView
-            style="@style/StyleItemDescription12"
             android:id="@+id/tv_description"
+            style="@style/StyleItemDescription12"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/padding_half"
-            android:layout_marginVertical="@dimen/padding_half"
+            android:layout_marginBottom="@dimen/padding_half"
             tools:text="Description Name" />
 
     </LinearLayout>
