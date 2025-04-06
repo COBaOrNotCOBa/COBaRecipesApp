@@ -20,12 +20,9 @@
         </ImageView>
 
         <TextView
+            style="@style/StyleHeaderTitle20"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/padding_main"
-            android:layout_marginBottom="@dimen/padding_main"
-            android:background="@drawable/shape_round_variants"
-            android:padding="10dp"
             android:text="@string/categories"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/imageViewHeader">
@@ -51,6 +48,6 @@
         android:id="@+id/fragmentTextViewCategories"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Фрагмент категорий"/>
+        android:text="Фрагмент категорий" />
 
 </LinearLayout>
