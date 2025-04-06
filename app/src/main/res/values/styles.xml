@@ -31,7 +31,7 @@
         <item name="android:textColor">@color/item_title_color</item>
     </style>
 
-    <style name="StyleItemDescription14" parent="TextAppearance.AppCompat">
+    <style name="StyleItemDescription12" parent="TextAppearance.AppCompat">
         <item name="android:textSize">@dimen/text_description_size_medium</item>
         <item name="android:fontFamily">@font/montserrat_medium</item>
         <item name="android:textColor">@color/item_text_description</item>

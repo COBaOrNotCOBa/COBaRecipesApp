@@ -34,7 +34,7 @@
             tools:text="Category Name" />
 
         <TextView
-            style="@style/StyleItemDescription14"
+            style="@style/StyleItemDescription12"
             android:id="@+id/tv_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
