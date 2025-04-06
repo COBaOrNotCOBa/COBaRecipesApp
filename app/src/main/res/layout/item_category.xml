@@ -22,7 +22,6 @@
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"
             tools:src="@tools:sample/avatars">
-
         </ImageView>
 
         <TextView
