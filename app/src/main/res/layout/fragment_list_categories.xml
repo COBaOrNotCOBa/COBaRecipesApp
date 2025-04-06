@@ -15,7 +15,8 @@
             android:id="@+id/imageViewHeader"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop">
+            android:scaleType="centerCrop"
+            android:src="@drawable/bcg_categories">
 
         </ImageView>
 
@@ -43,11 +44,5 @@
         tools:listitem="@layout/item_category">
 
     </androidx.recyclerview.widget.RecyclerView>
-
-    <TextView
-        android:id="@+id/fragmentTextViewCategories"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Фрагмент категорий" />
 
 </LinearLayout>
