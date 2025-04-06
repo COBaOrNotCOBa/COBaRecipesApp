@@ -25,6 +25,7 @@
         </ImageView>
 
         <TextView
+            style="@style/StyleItemTitle14"
             android:id="@+id/tv_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -33,6 +34,7 @@
             tools:text="Category Name" />
 
         <TextView
+            style="@style/StyleItemDescription14"
             android:id="@+id/tv_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
