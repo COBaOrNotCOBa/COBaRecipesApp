@@ -25,7 +25,12 @@ class CategoriesListAdapter(private val dataSet: List<Category>) :
                         null
                     )
                 } catch (e: Exception) {
-                    Log.d("!!!", "Image not found: ${category.title}")
+                    Log.e(
+                        "ImageLoadError",
+                        "Image not found: ${category.title}\n${
+                            Log.getStackTraceString(e)
+                        }"
+                    )
                     null
                 }
                 imageCategory.setImageDrawable(drawable)
