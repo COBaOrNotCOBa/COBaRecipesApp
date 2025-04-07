@@ -30,8 +30,6 @@
             style="@style/StyleItemTitle14"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/padding_half"
-            android:layout_marginVertical="@dimen/padding_half"
             tools:text="Category Name" />
 
         <TextView
@@ -39,8 +37,6 @@
             style="@style/StyleItemDescription12"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/padding_half"
-            android:layout_marginBottom="@dimen/padding_half"
             tools:text="Description Name" />
 
     </LinearLayout>
