@@ -29,12 +29,14 @@
         <item name="android:fontFamily">@font/montserrat_alternates_semi_bold</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:textColor">@color/item_title_color</item>
+        <item name="lineHeight">16dp</item>
     </style>
 
     <style name="StyleItemDescription12" parent="TextAppearance.AppCompat">
         <item name="android:textSize">@dimen/text_description_size_medium</item>
         <item name="android:fontFamily">@font/montserrat_medium</item>
         <item name="android:textColor">@color/item_text_description</item>
+        <item name="lineHeight">16dp</item>
     </style>
 
 
