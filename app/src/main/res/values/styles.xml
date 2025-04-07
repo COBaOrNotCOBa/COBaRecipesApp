@@ -5,13 +5,13 @@
         <item name="android:textSize">@dimen/text_size_large</item>
         <item name="android:fontFamily">@font/montserrat_alternates_semi_bold</item>
         <item name="android:textAllCaps">true</item>
-        <item name="android:textColor">@color/header_color</item>
+        <item name="android:textColor">@color/header_title_color</item>
         <item name="android:layout_marginStart">@dimen/padding_main</item>
         <item name="android:layout_marginBottom">@dimen/padding_main</item>
         <item name="android:background">@drawable/shape_round_variants</item>
         <item name="android:padding">10dp</item>
     </style>
-    
+
     <style name="StyleTitle14" parent="TextAppearance.AppCompat">
         <item name="android:textSize">@dimen/text_size_medium</item>
         <item name="android:fontFamily">@font/montserrat_alternates_semi_bold</item>
@@ -23,5 +23,21 @@
         <item name="android:textAppearance">@style/StyleTitle14</item>
         <item name="cornerRadius">@dimen/button_corner_radius</item>
     </style>
+
+    <style name="StyleItemTitle14" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:fontFamily">@font/montserrat_alternates_semi_bold</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/item_title_color</item>
+        <item name="lineHeight">16dp</item>
+    </style>
+
+    <style name="StyleItemDescription12" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/text_description_size_medium</item>
+        <item name="android:fontFamily">@font/montserrat_medium</item>
+        <item name="android:textColor">@color/item_text_description</item>
+        <item name="lineHeight">16dp</item>
+    </style>
+
 
 </resources>
