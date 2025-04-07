@@ -15,6 +15,7 @@
             android:id="@+id/imageViewHeader"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:contentDescription="Categories image"
             android:scaleType="centerCrop"
             android:src="@drawable/bcg_categories">
 

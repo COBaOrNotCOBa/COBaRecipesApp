@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.graphics.convertTo
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cobarecipesapp.databinding.ItemCategoryBinding
 import com.example.cobarecipesapp.domain.Category
@@ -16,8 +17,8 @@ class CategoriesListAdapter(private val dataSet: List<Category>) :
 
         fun bind(category: Category) {
             with(binding) {
-                tvTitle.text = category.title
-                tvDescription.text = category.description
+                tvCategoryTitle.text = category.title
+                tvCategoryDescription.text = category.description
 
                 val drawable = try {
                     Drawable.createFromStream(
@@ -25,13 +26,16 @@ class CategoriesListAdapter(private val dataSet: List<Category>) :
                         null
                     )
                 } catch (e: Exception) {
-                    Log.e(
-                        "ImageLoadError",
-                        "Image not found: ${category.imageUrl}\n${Log.getStackTraceString(e)}"
-                    )
+                    Log.e("ImageLoadError", "Image not found: ${category.title}", e)
                     null
                 }
-                imageCategory.setImageDrawable(drawable)
+                ivCategoryImage.setImageDrawable(drawable)
+
+                val description = itemView.context.getString(
+                    R.string.category_image_description,
+                    category.title
+                )
+                ivCategoryImage.contentDescription = description
             }
         }
     }
