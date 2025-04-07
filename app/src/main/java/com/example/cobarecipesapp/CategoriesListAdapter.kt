@@ -27,9 +27,7 @@ class CategoriesListAdapter(private val dataSet: List<Category>) :
                 } catch (e: Exception) {
                     Log.e(
                         "ImageLoadError",
-                        "Image not found: ${category.title}\n${
-                            Log.getStackTraceString(e)
-                        }"
+                        "Image not found: ${category.imageUrl}\n${Log.getStackTraceString(e)}"
                     )
                     null
                 }
