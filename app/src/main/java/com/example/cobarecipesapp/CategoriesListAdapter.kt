@@ -9,8 +9,20 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.cobarecipesapp.databinding.ItemCategoryBinding
 import com.example.cobarecipesapp.domain.Category
 
+
+
 class CategoriesListAdapter(private val dataSet: List<Category>) :
     RecyclerView.Adapter<CategoriesListAdapter.ViewHolder>() {
+
+    interface OnItemClickListener {
+        fun onItemClick()
+    }
+
+    private var itemClickListener: OnItemClickListener? = null
+
+    fun setOnItemClickListener(listener : OnItemClickListener){
+        this.itemClickListener = listener
+    }
 
     inner class ViewHolder(private val binding: ItemCategoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -51,6 +63,7 @@ class CategoriesListAdapter(private val dataSet: List<Category>) :
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         viewHolder.bind(dataSet[position])
+        viewHolder.itemView.setOnClickListener { itemClickListener?.onItemClick() }
     }
 
     override fun getItemCount() = dataSet.size
