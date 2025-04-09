@@ -12,7 +12,7 @@
         android:layout_height="224dp">
 
         <ImageView
-            android:id="@+id/imageViewHeader"
+            android:id="@+id/ivHeaderCategories"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="Categories image"
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:text="@string/categories"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/imageViewHeader">
+            app:layout_constraintStart_toStartOf="@+id/ivHeaderCategories">
 
         </TextView>
 
