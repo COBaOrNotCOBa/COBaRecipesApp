@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import com.example.cobarecipesapp.databinding.FragmentListCategoriesBinding
+import com.example.cobarecipesapp.domain.Category
 import java.lang.IllegalStateException
 
 class CategoriesListFragment : Fragment(R.layout.fragment_list_categories) {
@@ -50,17 +51,24 @@ class CategoriesListFragment : Fragment(R.layout.fragment_list_categories) {
     }
 
     private fun openRecipesByCategoryId(categoryId: Int) {
-        val categoryName = STUB.getCategories()[categoryId].title
-        val categoryImageUrl = STUB.getCategories()[categoryId].imageUrl
+        val categories = STUB.getCategories().first { categoryId == it.id }
+        val categoryName = categories.title
+        val categoryImageUrl = categories.imageUrl
         val bundle = bundleOf(
-            "ARG_CATEGORY_ID" to categoryId,
-            "ARG_CATEGORY_NAME" to categoryName,
-            "ARG_CATEGORY_IMAGE_URL" to categoryImageUrl
+            ARG_CATEGORY_ID to categoryId,
+            ARG_CATEGORY_NAME to categoryName,
+            ARG_CATEGORY_IMAGE_URL to categoryImageUrl
         )
         parentFragmentManager.commit {
             setReorderingAllowed(true)
             addToBackStack(null)
             replace<RecipesListFragment>(R.id.mainContainer, args = bundle)
         }
+    }
+
+    companion object {
+        const val ARG_CATEGORY_ID = "arg_category_id"
+        const val ARG_CATEGORY_NAME = "arg_category_name"
+        const val ARG_CATEGORY_IMAGE_URL = "arg_category_image_url"
     }
 }
