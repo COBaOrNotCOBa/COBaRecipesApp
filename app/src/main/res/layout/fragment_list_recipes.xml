@@ -12,7 +12,7 @@
         android:layout_height="224dp">
 
         <ImageView
-            android:id="@+id/ivHeaderRecipes"
+            android:id="@+id/ivRecipesHeader"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="@string/recipes_current_category"
@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/ivHeaderRecipes"
+            app:layout_constraintStart_toStartOf="@+id/ivRecipesHeader"
             tools:text="Current category">
 
         </TextView>
@@ -38,11 +38,11 @@
         android:id="@+id/rvRecipes"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginHorizontal="@dimen/padding_half"
-        android:layout_marginVertical="@dimen/padding_half"
+        android:layout_margin="@dimen/padding_half"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="1"
-        tools:itemCount="6">
+        tools:itemCount="8"
+        tools:listitem="@layout/item_recipe">
 
     </androidx.recyclerview.widget.RecyclerView>
 
