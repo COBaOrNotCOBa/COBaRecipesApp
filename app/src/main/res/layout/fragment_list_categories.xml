@@ -15,7 +15,7 @@
             android:id="@+id/ivHeaderCategories"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:contentDescription="Categories image"
+            android:contentDescription="@string/categories_header_image"
             android:scaleType="centerCrop"
             android:src="@drawable/bcg_categories">
 
@@ -25,7 +25,7 @@
             style="@style/StyleHeaderTitle20"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/categories"
+            android:text="@string/button_text_categories"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/ivHeaderCategories">
 

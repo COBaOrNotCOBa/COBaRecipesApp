@@ -15,7 +15,7 @@
             android:id="@+id/ivHeaderRecipes"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:contentDescription="Current category "
+            android:contentDescription="@string/recipes_current_category"
             android:scaleType="centerCrop"
             tools:src="@drawable/bcg_recipes_list">
 

@@ -38,7 +38,7 @@
             android:layout_marginEnd="2dp"
             android:layout_weight="1"
             android:backgroundTint="@color/button_categories_color"
-            android:text="@string/categories">
+            android:text="@string/button_text_categories">
         </Button>
 
         <Button
@@ -49,7 +49,7 @@
             android:layout_marginStart="2dp"
             android:layout_weight="1"
             android:backgroundTint="@color/button_favourites_color"
-            android:text="@string/favourites"
+            android:text="@string/button_text_favourites"
             app:icon="@drawable/ic_heart_empty"
             app:iconGravity="textEnd">
         </Button>
