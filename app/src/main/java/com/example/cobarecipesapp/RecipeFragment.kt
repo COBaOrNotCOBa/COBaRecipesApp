@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.cobarecipesapp.databinding.FragmentRecipeBinding
+import com.example.cobarecipesapp.domain.Recipe
 import java.lang.IllegalStateException
 
 class RecipeFragment : Fragment(R.layout.fragment_recipe) {
@@ -13,6 +14,8 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
     private var _binding: FragmentRecipeBinding? = null
     private val binding
         get() = _binding ?: throw IllegalStateException("Binding is null")
+
+    private var recipe = arguments?.getParcelable<Recipe>(RecipesListFragment.ARG_RECIPE)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -25,6 +28,8 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.tvRecipeNameHeader.text = recipe?.title ?: "Standard Food"
     }
 
     override fun onDestroyView() {

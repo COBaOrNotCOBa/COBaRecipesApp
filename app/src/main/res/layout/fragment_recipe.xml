@@ -32,6 +32,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            android:id="@+id/tvRecipeNameHeader"
             style="@style/StyleHeaderTitle20"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
