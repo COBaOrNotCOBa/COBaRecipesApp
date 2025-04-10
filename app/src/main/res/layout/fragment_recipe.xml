@@ -12,38 +12,36 @@
         android:layout_height="224dp">
 
         <ImageView
-            android:id="@+id/ivCategoriesHeader"
+            android:id="@+id/ivRecipeImageHeader"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:contentDescription="@string/categories_header_image"
+            android:contentDescription="Recipe image header"
             android:scaleType="centerCrop"
-            android:src="@drawable/bcg_categories">
+            tools:src="@tools:sample/avatars">
 
         </ImageView>
+
+        <ImageView
+            android:id="@+id/ivHeartIcon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="@dimen/padding_main"
+            android:contentDescription="Favorite button"
+            android:src="@drawable/ic_heart"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             style="@style/StyleHeaderTitle20"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/button_text_categories"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="Recipe name">
 
         </TextView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvCategories"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginHorizontal="@dimen/padding_half"
-        android:layout_marginVertical="@dimen/padding_half"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:spanCount="2"
-        tools:itemCount="6"
-        tools:listitem="@layout/item_category">
-
-    </androidx.recyclerview.widget.RecyclerView>
 
 </LinearLayout>
