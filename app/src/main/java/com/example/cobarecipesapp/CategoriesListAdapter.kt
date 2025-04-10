@@ -10,17 +10,16 @@ import com.example.cobarecipesapp.databinding.ItemCategoryBinding
 import com.example.cobarecipesapp.domain.Category
 
 
-
 class CategoriesListAdapter(private val dataSet: List<Category>) :
     RecyclerView.Adapter<CategoriesListAdapter.ViewHolder>() {
 
     interface OnItemClickListener {
-        fun onItemClick()
+        fun onItemClick(categoryId: Int)
     }
 
     private var itemClickListener: OnItemClickListener? = null
 
-    fun setOnItemClickListener(listener : OnItemClickListener){
+    fun setOnItemClickListener(listener: OnItemClickListener) {
         this.itemClickListener = listener
     }
 
@@ -48,6 +47,11 @@ class CategoriesListAdapter(private val dataSet: List<Category>) :
                     category.title
                 )
                 ivCategoryImage.contentDescription = description
+
+                root.setOnClickListener {
+                    itemClickListener?.onItemClick(category.id)
+                }
+
             }
         }
     }
@@ -63,7 +67,9 @@ class CategoriesListAdapter(private val dataSet: List<Category>) :
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         viewHolder.bind(dataSet[position])
-        viewHolder.itemView.setOnClickListener { itemClickListener?.onItemClick() }
+//        viewHolder.itemView.setOnClickListener {
+//            itemClickListener?.onItemClick(dataSet[position].id)
+//        }
     }
 
     override fun getItemCount() = dataSet.size

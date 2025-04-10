@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">COBaRecipesApp</string>
-    <string name="categories">категории</string>
-    <string name="favourites">избранное</string>
+    <string name="button_text_categories">категории</string>
+    <string name="button_text_favourites">избранное</string>
     <string name="category_image_description">Изображение категории %1$s</string>
+    <string name="recipes_current_category">Current category</string>
+    <string name="categories_header_image">Categories image</string>
+    <string name="favorites_fragment">Фрагмент избранное</string>
 </resources>

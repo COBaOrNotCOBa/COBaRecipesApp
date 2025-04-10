@@ -12,22 +12,23 @@
         android:layout_height="224dp">
 
         <ImageView
-            android:id="@+id/imageViewHeaderRecipes"
+            android:id="@+id/ivHeaderRecipes"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:contentDescription="Current category "
+            android:contentDescription="@string/recipes_current_category"
             android:scaleType="centerCrop"
-            android:src="@drawable/bcg_recipes_list">
+            tools:src="@drawable/bcg_recipes_list">
 
         </ImageView>
 
         <TextView
+            android:id="@+id/tvRecipesCategory"
             style="@style/StyleHeaderTitle20"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Выбранная категория"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/imageViewHeaderRecipes">
+            app:layout_constraintStart_toStartOf="@+id/ivHeaderRecipes"
+            tools:text="Current category">
 
         </TextView>
 
