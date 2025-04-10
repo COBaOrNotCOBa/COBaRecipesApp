@@ -82,10 +82,10 @@ class RecipesListFragment : Fragment(R.layout.fragment_list_recipes) {
     }
 
     private fun initBundleData(){
-        requireArguments().let { arguments ->
-            categoryId = arguments.getInt(CategoriesListFragment.ARG_CATEGORY_ID)
-            categoryName = arguments.getString(CategoriesListFragment.ARG_CATEGORY_NAME)
-            categoryImageUrl = arguments.getString(CategoriesListFragment.ARG_CATEGORY_IMAGE_URL)
+        arguments?.let { argument ->
+            categoryId = argument.getInt(CategoriesListFragment.ARG_CATEGORY_ID)
+            categoryName = argument.getString(CategoriesListFragment.ARG_CATEGORY_NAME)
+            categoryImageUrl = argument.getString(CategoriesListFragment.ARG_CATEGORY_IMAGE_URL)
         }
     }
 
