@@ -12,38 +12,36 @@
         android:layout_height="224dp">
 
         <ImageView
-            android:id="@+id/ivRecipesHeader"
+            android:id="@+id/ivRecipeImageHeader"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:contentDescription="@string/recipes_current_category"
+            android:contentDescription="@string/recipe_image_header"
             android:scaleType="centerCrop"
-            tools:src="@drawable/bcg_recipes_list">
+            tools:src="@tools:sample/avatars">
 
         </ImageView>
 
+        <ImageView
+            android:id="@+id/ivHeartIcon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="@dimen/padding_main"
+            android:contentDescription="@string/full_of_my_heart"
+            tools:src="@drawable/ic_heart"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
-            android:id="@+id/tvRecipesCategory"
             style="@style/StyleHeaderTitle20"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/ivRecipesHeader"
-            tools:text="Current category">
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="Recipe name">
 
         </TextView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvRecipes"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="@dimen/padding_half"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:spanCount="1"
-        tools:itemCount="8"
-        tools:listitem="@layout/item_recipe">
-
-    </androidx.recyclerview.widget.RecyclerView>
 
 </LinearLayout>

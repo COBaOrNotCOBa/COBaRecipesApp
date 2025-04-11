@@ -6,7 +6,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
+import androidx.fragment.app.replace
 import com.example.cobarecipesapp.databinding.FragmentListRecipesBinding
 import java.lang.IllegalStateException
 
@@ -34,6 +37,26 @@ class RecipesListFragment : Fragment(R.layout.fragment_list_recipes) {
 
         initBundleData()
 
+        initUI(view)
+
+        initRecycler()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    private fun initBundleData() {
+        arguments?.let { argument ->
+            categoryId = argument.getInt(CategoriesListFragment.ARG_CATEGORY_ID)
+            categoryName = argument.getString(CategoriesListFragment.ARG_CATEGORY_NAME)
+            categoryImageUrl = argument.getString(CategoriesListFragment.ARG_CATEGORY_IMAGE_URL)
+        }
+    }
+
+    private fun initUI(view: View) {
+
         binding.tvRecipesCategory.text = categoryName
 
         val drawable = try {
@@ -45,19 +68,28 @@ class RecipesListFragment : Fragment(R.layout.fragment_list_recipes) {
             Log.e("ImageLoadError", "Image not found: $categoryName", e)
             null
         }
-        binding.ivHeaderRecipes.setImageDrawable(drawable)
+        binding.ivRecipesHeader.setImageDrawable(drawable)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    private fun initRecycler() {
+        val recipes = categoryId?.let { STUB.getRecipesByCategoryId(it) } ?: emptyList()
+        val recipesAdapter = RecipesListAdapter(recipes)
+        binding.rvRecipes.adapter = recipesAdapter
+
+        recipesAdapter.setOnItemClickListener(object : RecipesListAdapter.OnItemClickListener {
+            override fun onItemClick(recipeId: Int) {
+                categoryId?.let { openRecipeByRecipeId(recipeId) }
+            }
+        })
+
     }
 
-    private fun initBundleData(){
-        requireArguments().let { arguments ->
-            categoryId = arguments.getInt(CategoriesListFragment.ARG_CATEGORY_ID)
-            categoryName = arguments.getString(CategoriesListFragment.ARG_CATEGORY_NAME)
-            categoryImageUrl = arguments.getString(CategoriesListFragment.ARG_CATEGORY_IMAGE_URL)
+    private fun openRecipeByRecipeId(recipeId: Int) {
+
+        parentFragmentManager.commit {
+            setReorderingAllowed(true)
+            addToBackStack(null)
+            replace<RecipeFragment>(R.id.mainContainer)
         }
     }
 

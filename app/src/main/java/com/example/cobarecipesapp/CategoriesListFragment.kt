@@ -4,13 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Adapter
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import com.example.cobarecipesapp.databinding.FragmentListCategoriesBinding
-import com.example.cobarecipesapp.domain.Category
 import java.lang.IllegalStateException
 
 class CategoriesListFragment : Fragment(R.layout.fragment_list_categories) {
@@ -51,9 +49,9 @@ class CategoriesListFragment : Fragment(R.layout.fragment_list_categories) {
     }
 
     private fun openRecipesByCategoryId(categoryId: Int) {
-        val categories = STUB.getCategories().first { categoryId == it.id }
-        val categoryName = categories.title
-        val categoryImageUrl = categories.imageUrl
+        val category = STUB.getCategories().first { categoryId == it.id }
+        val categoryName = category.title
+        val categoryImageUrl = category.imageUrl
         val bundle = bundleOf(
             ARG_CATEGORY_ID to categoryId,
             ARG_CATEGORY_NAME to categoryName,
