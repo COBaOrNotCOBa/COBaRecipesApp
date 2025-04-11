@@ -15,7 +15,7 @@
             android:id="@+id/ivRecipeImageHeader"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:contentDescription="Recipe image header"
+            android:contentDescription="@string/recipe_image_header"
             android:scaleType="centerCrop"
             tools:src="@tools:sample/avatars">
 
@@ -26,8 +26,8 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_margin="@dimen/padding_main"
-            android:contentDescription="Favorite button"
-            android:src="@drawable/ic_heart"
+            android:contentDescription="@string/full_of_my_heart"
+            tools:src="@drawable/ic_heart"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

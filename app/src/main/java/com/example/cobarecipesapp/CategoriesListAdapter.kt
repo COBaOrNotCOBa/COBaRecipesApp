@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.cobarecipesapp.databinding.ItemCategoryBinding
 import com.example.cobarecipesapp.domain.Category
 
-
 class CategoriesListAdapter(private val dataSet: List<Category>) :
     RecyclerView.Adapter<CategoriesListAdapter.ViewHolder>() {
 
@@ -47,9 +46,7 @@ class CategoriesListAdapter(private val dataSet: List<Category>) :
                 )
                 ivCategoryImage.contentDescription = description
 
-                root.setOnClickListener {
-                    itemClickListener?.onItemClick(category.id)
-                }
+                root.setOnClickListener { itemClickListener?.onItemClick(category.id) }
 
             }
         }

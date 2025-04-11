@@ -37,6 +37,26 @@ class RecipesListFragment : Fragment(R.layout.fragment_list_recipes) {
 
         initBundleData()
 
+        initUI(view)
+
+        initRecycler()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    private fun initBundleData() {
+        arguments?.let { argument ->
+            categoryId = argument.getInt(CategoriesListFragment.ARG_CATEGORY_ID)
+            categoryName = argument.getString(CategoriesListFragment.ARG_CATEGORY_NAME)
+            categoryImageUrl = argument.getString(CategoriesListFragment.ARG_CATEGORY_IMAGE_URL)
+        }
+    }
+
+    private fun initUI(view: View) {
+
         binding.tvRecipesCategory.text = categoryName
 
         val drawable = try {
@@ -49,22 +69,14 @@ class RecipesListFragment : Fragment(R.layout.fragment_list_recipes) {
             null
         }
         binding.ivRecipesHeader.setImageDrawable(drawable)
-
-        initRecycler()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     private fun initRecycler() {
-        val recipesAdapter = categoryId
-            ?.let { STUB.getRecipesByCategoryId(it) }
-            ?.let { RecipesListAdapter(it) }
+        val recipes = categoryId?.let { STUB.getRecipesByCategoryId(it) } ?: emptyList()
+        val recipesAdapter = RecipesListAdapter(recipes)
         binding.rvRecipes.adapter = recipesAdapter
 
-        recipesAdapter?.setOnItemClickListener(object : RecipesListAdapter.OnItemClickListener {
+        recipesAdapter.setOnItemClickListener(object : RecipesListAdapter.OnItemClickListener {
             override fun onItemClick(recipeId: Int) {
                 categoryId?.let { openRecipeByRecipeId(recipeId) }
             }
@@ -72,20 +84,12 @@ class RecipesListFragment : Fragment(R.layout.fragment_list_recipes) {
 
     }
 
-    fun openRecipeByRecipeId(recipeId: Int) {
+    private fun openRecipeByRecipeId(recipeId: Int) {
 
         parentFragmentManager.commit {
             setReorderingAllowed(true)
             addToBackStack(null)
             replace<RecipeFragment>(R.id.mainContainer)
-        }
-    }
-
-    private fun initBundleData(){
-        arguments?.let { argument ->
-            categoryId = argument.getInt(CategoriesListFragment.ARG_CATEGORY_ID)
-            categoryName = argument.getString(CategoriesListFragment.ARG_CATEGORY_NAME)
-            categoryImageUrl = argument.getString(CategoriesListFragment.ARG_CATEGORY_IMAGE_URL)
         }
     }
 
