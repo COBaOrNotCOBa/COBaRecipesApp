@@ -30,7 +30,7 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recipe = getRecipeFromArguments()
+        recipe = initBundleData()
 
         binding.tvRecipeNameHeader.text = recipe.title
 
@@ -41,7 +41,7 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
         _binding = null
     }
 
-    private fun getRecipeFromArguments(): Recipe {
+    private fun initBundleData(): Recipe {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             arguments?.getParcelable(ARG_RECIPE, Recipe::class.java)
         } else {
