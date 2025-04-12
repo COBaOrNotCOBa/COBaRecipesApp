@@ -6,4 +6,7 @@
     <string name="recipes_current_category">Current category</string>
     <string name="categories_header_image">Categories image</string>
     <string name="favorites_fragment">Фрагмент избранное</string>
+    <string name="recipe_image_description">Изображение рецепта %1$s</string>
+    <string name="recipe_image_header">Recipe image header</string>
+    <string name="full_of_my_heart">Full of my heart</string>
 </resources>
