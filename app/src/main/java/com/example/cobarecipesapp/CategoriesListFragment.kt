@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import com.example.cobarecipesapp.databinding.FragmentListCategoriesBinding
-import java.lang.IllegalStateException
 
 class CategoriesListFragment : Fragment(R.layout.fragment_list_categories) {
 
