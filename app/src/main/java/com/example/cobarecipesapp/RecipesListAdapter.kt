@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.cobarecipesapp.databinding.ItemRecipeBinding
 import com.example.cobarecipesapp.domain.Recipe
 
-
 class RecipesListAdapter(private val dataSet: List<Recipe>) :
     RecyclerView.Adapter<RecipesListAdapter.ViewHolder>() {
 
@@ -29,6 +28,7 @@ class RecipesListAdapter(private val dataSet: List<Recipe>) :
             with(binding) {
                 tvRecipeTitle.text = recipe.title
 
+
                 val drawable = try {
                     Drawable.createFromStream(
                         itemView.context.assets.open(recipe.imageUrl),
@@ -45,6 +45,8 @@ class RecipesListAdapter(private val dataSet: List<Recipe>) :
                     recipe.title
                 )
                 ivRecipeImage.contentDescription = description
+
+                root.setOnClickListener { itemClickListener?.onItemClick(recipe.id) }
             }
         }
 
