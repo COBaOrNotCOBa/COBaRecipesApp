@@ -27,11 +27,12 @@
             android:layout_height="40dp"
             android:layout_margin="@dimen/padding_main"
             android:contentDescription="@string/full_of_my_heart"
-            tools:src="@drawable/ic_heart"
+            android:src="@drawable/ic_heart"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            android:id="@+id/tvRecipeNameHeader"
             style="@style/StyleHeaderTitle20"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

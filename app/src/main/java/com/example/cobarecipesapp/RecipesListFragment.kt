@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import com.example.cobarecipesapp.databinding.FragmentListRecipesBinding
-import java.lang.IllegalStateException
 
 class RecipesListFragment : Fragment(R.layout.fragment_list_recipes) {
 
@@ -47,14 +46,6 @@ class RecipesListFragment : Fragment(R.layout.fragment_list_recipes) {
         _binding = null
     }
 
-    private fun initBundleData() {
-        arguments?.let { argument ->
-            categoryId = argument.getInt(CategoriesListFragment.ARG_CATEGORY_ID)
-            categoryName = argument.getString(CategoriesListFragment.ARG_CATEGORY_NAME)
-            categoryImageUrl = argument.getString(CategoriesListFragment.ARG_CATEGORY_IMAGE_URL)
-        }
-    }
-
     private fun initUI(view: View) {
 
         binding.tvRecipesCategory.text = categoryName
@@ -78,7 +69,7 @@ class RecipesListFragment : Fragment(R.layout.fragment_list_recipes) {
 
         recipesAdapter.setOnItemClickListener(object : RecipesListAdapter.OnItemClickListener {
             override fun onItemClick(recipeId: Int) {
-                categoryId?.let { openRecipeByRecipeId(recipeId) }
+                openRecipeByRecipeId(recipeId)
             }
         })
 
@@ -86,11 +77,26 @@ class RecipesListFragment : Fragment(R.layout.fragment_list_recipes) {
 
     private fun openRecipeByRecipeId(recipeId: Int) {
 
+        val recipe = STUB.getRecipeById(recipeId)
+        val bundle = bundleOf(ARG_RECIPE to recipe)
+
         parentFragmentManager.commit {
             setReorderingAllowed(true)
             addToBackStack(null)
-            replace<RecipeFragment>(R.id.mainContainer)
+            replace<RecipeFragment>(R.id.mainContainer, args = bundle)
         }
+    }
+
+    private fun initBundleData() {
+        arguments?.let { argument ->
+            categoryId = argument.getInt(CategoriesListFragment.ARG_CATEGORY_ID)
+            categoryName = argument.getString(CategoriesListFragment.ARG_CATEGORY_NAME)
+            categoryImageUrl = argument.getString(CategoriesListFragment.ARG_CATEGORY_IMAGE_URL)
+        }
+    }
+
+    companion object {
+        const val ARG_RECIPE = "arg_recipe"
     }
 
 }
