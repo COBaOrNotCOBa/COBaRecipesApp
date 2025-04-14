@@ -10,6 +10,8 @@ import com.example.cobarecipesapp.domain.Ingredient
 class IngredientsAdapter(private val dataSet: List<Ingredient>) :
     RecyclerView.Adapter<IngredientsAdapter.ViewHolder>() {
 
+    private var quantity = 1
+
     inner class ViewHolder(private val binding: ItemIngredientBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
@@ -18,7 +20,7 @@ class IngredientsAdapter(private val dataSet: List<Ingredient>) :
             with(binding) {
 
                 tvIngredientDescription.text = ingredient.description
-                tvIngredientQuantity.text = ingredient.quantity
+                tvIngredientQuantity.text = checkQuantityType(ingredient)
                 tvIngredientUnitOfMeasure.text = ingredient.unitOfMeasure
 
             }
@@ -42,4 +44,19 @@ class IngredientsAdapter(private val dataSet: List<Ingredient>) :
 
     override fun getItemCount(): Int = dataSet.size
 
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateIngredients(progress: Int) {
+        quantity = progress
+        notifyDataSetChanged()
+    }
+
+    @SuppressLint("DefaultLocale")
+    private fun checkQuantityType(ingredient: Ingredient): String {
+        val quantityValue = ingredient.quantity.toDouble() * quantity
+        return if (quantityValue % 1 == 0.0) {
+            quantityValue.toInt().toString()
+        } else {
+            "%.1f".format(quantityValue)
+        }
+    }
 }

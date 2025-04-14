@@ -1,5 +1,6 @@
 package com.example.cobarecipesapp
 
+import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
@@ -7,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -83,6 +85,22 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
             val methodAdapter = MethodAdapter(recipe.method)
             rvMethod.adapter = methodAdapter
             rvMethod.addItemDecoration(createDividerDecoration())
+
+            sbPortionsCount.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                @SuppressLint("SetTextI18n")
+                override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                    tvPortionsCount.text = progress.toString()
+                    ingredientAdapter.updateIngredients(progress)
+                }
+
+                override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                    Log.d("SeekBar", "Начало перемещения ползунка")
+                }
+
+                override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                    Log.d("SeekBar", "Конец перемещения ползунка")
+                }
+            })
         }
     }
 

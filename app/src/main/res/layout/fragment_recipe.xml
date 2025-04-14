@@ -19,7 +19,7 @@
                 android:id="@+id/ivRecipeImageHeader"
                 android:layout_width="match_parent"
                 android:layout_height="224dp"
-                android:contentDescription="@string/recipe_image_header"
+                android:contentDescription="@string/image_recipe_header"
                 android:scaleType="centerCrop"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -32,7 +32,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_margin="@dimen/padding_main"
-                android:contentDescription="@string/full_eclipse_of_my_heart"
+                android:contentDescription="@string/icon_full_eclipse_of_my_heart"
                 android:src="@drawable/ic_heart"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -42,10 +42,10 @@
                 style="@style/StyleHeaderTitle20"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 android:maxWidth="250dp"
                 android:singleLine="false"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 tools:text="Recipe name" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -53,14 +53,42 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="82dp"
-            android:layout_margin="@dimen/padding_main">
-
+            android:layout_margin="@dimen/padding_main"
+            android:orientation="vertical">
 
             <TextView
                 style="@style/StyleIngredientsTitle20"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/ingredients_for_recipe" />
+                android:text="@string/text_ingredients_for_recipe" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/StylePortions16"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_quantity_portions" />
+
+                <TextView
+                    android:id="@+id/tvPortionsCount"
+                    style="@style/StylePortions16"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/padding_description_half"
+                    android:text="@string/start_count_quantity_portions" />
+            </LinearLayout>
+
+            <SeekBar
+                android:id="@+id/sbPortionsCount"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:max="5"
+                android:min="1"
+                android:progress="@string/start_count_quantity_portions" />
 
         </LinearLayout>
 
@@ -70,7 +98,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/padding_main"
             android:background="@drawable/shape_ingredients"
-            android:paddingHorizontal="@dimen/padding12"
+            android:paddingHorizontal="@dimen/padding_description_main"
             android:paddingVertical="@dimen/padding_half"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/item_ingredient" />
@@ -80,7 +108,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/padding_main"
-            android:text="@string/cooking_method" />
+            android:text="@string/text_cooking_method" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvMethod"
@@ -88,7 +116,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/padding_main"
             android:background="@drawable/shape_ingredients"
-            android:paddingHorizontal="@dimen/padding12"
+            android:paddingHorizontal="@dimen/padding_description_main"
             android:paddingVertical="@dimen/padding_half"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/item_ingredient" />

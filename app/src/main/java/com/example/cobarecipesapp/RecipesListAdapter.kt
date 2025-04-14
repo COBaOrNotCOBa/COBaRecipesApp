@@ -40,7 +40,7 @@ class RecipesListAdapter(private val dataSet: List<Recipe>) :
                 ivRecipeImage.setImageDrawable(drawable)
 
                 val description = itemView.context.getString(
-                    R.string.recipe_image_description,
+                    R.string.image_recipe_description,
                     recipe.title
                 )
                 ivRecipeImage.contentDescription = description

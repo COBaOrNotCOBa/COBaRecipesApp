@@ -68,5 +68,10 @@
         <item name="android:textColor">@color/text_ingredient_description_color</item>
     </style>
 
+    <style name="StylePortions16" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/text_size_portions_medium</item>
+        <item name="fontFamily">@font/montserrat_semi_bold</item>
+        <item name="android:textColor">@color/text_portions_color</item>
+    </style>
 
 </resources>
