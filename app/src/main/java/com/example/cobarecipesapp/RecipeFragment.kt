@@ -1,14 +1,18 @@
 package com.example.cobarecipesapp
 
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.example.cobarecipesapp.RecipesListFragment.Companion.ARG_RECIPE
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.cobarecipesapp.databinding.FragmentRecipeBinding
 import com.example.cobarecipesapp.domain.Recipe
+import com.google.android.material.divider.MaterialDividerItemDecoration
 
 class RecipeFragment : Fragment(R.layout.fragment_recipe) {
 
@@ -30,9 +34,11 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recipe = initBundleData()
+        initBundleData()
 
-        binding.tvRecipeNameHeader.text = recipe.title
+        initUI(view)
+
+        initRecycler()
 
     }
 
@@ -41,12 +47,53 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
         _binding = null
     }
 
-    private fun initBundleData(): Recipe {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            arguments?.getParcelable(ARG_RECIPE, Recipe::class.java)
+    private fun initBundleData() {
+        recipe = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            arguments?.getParcelable(RecipesListFragment.ARG_RECIPE, Recipe::class.java)
         } else {
             @Suppress("DEPRECATION")
-            arguments?.getParcelable(ARG_RECIPE)
+            arguments?.getParcelable(RecipesListFragment.ARG_RECIPE)
         } ?: throw IllegalStateException("Recipe not found in arguments")
     }
+
+    private fun initUI(view: View) {
+        binding.tvRecipeNameHeader.text = recipe.title
+
+        val drawable = try {
+            Drawable.createFromStream(
+                recipe.imageUrl.let { view.context.assets.open(it) },
+                null
+            )
+        } catch (e: Exception) {
+            Log.e("ImageLoadError", "Image not found: ${recipe.title}", e)
+            null
+        }
+        binding.ivRecipeImageHeader.setImageDrawable(drawable)
+
+    }
+
+    private fun initRecycler() {
+        with(binding) {
+            val recipe = STUB.getRecipeById(recipe.id)
+
+            val ingredientAdapter = IngredientsAdapter(recipe.ingredients)
+            rvIngredients.adapter = ingredientAdapter
+            rvIngredients.addItemDecoration(createDividerDecoration())
+
+            val methodAdapter = MethodAdapter(recipe.method)
+            rvMethod.adapter = methodAdapter
+            rvMethod.addItemDecoration(createDividerDecoration())
+        }
+    }
+
+    private fun createDividerDecoration(): MaterialDividerItemDecoration {
+        return MaterialDividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL).apply {
+            dividerColor =
+                ContextCompat.getColor(requireContext(), R.color.line_ingredient_color)
+            dividerThickness =
+                resources.getDimensionPixelSize(R.dimen.divider_height)
+            isLastItemDecorated = false
+        }
+    }
+
 }

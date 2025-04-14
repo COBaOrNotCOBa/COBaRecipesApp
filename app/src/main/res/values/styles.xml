@@ -5,11 +5,25 @@
         <item name="android:textSize">@dimen/text_size_large</item>
         <item name="android:fontFamily">@font/montserrat_alternates_semi_bold</item>
         <item name="android:textAllCaps">true</item>
-        <item name="android:textColor">@color/header_title_color</item>
+        <item name="android:textColor">@color/title_main_color</item>
         <item name="android:layout_marginStart">@dimen/padding_main</item>
         <item name="android:layout_marginBottom">@dimen/padding_main</item>
         <item name="android:background">@drawable/shape_round_variants</item>
         <item name="android:padding">10dp</item>
+    </style>
+
+    <style name="StyleIngredientsTitle20" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/text_size_large</item>
+        <item name="android:fontFamily">@font/montserrat_alternates_semi_bold</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/title_ingredients_color</item>
+    </style>
+
+    <style name="StyleMethodTitle20" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/text_size_large</item>
+        <item name="android:fontFamily">@font/montserrat_alternates_semi_bold</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/title_method_color</item>
     </style>
 
     <style name="StyleTitle14" parent="TextAppearance.AppCompat">
@@ -28,15 +42,24 @@
         <item name="android:textSize">@dimen/text_size_medium</item>
         <item name="android:fontFamily">@font/montserrat_alternates_semi_bold</item>
         <item name="android:textAllCaps">true</item>
-        <item name="android:textColor">@color/item_title_color</item>
+        <item name="android:textColor">@color/title_main_color</item>
         <item name="lineHeight">16dp</item>
+        <item name="android:backgroundTint">@color/white</item>
     </style>
 
     <style name="StyleItemDescription12" parent="TextAppearance.AppCompat">
-        <item name="android:textSize">@dimen/text_description_size_medium</item>
+        <item name="android:textSize">@dimen/text_item_description_size_medium</item>
         <item name="android:fontFamily">@font/montserrat_medium</item>
-        <item name="android:textColor">@color/item_text_description</item>
+        <item name="android:textColor">@color/text_item_description_color</item>
         <item name="lineHeight">16dp</item>
+        <item name="android:backgroundTint">@color/white</item>
+    </style>
+
+    <style name="StyleIngredientDescription14" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/text_ingredient_description_size_medium</item>
+        <item name="fontFamily">@font/montserrat_regular</item>
+        <item name="textAllCaps">true</item>
+        <item name="android:textColor">@color/text_ingredient_description_color</item>
     </style>
 
 

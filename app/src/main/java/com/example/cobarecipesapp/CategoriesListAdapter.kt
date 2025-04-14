@@ -62,12 +62,8 @@ class CategoriesListAdapter(private val dataSet: List<Category>) :
         return ViewHolder(binding)
     }
 
-    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) =
         viewHolder.bind(dataSet[position])
-//        viewHolder.itemView.setOnClickListener {
-//            itemClickListener?.onItemClick(dataSet[position].id)
-//        }
-    }
 
     override fun getItemCount() = dataSet.size
 

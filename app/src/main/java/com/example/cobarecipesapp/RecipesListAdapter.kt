@@ -28,7 +28,6 @@ class RecipesListAdapter(private val dataSet: List<Recipe>) :
             with(binding) {
                 tvRecipeTitle.text = recipe.title
 
-
                 val drawable = try {
                     Drawable.createFromStream(
                         itemView.context.assets.open(recipe.imageUrl),

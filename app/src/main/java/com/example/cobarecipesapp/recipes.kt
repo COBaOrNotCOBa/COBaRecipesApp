@@ -273,6 +273,6 @@ object STUB {
         if (categoryId == 0) burgerRecipes else listOf()
 
     fun getRecipeById(recipeId: Int): Recipe =
-        burgerRecipes.first { recipeId == it.id }
+        burgerRecipes.find { recipeId == it.id } ?: burgerRecipes[0] // Заглушка
 
 }
