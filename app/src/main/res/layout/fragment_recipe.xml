@@ -44,6 +44,8 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                android:maxWidth="250dp"
+                android:singleLine="false"
                 tools:text="Recipe name" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
