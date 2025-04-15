@@ -12,4 +12,6 @@
     <color name="text_ingredient_description_color">#666666</color>
     <color name="line_ingredient_color">#F5F5F5</color>
     <color name="text_portions_color">#626466</color>
+    <color name="seekbar_thumb_color">#525DC0</color>
+    <color name="seekbar_progress_color">#A1A9F9</color>
 </resources>
