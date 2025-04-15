@@ -46,6 +46,14 @@ class RecipesListFragment : Fragment(R.layout.fragment_list_recipes) {
         _binding = null
     }
 
+    private fun initBundleData() {
+        arguments?.let { argument ->
+            categoryId = argument.getInt(CategoriesListFragment.ARG_CATEGORY_ID)
+            categoryName = argument.getString(CategoriesListFragment.ARG_CATEGORY_NAME)
+            categoryImageUrl = argument.getString(CategoriesListFragment.ARG_CATEGORY_IMAGE_URL)
+        }
+    }
+
     private fun initUI(view: View) {
 
         binding.tvRecipesCategory.text = categoryName
@@ -84,14 +92,6 @@ class RecipesListFragment : Fragment(R.layout.fragment_list_recipes) {
             setReorderingAllowed(true)
             addToBackStack(null)
             replace<RecipeFragment>(R.id.mainContainer, args = bundle)
-        }
-    }
-
-    private fun initBundleData() {
-        arguments?.let { argument ->
-            categoryId = argument.getInt(CategoriesListFragment.ARG_CATEGORY_ID)
-            categoryName = argument.getString(CategoriesListFragment.ARG_CATEGORY_NAME)
-            categoryImageUrl = argument.getString(CategoriesListFragment.ARG_CATEGORY_IMAGE_URL)
         }
     }
 

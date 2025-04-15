@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tolls="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="@dimen/padding_half"
+    android:orientation="horizontal"
+    app:cardCornerRadius="@dimen/card_corner_radius">
+
+    <TextView
+        android:id="@+id/tvMethodDescription"
+        style="@style/StyleMethodDescription14"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tolls:text="description" />
+
+</LinearLayout>
