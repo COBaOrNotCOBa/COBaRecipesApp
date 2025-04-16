@@ -20,7 +20,7 @@
             android:id="@+id/ivRecipeImage"
             android:layout_width="match_parent"
             android:layout_height="130dp"
-            android:contentDescription="@string/recipe_image"
+            android:contentDescription="@string/image_recipe"
             android:scaleType="centerCrop"
             tools:src="@tools:sample/avatars">
 
