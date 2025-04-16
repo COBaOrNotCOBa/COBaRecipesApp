@@ -76,7 +76,6 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
 
     private fun initRecycler() {
         with(binding) {
-            val recipe = STUB.getRecipeById(recipe.id)
 
             val ingredientAdapter = IngredientsAdapter(recipe.ingredients)
             rvIngredients.adapter = ingredientAdapter
