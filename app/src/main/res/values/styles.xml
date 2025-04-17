@@ -73,10 +73,13 @@
         <item name="fontFamily">@font/montserrat_semi_bold</item>
         <item name="android:textColor">@color/text_portions_color</item>
     </style>
-    
+
     <style name="StyleSeekBar" parent="TextAppearance.AppCompat">
         <item name="android:thumb">@drawable/shape_seekbar_thumb</item>
         <item name="android:progressDrawable">@drawable/shape_seekbar_progress</item>
+        <item name="android:min">@integer/seekbar_portions_min</item>
+        <item name="android:max">@integer/seekbar_portions_max</item>
+        <item name="android:progress">@integer/seekbar_portions_default</item>
     </style>
 
 </resources>
