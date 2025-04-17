@@ -27,15 +27,18 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:src="@tools:sample/avatars" />
 
-            <ImageView
-                android:id="@+id/ivHeartIcon"
+            <ImageButton
+                android:id="@+id/ibHeartIcon"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_margin="@dimen/padding_main"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
                 android:contentDescription="@string/icon_full_eclipse_of_my_heart"
-                android:src="@drawable/ic_heart"
+                android:scaleType="centerCrop"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@drawable/ic_heart" />
 
             <TextView
                 android:id="@+id/tvRecipeNameHeader"
