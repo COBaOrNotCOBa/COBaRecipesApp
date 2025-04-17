@@ -4,20 +4,19 @@
     <string name="button_text_categories">категории</string>
     <string name="button_text_favourites">избранное</string>
 
-    <string name="image_category_description">Изображение категории %1$s</string>
+    <string name="image_category_description">Image category %1$s</string>
     <string name="image_categories_header">Categories image</string>
-    <string name="image_recipe_description">Изображение рецепта %1$s</string>
+    <string name="image_recipe_description">Image recipe %1$s</string>
     <string name="image_recipe_header">Recipe image header</string>
     <string name="image_recipe">Recipe Image</string>
 
     <string name="icon_full_eclipse_of_my_heart">Full of my heart</string>
 
-    <string name="start_count_quantity_portions">1</string>
-
     <string name="text_ingredients_for_recipe">Ингредиенты</string>
-    <string name="text_recipes_current_category">Current category</string>
+    <string name="text_recipes_current_category">Текущая категория</string>
     <string name="text_favorites_fragment">Фрагмент избранное</string>
     <string name="text_quantity_portions">Порции:</string>
     <string name="text_cooking_method">Способ приготовления</string>
+    <string name="text_list_of_ingredients">Список ингредиентов</string>
 
 </resources>
