@@ -1,6 +1,7 @@
 package com.example.cobarecipesapp
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
@@ -60,32 +61,72 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
 
     private fun initUI(view: View) {
         with(binding) {
-
             tvRecipeNameHeader.text = recipe.title
-
-            val drawable = try {
-                Drawable.createFromStream(
-                    recipe.imageUrl.let { view.context.assets.open(it) },
-                    null
-                )
-            } catch (e: Exception) {
-                Log.e("ImageLoadError", "Image not found: ${recipe.title}", e)
-                null
-            }
-            ivRecipeImageHeader.setImageDrawable(drawable)
-
-            ibHeartIcon.setImageResource(R.drawable.ic_heart_empty)
-            var isFavorite = false
-            ibHeartIcon.setOnClickListener {
-                isFavorite = !isFavorite
-                val newIconRes = if (isFavorite) {
-                    R.drawable.ic_heart
-                } else {
-                    R.drawable.ic_heart_empty
-                }
-                ibHeartIcon.setImageResource(newIconRes)
-            }
+            loadRecipeImage(view)
+            setupFavoriteToggle()
         }
+    }
+
+    private fun loadRecipeImage(view: View) {
+        val drawable = try {
+            Drawable.createFromStream(
+                recipe.imageUrl.let { view.context.assets.open(it) },
+                null
+            )
+        } catch (e: Exception) {
+            Log.e("ImageLoadError", "Image not found: ${recipe.title}", e)
+            null
+        }
+        binding.ivRecipeImageHeader.setImageDrawable(drawable)
+    }
+
+    private fun setupFavoriteToggle() {
+        val currentFavoriteRecipes = getFavorites()
+        var isFavorite = currentFavoriteRecipes.contains(recipe.id.toString())
+
+        updateHeartIcon(isFavorite)
+
+        binding.ibHeartIcon.setOnClickListener {
+            isFavorite = !isFavorite
+            if (isFavorite) {
+                currentFavoriteRecipes.add(recipe.id.toString())
+            } else {
+                currentFavoriteRecipes.remove(recipe.id.toString())
+            }
+            saveFavorites(currentFavoriteRecipes)
+            updateHeartIcon(isFavorite)
+        }
+    }
+
+    private fun updateHeartIcon(isFavorite: Boolean) {
+        binding.ibHeartIcon.setImageResource(
+            if (isFavorite) R.drawable.ic_heart else R.drawable.ic_heart_empty
+        )
+    }
+
+    private fun saveFavorites(favoritesId: Set<String>) {
+        val sharedPrefs = activity?.getSharedPreferences(
+            getString(R.string.shared_prefs_file),
+            Context.MODE_PRIVATE
+        ) ?: return
+
+        with(sharedPrefs.edit()) {
+            putStringSet(FAVORITE_RECIPES_KEY, favoritesId)
+            apply()
+        }
+
+    }
+
+    private fun getFavorites(): MutableSet<String> {
+        val sharedPrefs = activity?.getSharedPreferences(
+            getString(R.string.shared_prefs_file),
+            Context.MODE_PRIVATE
+        ) ?: return HashSet()
+
+        val currentFavorites = sharedPrefs.getStringSet(FAVORITE_RECIPES_KEY, null)
+
+        return currentFavorites?.let { HashSet(it) } ?: HashSet()
+
     }
 
     private fun initRecycler() {
@@ -125,6 +166,10 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
                 resources.getDimensionPixelSize(R.dimen.divider_height)
             isLastItemDecorated = false
         }
+    }
+
+    companion object {
+        const val FAVORITE_RECIPES_KEY = "favorite_recipes_key"
     }
 
 }
