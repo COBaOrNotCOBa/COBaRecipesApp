@@ -59,19 +59,33 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
     }
 
     private fun initUI(view: View) {
-        binding.tvRecipeNameHeader.text = recipe.title
+        with(binding) {
 
-        val drawable = try {
-            Drawable.createFromStream(
-                recipe.imageUrl.let { view.context.assets.open(it) },
+            tvRecipeNameHeader.text = recipe.title
+
+            val drawable = try {
+                Drawable.createFromStream(
+                    recipe.imageUrl.let { view.context.assets.open(it) },
+                    null
+                )
+            } catch (e: Exception) {
+                Log.e("ImageLoadError", "Image not found: ${recipe.title}", e)
                 null
-            )
-        } catch (e: Exception) {
-            Log.e("ImageLoadError", "Image not found: ${recipe.title}", e)
-            null
-        }
-        binding.ivRecipeImageHeader.setImageDrawable(drawable)
+            }
+            ivRecipeImageHeader.setImageDrawable(drawable)
 
+            ibHeartIcon.setImageResource(R.drawable.ic_heart_empty)
+            var isFavorite = false
+            ibHeartIcon.setOnClickListener {
+                isFavorite = !isFavorite
+                val newIconRes = if (isFavorite) {
+                    R.drawable.ic_heart
+                } else {
+                    R.drawable.ic_heart_empty
+                }
+                ibHeartIcon.setImageResource(newIconRes)
+            }
+        }
     }
 
     private fun initRecycler() {

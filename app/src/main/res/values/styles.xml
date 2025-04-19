@@ -82,4 +82,9 @@
         <item name="android:progress">@integer/seekbar_portions_default</item>
     </style>
 
+    <style name="StyleHeartIcon" parent="TextAppearance.AppCompat">
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+        <item name="android:clickable">true</item>
+    </style>
+
 </resources>
