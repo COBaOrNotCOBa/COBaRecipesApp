@@ -19,4 +19,6 @@
     <string name="text_cooking_method">Способ приготовления</string>
     <string name="text_list_of_ingredients">Список ингредиентов</string>
 
+    <string name="shared_prefs_file">my_favorites_prefs</string>
+
 </resources>
