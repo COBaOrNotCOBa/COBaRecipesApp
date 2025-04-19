@@ -29,11 +29,10 @@
 
             <ImageButton
                 android:id="@+id/ibHeartIcon"
+                style="@style/StyleHeartIcon"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_margin="@dimen/padding_main"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:clickable="true"
                 android:contentDescription="@string/icon_full_eclipse_of_my_heart"
                 android:scaleType="centerCrop"
                 app:layout_constraintEnd_toEndOf="parent"

@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import com.example.cobarecipesapp.databinding.ActivityMainBinding
-import java.lang.IllegalStateException
 
 class MainActivity : AppCompatActivity() {
 
