@@ -20,5 +20,6 @@
     <string name="text_list_of_ingredients">Список ингредиентов</string>
     <string name="text_favorites_empty">Вы еще не добавили ни одного рецепта в избранное</string>
     <string name="text_favorites">избранное</string>
+    <string name="recycler_view_favorites_list">favorites_list</string>
 
 </resources>

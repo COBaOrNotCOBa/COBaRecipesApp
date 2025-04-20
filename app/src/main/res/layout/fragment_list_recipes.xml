@@ -40,7 +40,6 @@
         android:layout_height="match_parent"
         android:layout_marginHorizontal="@dimen/padding_main"
         android:layout_marginTop="@dimen/padding_main"
-        android:layout_marginBottom="@dimen/padding_half"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="1"
         tools:itemCount="8"
