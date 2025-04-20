@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.cobarecipesapp.databinding.FragmentRecipeBinding
 import com.example.cobarecipesapp.domain.Recipe
 import com.google.android.material.divider.MaterialDividerItemDecoration
+import androidx.core.content.edit
 
 class RecipeFragment : Fragment(R.layout.fragment_recipe) {
 
@@ -81,53 +82,51 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
     }
 
     private fun setupFavoriteToggle() {
-        val currentFavoriteRecipes = getFavorites()
-        var isFavorite = currentFavoriteRecipes.contains(recipe.id.toString())
 
-        updateHeartIcon(isFavorite)
+        updateHeartIconState()
 
         binding.ibHeartIcon.setOnClickListener {
-            isFavorite = !isFavorite
+            val currentFavoriteRecipes = getFavorites()
+            val recipeId = recipe.id.toString()
+            val isFavorite = currentFavoriteRecipes.contains(recipeId)
+
             if (isFavorite) {
-                currentFavoriteRecipes.add(recipe.id.toString())
+                currentFavoriteRecipes.remove(recipeId)
             } else {
-                currentFavoriteRecipes.remove(recipe.id.toString())
+                currentFavoriteRecipes.add(recipeId)
             }
+
             saveFavorites(currentFavoriteRecipes)
-            updateHeartIcon(isFavorite)
+            updateHeartIconState()
         }
     }
 
-    private fun updateHeartIcon(isFavorite: Boolean) {
+    private fun updateHeartIconState() {
+        val isFavorite = getFavorites().contains(recipe.id.toString())
         binding.ibHeartIcon.setImageResource(
             if (isFavorite) R.drawable.ic_heart else R.drawable.ic_heart_empty
         )
     }
 
     private fun saveFavorites(favoritesId: Set<String>) {
-        val sharedPrefs = activity?.getSharedPreferences(
-            getString(R.string.shared_prefs_file),
-            Context.MODE_PRIVATE
+        val sharedPrefs = requireContext().getSharedPreferences(
+            FAVORITE_PREFS_KEY, Context.MODE_PRIVATE
         ) ?: return
 
-        with(sharedPrefs.edit()) {
+        sharedPrefs.edit(commit = true) {
             putStringSet(FAVORITE_RECIPES_KEY, favoritesId)
-            apply()
         }
 
     }
 
     private fun getFavorites(): MutableSet<String> {
-        val sharedPrefs = activity?.getSharedPreferences(
-            getString(R.string.shared_prefs_file),
-            Context.MODE_PRIVATE
-        ) ?: return HashSet()
-
-        val currentFavorites = sharedPrefs.getStringSet(FAVORITE_RECIPES_KEY, null)
-
-        return currentFavorites?.let { HashSet(it) } ?: HashSet()
+        val sharedPrefs = requireContext().getSharedPreferences(
+            FAVORITE_PREFS_KEY, Context.MODE_PRIVATE
+        )
+        return HashSet(sharedPrefs?.getStringSet(FAVORITE_RECIPES_KEY, HashSet()) ?: mutableSetOf())
 
     }
+
 
     private fun initRecycler() {
         with(binding) {
@@ -170,6 +169,7 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
 
     companion object {
         const val FAVORITE_RECIPES_KEY = "favorite_recipes_key"
+        const val FAVORITE_PREFS_KEY = "favorite prefs key"
     }
 
 }

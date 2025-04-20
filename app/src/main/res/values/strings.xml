@@ -9,16 +9,16 @@
     <string name="image_recipe_description">Image recipe %1$s</string>
     <string name="image_recipe_header">Recipe image header</string>
     <string name="image_recipe">Recipe Image</string>
+    <string name="text_favorites_fragment">Image favorites</string>
 
     <string name="icon_full_eclipse_of_my_heart">Full of my heart</string>
 
     <string name="text_ingredients_for_recipe">Ингредиенты</string>
     <string name="text_recipes_current_category">Текущая категория</string>
-    <string name="text_favorites_fragment">Фрагмент избранное</string>
     <string name="text_quantity_portions">Порции:</string>
     <string name="text_cooking_method">Способ приготовления</string>
     <string name="text_list_of_ingredients">Список ингредиентов</string>
-
-    <string name="shared_prefs_file">my_favorites_prefs</string>
+    <string name="text_favorites_empty">Вы еще не добавили ни одного рецепта в избранное</string>
+    <string name="text_favorites">избранное</string>
 
 </resources>
