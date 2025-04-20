@@ -3,15 +3,21 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="main_background_color">#F4FAFF</color>
+
     <color name="button_categories_color">#525DC0</color>
     <color name="button_favourites_color">#E13E3E</color>
+
     <color name="title_ingredients_color">#422952</color>
     <color name="title_method_color">#422952</color>
     <color name="title_main_color">#5F3678</color>
+
     <color name="text_item_description_color">#666666</color>
     <color name="text_ingredient_description_color">#666666</color>
-    <color name="line_ingredient_color">#F5F5F5</color>
+    <color name="text_favorites_empty_color">#666666</color>
     <color name="text_portions_color">#626466</color>
+
+    <color name="line_ingredient_color">#F5F5F5</color>
+
     <color name="seekbar_thumb_color">#525DC0</color>
     <color name="seekbar_progress_color">#A1A9F9</color>
 </resources>

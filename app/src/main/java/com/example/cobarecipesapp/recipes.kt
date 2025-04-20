@@ -273,6 +273,10 @@ object STUB {
         if (categoryId == 0) burgerRecipes else listOf()
 
     fun getRecipeById(recipeId: Int): Recipe =
-        burgerRecipes.find { recipeId == it.id } ?: burgerRecipes[0] // Заглушка
+        burgerRecipes.find { it.id == recipeId } ?: burgerRecipes[0] // Заглушка
+
+    fun getRecipesByIds(favoritesId: Set<Int>): List<Recipe> =
+        burgerRecipes.filter { it.id in favoritesId }
+
 
 }

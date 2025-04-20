@@ -48,7 +48,7 @@
     </style>
 
     <style name="StyleItemDescription12" parent="TextAppearance.AppCompat">
-        <item name="android:textSize">@dimen/text_item_description_size_medium</item>
+        <item name="android:textSize">@dimen/text_size_item_description_medium</item>
         <item name="android:fontFamily">@font/montserrat_medium</item>
         <item name="android:textColor">@color/text_item_description_color</item>
         <item name="lineHeight">16dp</item>
@@ -56,14 +56,14 @@
     </style>
 
     <style name="StyleIngredientDescription14" parent="TextAppearance.AppCompat">
-        <item name="android:textSize">@dimen/text_ingredient_description_size_medium</item>
+        <item name="android:textSize">@dimen/text_size_ingredient_description_medium</item>
         <item name="fontFamily">@font/montserrat_regular</item>
         <item name="textAllCaps">true</item>
         <item name="android:textColor">@color/text_ingredient_description_color</item>
     </style>
 
     <style name="StyleMethodDescription14" parent="TextAppearance.AppCompat">
-        <item name="android:textSize">@dimen/text_ingredient_description_size_medium</item>
+        <item name="android:textSize">@dimen/text_size_ingredient_description_medium</item>
         <item name="fontFamily">@font/montserrat_regular</item>
         <item name="android:textColor">@color/text_ingredient_description_color</item>
     </style>
@@ -72,6 +72,15 @@
         <item name="android:textSize">@dimen/text_size_portions_medium</item>
         <item name="fontFamily">@font/montserrat_semi_bold</item>
         <item name="android:textColor">@color/text_portions_color</item>
+    </style>
+
+    <style name="StyleFavoritesEmpty16" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/text_size_favorites_empty_medium</item>
+        <item name="fontFamily">@font/montserrat_regular</item>
+        <item name="android:textColor">@color/text_ingredient_description_color</item>
+        <item name="android:breakStrategy">balanced</item>
+        <item name="android:textAlignment">center</item>
+        <item name="color">@color/text_favorites_empty_color</item>
     </style>
 
     <style name="StyleSeekBar" parent="TextAppearance.AppCompat">
