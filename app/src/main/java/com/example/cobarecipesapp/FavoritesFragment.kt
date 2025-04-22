@@ -46,12 +46,9 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
 
         binding.rvFavorites.adapter = favoritesAdapter
 
-        favoritesAdapter.setOnItemClickListener(object :
-            RecipesListAdapter.OnItemClickListener {
-            override fun onItemClick(recipeId: Int) {
-                openRecipeByRecipeId(recipeId)
-            }
-        })
+        favoritesAdapter.setOnItemClick { recipeId ->
+            openRecipeByRecipeId(recipeId)
+        }
 
     }
 
@@ -77,19 +74,17 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
             } else {
                 val favoriteRecipes = STUB.getRecipesByIds(favoritesId)
                 favoritesAdapter = RecipesListAdapter(favoriteRecipes)
-                favoritesAdapter.setOnItemClickListener(object :
-                    RecipesListAdapter.OnItemClickListener {
-                    override fun onItemClick(recipeId: Int) {
-                        openRecipeByRecipeId(recipeId)
-                    }
-                })
-
+                favoritesAdapter.setOnItemClick { recipeId ->
+                    openRecipeByRecipeId(recipeId)
+                }
                 rvFavorites.adapter = favoritesAdapter
                 tvEmptyState.visibility = View.GONE
                 rvFavorites.visibility = View.VISIBLE
             }
         }
     }
+
+
 
     private fun getFavorites(): MutableSet<String> {
         val sharedPrefs = requireContext().getSharedPreferences(

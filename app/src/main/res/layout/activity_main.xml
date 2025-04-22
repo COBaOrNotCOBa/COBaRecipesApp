@@ -10,15 +10,14 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/mainContainer"
-        android:layout_marginTop="32dp"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="32dp"
         android:layout_marginBottom="@dimen/padding_half"
         app:layout_constraintBottom_toTopOf="@+id/btnBottomLinearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-    </androidx.fragment.app.FragmentContainerView>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:id="@+id/btnBottomLinearLayout"
@@ -39,8 +38,7 @@
             android:layout_marginEnd="2dp"
             android:layout_weight="1"
             android:backgroundTint="@color/button_categories_color"
-            android:text="@string/button_text_categories">
-        </Button>
+            android:text="@string/button_text_categories" />
 
         <Button
             android:id="@+id/btnFavourites"
@@ -52,8 +50,7 @@
             android:backgroundTint="@color/button_favourites_color"
             android:text="@string/button_text_favourites"
             app:icon="@drawable/ic_heart_empty"
-            app:iconGravity="textEnd">
-        </Button>
+            app:iconGravity="textEnd" />
 
     </LinearLayout>
 
