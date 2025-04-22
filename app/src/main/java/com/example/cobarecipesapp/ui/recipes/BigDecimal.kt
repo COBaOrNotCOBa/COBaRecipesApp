@@ -1,4 +1,4 @@
-package com.example.cobarecipesapp
+package com.example.cobarecipesapp.ui.recipes
 
 import java.math.BigDecimal
 import java.math.RoundingMode

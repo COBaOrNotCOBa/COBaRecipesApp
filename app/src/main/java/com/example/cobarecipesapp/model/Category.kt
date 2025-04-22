@@ -1,4 +1,4 @@
-package com.example.cobarecipesapp.domain
+package com.example.cobarecipesapp.model
 
 data class Category(
     val id: Int,

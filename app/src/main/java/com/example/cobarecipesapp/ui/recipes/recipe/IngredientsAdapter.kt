@@ -1,12 +1,13 @@
-package com.example.cobarecipesapp
+package com.example.cobarecipesapp.ui.recipes.recipe
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cobarecipesapp.databinding.ItemIngredientBinding
-import com.example.cobarecipesapp.domain.Ingredient
-import java.math.RoundingMode
+import com.example.cobarecipesapp.model.Ingredient
+import com.example.cobarecipesapp.ui.recipes.multiply
+import com.example.cobarecipesapp.ui.recipes.toRoundedString
 
 class IngredientsAdapter(private val dataSet: List<Ingredient>) :
     RecyclerView.Adapter<IngredientsAdapter.ViewHolder>() {

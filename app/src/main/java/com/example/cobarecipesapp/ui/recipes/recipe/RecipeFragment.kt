@@ -1,4 +1,4 @@
-package com.example.cobarecipesapp
+package com.example.cobarecipesapp.ui.recipes.recipe
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -14,9 +14,11 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.cobarecipesapp.databinding.FragmentRecipeBinding
-import com.example.cobarecipesapp.domain.Recipe
+import com.example.cobarecipesapp.model.Recipe
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import androidx.core.content.edit
+import com.example.cobarecipesapp.R
+import com.example.cobarecipesapp.ui.recipes.recipeList.RecipesListFragment
 
 class RecipeFragment : Fragment(R.layout.fragment_recipe) {
 
