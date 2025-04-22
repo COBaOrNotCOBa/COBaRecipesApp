@@ -68,6 +68,35 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
         }
     }
 
+    private fun initRecycler() {
+        with(binding) {
+
+            val ingredientAdapter = IngredientsAdapter(recipe.ingredients)
+            rvIngredients.adapter = ingredientAdapter
+            rvIngredients.addItemDecoration(createDividerDecoration())
+
+            val methodAdapter = MethodAdapter(recipe.method)
+            rvMethod.adapter = methodAdapter
+            rvMethod.addItemDecoration(createDividerDecoration())
+
+            sbPortionsCount.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                @SuppressLint("SetTextI18n")
+                override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                    tvPortionsCount.text = progress.toString()
+                    ingredientAdapter.updateIngredients(progress)
+                }
+
+                override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                    Log.d("SeekBar", "Начало перемещения ползунка")
+                }
+
+                override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                    Log.d("SeekBar", "Конец перемещения ползунка")
+                }
+            })
+        }
+    }
+
     private fun loadRecipeImage(view: View) {
         val drawable = try {
             Drawable.createFromStream(
@@ -110,7 +139,7 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
 
     private fun saveFavorites(favoritesId: Set<String>) {
         val sharedPrefs = requireContext().getSharedPreferences(
-            FAVORITE_PREFS_KEY, Context.MODE_PRIVATE
+            favorite_prefs_key, Context.MODE_PRIVATE
         ) ?: return
 
         sharedPrefs.edit(commit = true) {
@@ -121,40 +150,10 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
 
     private fun getFavorites(): MutableSet<String> {
         val sharedPrefs = requireContext().getSharedPreferences(
-            FAVORITE_PREFS_KEY, Context.MODE_PRIVATE
+            favorite_prefs_key, Context.MODE_PRIVATE
         )
         return HashSet(sharedPrefs?.getStringSet(FAVORITE_RECIPES_KEY, HashSet()) ?: mutableSetOf())
 
-    }
-
-
-    private fun initRecycler() {
-        with(binding) {
-
-            val ingredientAdapter = IngredientsAdapter(recipe.ingredients)
-            rvIngredients.adapter = ingredientAdapter
-            rvIngredients.addItemDecoration(createDividerDecoration())
-
-            val methodAdapter = MethodAdapter(recipe.method)
-            rvMethod.adapter = methodAdapter
-            rvMethod.addItemDecoration(createDividerDecoration())
-
-            sbPortionsCount.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-                @SuppressLint("SetTextI18n")
-                override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                    tvPortionsCount.text = progress.toString()
-                    ingredientAdapter.updateIngredients(progress)
-                }
-
-                override fun onStartTrackingTouch(seekBar: SeekBar?) {
-                    Log.d("SeekBar", "Начало перемещения ползунка")
-                }
-
-                override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                    Log.d("SeekBar", "Конец перемещения ползунка")
-                }
-            })
-        }
     }
 
     private fun createDividerDecoration(): MaterialDividerItemDecoration {
@@ -169,7 +168,7 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
 
     companion object {
         const val FAVORITE_RECIPES_KEY = "favorite_recipes_key"
-        const val FAVORITE_PREFS_KEY = "favorite prefs key"
+        const val favorite_prefs_key = "favorite prefs key"
     }
 
 }

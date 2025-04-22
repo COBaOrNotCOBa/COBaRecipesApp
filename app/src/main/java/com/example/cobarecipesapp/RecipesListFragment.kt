@@ -75,11 +75,9 @@ class RecipesListFragment : Fragment(R.layout.fragment_list_recipes) {
         val recipesAdapter = RecipesListAdapter(recipes)
         binding.rvRecipes.adapter = recipesAdapter
 
-        recipesAdapter.setOnItemClickListener(object : RecipesListAdapter.OnItemClickListener {
-            override fun onItemClick(recipeId: Int) {
-                openRecipeByRecipeId(recipeId)
-            }
-        })
+        recipesAdapter.setOnItemClick { recipeId ->
+            openRecipeByRecipeId(recipeId)
+        }
 
     }
 

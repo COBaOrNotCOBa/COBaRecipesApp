@@ -52,18 +52,6 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
 
     }
 
-    private fun openRecipeByRecipeId(recipeId: Int) {
-
-        val recipe = STUB.getRecipeById(recipeId)
-        val bundle = bundleOf(RecipesListFragment.ARG_RECIPE to recipe)
-
-        parentFragmentManager.commit {
-            setReorderingAllowed(true)
-            addToBackStack(null)
-            replace<RecipeFragment>(R.id.mainContainer, args = bundle)
-        }
-    }
-
     private fun loadFavorites() {
         val favoritesId = getFavorites().map { it.toInt() }.toSet()
 
@@ -84,11 +72,21 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
         }
     }
 
+    private fun openRecipeByRecipeId(recipeId: Int) {
 
+        val recipe = STUB.getRecipeById(recipeId)
+        val bundle = bundleOf(RecipesListFragment.ARG_RECIPE to recipe)
+
+        parentFragmentManager.commit {
+            setReorderingAllowed(true)
+            addToBackStack(null)
+            replace<RecipeFragment>(R.id.mainContainer, args = bundle)
+        }
+    }
 
     private fun getFavorites(): MutableSet<String> {
         val sharedPrefs = requireContext().getSharedPreferences(
-            RecipeFragment.FAVORITE_PREFS_KEY, Context.MODE_PRIVATE
+            RecipeFragment.favorite_prefs_key, Context.MODE_PRIVATE
         )
         return HashSet(
             sharedPrefs?.getStringSet(RecipeFragment.FAVORITE_RECIPES_KEY, HashSet())
