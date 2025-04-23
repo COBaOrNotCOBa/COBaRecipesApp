@@ -1,4 +1,4 @@
-package com.example.cobarecipesapp.ui.recipes
+package com.example.cobarecipesapp.ui.common
 
 import com.example.cobarecipesapp.ui.recipes.recipeList.RecipesListAdapter
 

@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cobarecipesapp.databinding.ItemIngredientBinding
 import com.example.cobarecipesapp.model.Ingredient
-import com.example.cobarecipesapp.ui.recipes.multiply
-import com.example.cobarecipesapp.ui.recipes.toRoundedString
+import com.example.cobarecipesapp.utils.multiply
+import com.example.cobarecipesapp.utils.toRoundedString
 
 class IngredientsAdapter(private val dataSet: List<Ingredient>) :
     RecyclerView.Adapter<IngredientsAdapter.ViewHolder>() {

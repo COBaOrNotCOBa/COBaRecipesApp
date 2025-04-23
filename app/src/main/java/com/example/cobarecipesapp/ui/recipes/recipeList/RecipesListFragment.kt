@@ -15,7 +15,7 @@ import com.example.cobarecipesapp.data.STUB
 import com.example.cobarecipesapp.databinding.FragmentListRecipesBinding
 import com.example.cobarecipesapp.ui.categories.CategoriesListFragment
 import com.example.cobarecipesapp.ui.recipes.recipe.RecipeFragment
-import com.example.cobarecipesapp.ui.recipes.setOnItemClick
+import com.example.cobarecipesapp.ui.common.setOnItemClick
 
 class RecipesListFragment : Fragment(R.layout.fragment_list_recipes) {
 

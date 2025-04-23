@@ -15,7 +15,7 @@ import com.example.cobarecipesapp.databinding.FragmentFavoritesBinding
 import com.example.cobarecipesapp.ui.recipes.recipe.RecipeFragment
 import com.example.cobarecipesapp.ui.recipes.recipeList.RecipesListAdapter
 import com.example.cobarecipesapp.ui.recipes.recipeList.RecipesListFragment
-import com.example.cobarecipesapp.ui.recipes.setOnItemClick
+import com.example.cobarecipesapp.ui.common.setOnItemClick
 
 class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
 

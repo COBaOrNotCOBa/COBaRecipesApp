@@ -18,7 +18,6 @@ import com.example.cobarecipesapp.model.Recipe
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import androidx.core.content.edit
 import com.example.cobarecipesapp.R
-import com.example.cobarecipesapp.ui.recipes.recipeList.RecipesListFragment
 
 class RecipeFragment : Fragment(R.layout.fragment_recipe) {
 
@@ -55,10 +54,10 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
 
     private fun initBundleData() {
         recipe = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            arguments?.getParcelable(RecipesListFragment.ARG_RECIPE, Recipe::class.java)
+            arguments?.getParcelable(ARG_RECIPE, Recipe::class.java)
         } else {
             @Suppress("DEPRECATION")
-            arguments?.getParcelable(RecipesListFragment.ARG_RECIPE)
+            arguments?.getParcelable(ARG_RECIPE)
         } ?: throw IllegalStateException("Recipe not found in arguments")
     }
 
@@ -96,6 +95,16 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
                     Log.d("SeekBar", "Конец перемещения ползунка")
                 }
             })
+        }
+    }
+
+    private fun createDividerDecoration(): MaterialDividerItemDecoration {
+        return MaterialDividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL).apply {
+            dividerColor =
+                ContextCompat.getColor(requireContext(), R.color.line_ingredient_color)
+            dividerThickness =
+                resources.getDimensionPixelSize(R.dimen.divider_height)
+            isLastItemDecorated = false
         }
     }
 
@@ -158,17 +167,8 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
 
     }
 
-    private fun createDividerDecoration(): MaterialDividerItemDecoration {
-        return MaterialDividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL).apply {
-            dividerColor =
-                ContextCompat.getColor(requireContext(), R.color.line_ingredient_color)
-            dividerThickness =
-                resources.getDimensionPixelSize(R.dimen.divider_height)
-            isLastItemDecorated = false
-        }
-    }
-
     companion object {
+        const val ARG_RECIPE = "arg_recipe"
         const val FAVORITE_RECIPES_KEY = "favorite_recipes_key"
         const val FAVORITE_PREFS_KEY = "favorite_prefs_key"
     }
