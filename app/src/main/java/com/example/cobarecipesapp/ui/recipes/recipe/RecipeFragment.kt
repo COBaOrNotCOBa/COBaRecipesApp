@@ -98,16 +98,6 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
         }
     }
 
-    private fun createDividerDecoration(): MaterialDividerItemDecoration {
-        return MaterialDividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL).apply {
-            dividerColor =
-                ContextCompat.getColor(requireContext(), R.color.line_ingredient_color)
-            dividerThickness =
-                resources.getDimensionPixelSize(R.dimen.divider_height)
-            isLastItemDecorated = false
-        }
-    }
-
     private fun loadRecipeImage(view: View) {
         val drawable = try {
             Drawable.createFromStream(
@@ -165,6 +155,16 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
         )
         return HashSet(sharedPrefs?.getStringSet(FAVORITE_RECIPES_KEY, HashSet()) ?: mutableSetOf())
 
+    }
+
+    private fun createDividerDecoration(): MaterialDividerItemDecoration {
+        return MaterialDividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL).apply {
+            dividerColor =
+                ContextCompat.getColor(requireContext(), R.color.line_ingredient_color)
+            dividerThickness =
+                resources.getDimensionPixelSize(R.dimen.divider_height)
+            isLastItemDecorated = false
+        }
     }
 
     companion object {
