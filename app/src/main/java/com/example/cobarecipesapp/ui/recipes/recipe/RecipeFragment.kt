@@ -141,7 +141,7 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
 
     private fun saveFavorites(favoritesId: Set<String>) {
         val sharedPrefs = requireContext().getSharedPreferences(
-            favorite_prefs_key, Context.MODE_PRIVATE
+            FAVORITE_PREFS_KEY, Context.MODE_PRIVATE
         ) ?: return
 
         sharedPrefs.edit(commit = true) {
@@ -152,7 +152,7 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
 
     private fun getFavorites(): MutableSet<String> {
         val sharedPrefs = requireContext().getSharedPreferences(
-            favorite_prefs_key, Context.MODE_PRIVATE
+            FAVORITE_PREFS_KEY, Context.MODE_PRIVATE
         )
         return HashSet(sharedPrefs?.getStringSet(FAVORITE_RECIPES_KEY, HashSet()) ?: mutableSetOf())
 
@@ -170,7 +170,7 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
 
     companion object {
         const val FAVORITE_RECIPES_KEY = "favorite_recipes_key"
-        const val favorite_prefs_key = "favorite prefs key"
+        const val FAVORITE_PREFS_KEY = "favorite_prefs_key"
     }
 
 }

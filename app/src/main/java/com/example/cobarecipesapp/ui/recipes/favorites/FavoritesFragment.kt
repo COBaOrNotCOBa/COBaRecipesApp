@@ -92,7 +92,7 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
 
     private fun getFavorites(): MutableSet<String> {
         val sharedPrefs = requireContext().getSharedPreferences(
-            RecipeFragment.Companion.favorite_prefs_key, Context.MODE_PRIVATE
+            RecipeFragment.Companion.FAVORITE_PREFS_KEY, Context.MODE_PRIVATE
         )
         return HashSet(
             sharedPrefs?.getStringSet(RecipeFragment.Companion.FAVORITE_RECIPES_KEY, HashSet())
