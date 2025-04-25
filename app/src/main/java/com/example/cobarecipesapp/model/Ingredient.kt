@@ -1,4 +1,4 @@
-package com.example.cobarecipesapp.domain
+package com.example.cobarecipesapp.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

@@ -1,4 +1,4 @@
-package com.example.cobarecipesapp
+package com.example.cobarecipesapp.ui.recipes.recipe
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -14,9 +14,10 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.cobarecipesapp.databinding.FragmentRecipeBinding
-import com.example.cobarecipesapp.domain.Recipe
+import com.example.cobarecipesapp.model.Recipe
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import androidx.core.content.edit
+import com.example.cobarecipesapp.R
 
 class RecipeFragment : Fragment(R.layout.fragment_recipe) {
 
@@ -53,10 +54,10 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
 
     private fun initBundleData() {
         recipe = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            arguments?.getParcelable(RecipesListFragment.ARG_RECIPE, Recipe::class.java)
+            arguments?.getParcelable(ARG_RECIPE, Recipe::class.java)
         } else {
             @Suppress("DEPRECATION")
-            arguments?.getParcelable(RecipesListFragment.ARG_RECIPE)
+            arguments?.getParcelable(ARG_RECIPE)
         } ?: throw IllegalStateException("Recipe not found in arguments")
     }
 
@@ -139,7 +140,7 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
 
     private fun saveFavorites(favoritesId: Set<String>) {
         val sharedPrefs = requireContext().getSharedPreferences(
-            favorite_prefs_key, Context.MODE_PRIVATE
+            FAVORITE_PREFS_KEY, Context.MODE_PRIVATE
         ) ?: return
 
         sharedPrefs.edit(commit = true) {
@@ -150,7 +151,7 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
 
     private fun getFavorites(): MutableSet<String> {
         val sharedPrefs = requireContext().getSharedPreferences(
-            favorite_prefs_key, Context.MODE_PRIVATE
+            FAVORITE_PREFS_KEY, Context.MODE_PRIVATE
         )
         return HashSet(sharedPrefs?.getStringSet(FAVORITE_RECIPES_KEY, HashSet()) ?: mutableSetOf())
 
@@ -167,8 +168,9 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
     }
 
     companion object {
+        const val ARG_RECIPE = "arg_recipe"
         const val FAVORITE_RECIPES_KEY = "favorite_recipes_key"
-        const val favorite_prefs_key = "favorite prefs key"
+        const val FAVORITE_PREFS_KEY = "favorite_prefs_key"
     }
 
 }

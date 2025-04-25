@@ -1,4 +1,4 @@
-package com.example.cobarecipesapp
+package com.example.cobarecipesapp.ui.recipes.recipeList
 
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -10,7 +10,12 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
+import com.example.cobarecipesapp.R
+import com.example.cobarecipesapp.data.STUB
 import com.example.cobarecipesapp.databinding.FragmentListRecipesBinding
+import com.example.cobarecipesapp.ui.categories.CategoriesListFragment
+import com.example.cobarecipesapp.ui.recipes.recipe.RecipeFragment
+import com.example.cobarecipesapp.ui.common.setOnItemClick
 
 class RecipesListFragment : Fragment(R.layout.fragment_list_recipes) {
 

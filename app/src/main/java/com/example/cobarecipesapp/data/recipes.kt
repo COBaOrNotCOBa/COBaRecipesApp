@@ -1,8 +1,8 @@
-package com.example.cobarecipesapp
+package com.example.cobarecipesapp.data
 
-import com.example.cobarecipesapp.domain.Category
-import com.example.cobarecipesapp.domain.Recipe
-import com.example.cobarecipesapp.domain.Ingredient
+import com.example.cobarecipesapp.model.Category
+import com.example.cobarecipesapp.model.Recipe
+import com.example.cobarecipesapp.model.Ingredient
 
 object STUB {
 

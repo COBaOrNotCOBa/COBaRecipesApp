@@ -1,4 +1,4 @@
-package com.example.cobarecipesapp
+package com.example.cobarecipesapp.ui.recipes.favorites
 
 import android.content.Context
 import android.os.Bundle
@@ -9,7 +9,13 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
+import com.example.cobarecipesapp.R
+import com.example.cobarecipesapp.data.STUB
 import com.example.cobarecipesapp.databinding.FragmentFavoritesBinding
+import com.example.cobarecipesapp.ui.recipes.recipe.RecipeFragment
+import com.example.cobarecipesapp.ui.recipes.recipeList.RecipesListAdapter
+import com.example.cobarecipesapp.ui.recipes.recipeList.RecipesListFragment
+import com.example.cobarecipesapp.ui.common.setOnItemClick
 
 class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
 
@@ -75,7 +81,7 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
     private fun openRecipeByRecipeId(recipeId: Int) {
 
         val recipe = STUB.getRecipeById(recipeId)
-        val bundle = bundleOf(RecipesListFragment.ARG_RECIPE to recipe)
+        val bundle = bundleOf(RecipesListFragment.Companion.ARG_RECIPE to recipe)
 
         parentFragmentManager.commit {
             setReorderingAllowed(true)
@@ -86,10 +92,10 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
 
     private fun getFavorites(): MutableSet<String> {
         val sharedPrefs = requireContext().getSharedPreferences(
-            RecipeFragment.favorite_prefs_key, Context.MODE_PRIVATE
+            RecipeFragment.Companion.FAVORITE_PREFS_KEY, Context.MODE_PRIVATE
         )
         return HashSet(
-            sharedPrefs?.getStringSet(RecipeFragment.FAVORITE_RECIPES_KEY, HashSet())
+            sharedPrefs?.getStringSet(RecipeFragment.Companion.FAVORITE_RECIPES_KEY, HashSet())
                 ?: mutableSetOf()
         )
 

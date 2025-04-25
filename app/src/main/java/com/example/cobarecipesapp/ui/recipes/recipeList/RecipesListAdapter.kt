@@ -1,18 +1,19 @@
-package com.example.cobarecipesapp
+package com.example.cobarecipesapp.ui.recipes.recipeList
 
 import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.cobarecipesapp.databinding.ItemCategoryBinding
-import com.example.cobarecipesapp.domain.Category
+import com.example.cobarecipesapp.R
+import com.example.cobarecipesapp.databinding.ItemRecipeBinding
+import com.example.cobarecipesapp.model.Recipe
 
-class CategoriesListAdapter(private val dataSet: List<Category>) :
-    RecyclerView.Adapter<CategoriesListAdapter.ViewHolder>() {
+class RecipesListAdapter(private val dataSet: List<Recipe>) :
+    RecyclerView.Adapter<RecipesListAdapter.ViewHolder>() {
 
     interface OnItemClickListener {
-        fun onItemClick(categoryId: Int)
+        fun onItemClick(recipeId: Int)
     }
 
     private var itemClickListener: OnItemClickListener? = null
@@ -21,40 +22,39 @@ class CategoriesListAdapter(private val dataSet: List<Category>) :
         this.itemClickListener = listener
     }
 
-    inner class ViewHolder(private val binding: ItemCategoryBinding) :
+    inner class ViewHolder(private val binding: ItemRecipeBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(category: Category) {
+        fun bind(recipe: Recipe) {
             with(binding) {
-                tvCategoryTitle.text = category.title
-                tvCategoryDescription.text = category.description
+                tvRecipeTitle.text = recipe.title
 
                 val drawable = try {
                     Drawable.createFromStream(
-                        itemView.context.assets.open(category.imageUrl),
+                        itemView.context.assets.open(recipe.imageUrl),
                         null
                     )
                 } catch (e: Exception) {
-                    Log.e("ImageLoadError", "Image not found: ${category.title}", e)
+                    Log.e("ImageLoadError", "Image not found: ${recipe.title}", e)
                     null
                 }
-                ivCategoryImage.setImageDrawable(drawable)
+                ivRecipeImage.setImageDrawable(drawable)
 
                 val description = itemView.context.getString(
-                    R.string.image_category_description,
-                    category.title
+                    R.string.image_recipe_description,
+                    recipe.title
                 )
-                ivCategoryImage.contentDescription = description
+                ivRecipeImage.contentDescription = description
 
-                root.setOnClickListener { itemClickListener?.onItemClick(category.id) }
-
+                root.setOnClickListener { itemClickListener?.onItemClick(recipe.id) }
             }
         }
+
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val binding =
-            ItemCategoryBinding.inflate(
+            ItemRecipeBinding.inflate(
                 LayoutInflater.from(viewGroup.context),
                 viewGroup,
                 false
@@ -64,6 +64,7 @@ class CategoriesListAdapter(private val dataSet: List<Category>) :
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) =
         viewHolder.bind(dataSet[position])
+
 
     override fun getItemCount() = dataSet.size
 
