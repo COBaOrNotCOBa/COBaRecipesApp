@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.cobarecipesapp.databinding.FragmentRecipeBinding
 import com.google.android.material.divider.MaterialDividerItemDecoration
-import androidx.core.content.edit
 import androidx.fragment.app.viewModels
 import com.example.cobarecipesapp.R
 
@@ -25,6 +24,7 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
         get() = _binding ?: throw IllegalStateException("Binding is null")
 
     private val recipeViewModel: RecipeViewModel by viewModels()
+    private lateinit var ingredientAdapter: IngredientsAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -68,7 +68,6 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
 
                 binding.ibHeartIcon.setOnClickListener {
                     recipeViewModel.onFavoritesClicked()
-                    updateHeartIconState(!state.isFavorite)
                 }
 
                 Log.i(
@@ -81,17 +80,19 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
 
     private fun initRecycler() {
         with(binding) {
+            val ingredientsDecoration = createDividerDecoration()
+            val methodDecoration = createDividerDecoration()
+
+            rvIngredients.addItemDecoration(ingredientsDecoration)
+            rvMethod.addItemDecoration(methodDecoration)
+
             recipeViewModel.recipeState.observe(viewLifecycleOwner) { state ->
 
                 val ingredients = state.recipe?.ingredients ?: emptyList()
-                val ingredientAdapter = IngredientsAdapter(ingredients)
-                rvIngredients.adapter = ingredientAdapter
-                rvIngredients.addItemDecoration(createDividerDecoration())
-
                 val method = state.recipe?.method ?: emptyList()
-                val methodAdapter = MethodAdapter(method)
-                rvMethod.adapter = methodAdapter
-                rvMethod.addItemDecoration(createDividerDecoration())
+
+                rvIngredients.adapter = IngredientsAdapter(ingredients)
+                rvMethod.adapter = MethodAdapter(method)
 
                 sbPortionsCount.setOnSeekBarChangeListener(object :
                     SeekBar.OnSeekBarChangeListener {
