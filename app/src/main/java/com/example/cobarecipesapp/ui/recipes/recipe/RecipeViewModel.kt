@@ -9,8 +9,7 @@ import com.example.cobarecipesapp.model.Recipe
 class RecipeViewModel : ViewModel() {
 
     private val _recipeState = MutableLiveData(RecipeState())
-    val recipeState: LiveData<RecipeState>
-        get() = _recipeState
+    val recipeState: LiveData<RecipeState> = _recipeState
 
     data class RecipeState(
         val recipe: Recipe? = null,
