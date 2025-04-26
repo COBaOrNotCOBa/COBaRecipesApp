@@ -14,8 +14,7 @@ import com.example.cobarecipesapp.data.STUB
 class RecipeViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _recipeState = MutableLiveData(RecipeState())
-    val recipeState: LiveData<RecipeState>
-        get() = _recipeState
+    val recipeState: LiveData<RecipeState> = _recipeState
 
     fun loadRecipe(recipeId: Int) {
         // TODO 'load from network'

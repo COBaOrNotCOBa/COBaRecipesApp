@@ -13,7 +13,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.cobarecipesapp.databinding.FragmentRecipeBinding
 import com.google.android.material.divider.MaterialDividerItemDecoration
-import androidx.fragment.app.activityViewModels
+import androidx.core.content.edit
+import androidx.fragment.app.viewModels
 import com.example.cobarecipesapp.R
 
 
@@ -23,7 +24,7 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
     private val binding
         get() = _binding ?: throw IllegalStateException("Binding is null")
 
-    private val recipeViewModel: RecipeViewModel by activityViewModels()
+    private val recipeViewModel: RecipeViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
