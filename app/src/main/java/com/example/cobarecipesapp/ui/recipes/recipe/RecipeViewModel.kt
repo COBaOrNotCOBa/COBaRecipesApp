@@ -21,11 +21,13 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
         // TODO 'load from network'
 
         val recipe = STUB.getRecipeById(recipeId)
+        val image = getRecipeImage(recipe.imageUrl)
+
         _recipeState.value = RecipeState(
             recipe = recipe,
             isFavorite = checkIsFavorite(recipeId),
             portionsCount = _recipeState.value?.portionsCount ?: 1,
-            recipeImage = getRecipeImage(),
+            recipeImage = image,
         )
     }
 
@@ -52,21 +54,10 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
         return getFavorites().contains(recipeId.toString())
     }
 
-    private fun getFavorites(): MutableSet<String> {
-        val sharedPrefs = getApplication<Application>().applicationContext.getSharedPreferences(
-            FAVORITE_PREFS_KEY, Context.MODE_PRIVATE
-        )
-        return HashSet(
-            sharedPrefs?.getStringSet(FAVORITE_RECIPES_KEY, HashSet())
-                ?: mutableSetOf()
-        )
-    }
-
-    private fun getRecipeImage(): Drawable? {
+    private fun getRecipeImage(imageUrl : String): Drawable? {
         return try {
-            val recipeImage = recipeState.value?.recipeImage
             Drawable.createFromStream(
-                getApplication<Application>().assets.open(recipeImage.toString()),
+                getApplication<Application>().assets.open(imageUrl),
                 null
             )
         } catch (e: Exception) {
@@ -77,6 +68,16 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
             )
             null
         }
+    }
+
+    private fun getFavorites(): MutableSet<String> {
+        val sharedPrefs = getApplication<Application>().applicationContext.getSharedPreferences(
+            FAVORITE_PREFS_KEY, Context.MODE_PRIVATE
+        )
+        return HashSet(
+            sharedPrefs?.getStringSet(FAVORITE_RECIPES_KEY, HashSet())
+                ?: mutableSetOf()
+        )
     }
 
     private fun saveFavorites(favoritesId: Set<String>) {

@@ -1,7 +1,6 @@
 package com.example.cobarecipesapp.ui.recipes.recipe
 
 import android.annotation.SuppressLint
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -62,7 +61,7 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
                 with(binding) {
                     tvRecipeNameHeader.text = recipe.title
 
-                ivRecipeImageHeader.setImageDrawable(state.recipeImage)
+                    ivRecipeImageHeader.setImageDrawable(state.recipeImage)
 
                     updateHeartIconState(state.isFavorite)
 
@@ -74,13 +73,14 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
                         ingredientAdapter.updateIngredients(state.portionsCount)
                     }
 
-                Log.i(
-                    "!!!",
-                    "isFavorite = ${state.isFavorite}"
-                )
+                    Log.i(
+                        "!!!",
+                        "isFavorite = ${state.isFavorite}"
+                    )
+                }
             }
         }
-    }}
+    }
 
     private fun initRecycler() {
         with(binding) {
