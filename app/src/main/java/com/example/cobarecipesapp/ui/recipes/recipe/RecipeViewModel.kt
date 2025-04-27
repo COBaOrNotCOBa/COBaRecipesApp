@@ -20,12 +20,30 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
         // TODO 'load from network'
 
         val recipe = STUB.getRecipeById(recipeId)
-        val currentState = recipeState.value ?: RecipeState()
-        _recipeState.value = currentState.copy(
+        _recipeState.value = RecipeState(
             recipe = recipe,
             isFavorite = checkIsFavorite(recipeId),
-            portionsCount = currentState.portionsCount ?: 1,
+            portionsCount = _recipeState.value?.portionsCount ?: 1,
         )
+    }
+
+    fun onFavoritesClicked() {
+        _recipeState.value?.let { currentState ->
+            _recipeState.value = currentState.copy(isFavorite = !currentState.isFavorite)
+
+            currentState.recipe?.id?.toString()?.let { recipeId ->
+                val favorites = getFavorites().apply {
+                    if (currentState.isFavorite) remove(recipeId) else add(recipeId)
+                }
+                saveFavorites(favorites)
+            }
+        }
+    }
+
+    fun updatePortionsCount(count: Int) {
+        _recipeState.value?.let { currentState ->
+            _recipeState.value = currentState.copy(portionsCount = count)
+        }
     }
 
     private fun checkIsFavorite(recipeId: Int): Boolean {
@@ -40,20 +58,6 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
             sharedPrefs?.getStringSet(FAVORITE_RECIPES_KEY, HashSet())
                 ?: mutableSetOf()
         )
-    }
-
-    fun onFavoritesClicked() {
-        val currentState = recipeState.value ?: RecipeState()
-        val currentFavoriteStatus = currentState.isFavorite
-        _recipeState.value = currentState.copy(
-            isFavorite = !currentFavoriteStatus
-        )
-
-        val recipeId = currentState.recipe?.id?.toString() ?: return
-        val favorites = getFavorites().apply {
-            if (currentFavoriteStatus) remove(recipeId) else add(recipeId)
-        }
-        saveFavorites(favorites)
     }
 
     private fun saveFavorites(favoritesId: Set<String>) {
@@ -73,7 +77,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
     data class RecipeState(
         val recipe: Recipe? = null,
         val isFavorite: Boolean = false,
-        val portionsCount: Int? = null,
+        val portionsCount: Int = 1,
     )
 
     companion object {
