@@ -21,27 +21,45 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
         // TODO 'load from network'
 
         val recipe = STUB.getRecipeById(recipeId)
-        val currentState = recipeState.value ?: RecipeState()
-        _recipeState.value = currentState.copy(
+        _recipeState.value = RecipeState(
             recipe = recipe,
             isFavorite = checkIsFavorite(recipeId),
-            portionsCount = currentState.portionsCount ?: 1,
-            recipeImage = getRecipeImage()
+            portionsCount = _recipeState.value?.portionsCount ?: 1,
+            recipeImage = getRecipeImage(),
         )
     }
 
     fun onFavoritesClicked() {
-        val currentState = recipeState.value ?: RecipeState()
-        val currentFavoriteStatus = currentState.isFavorite
-        _recipeState.value = currentState.copy(
-            isFavorite = !currentFavoriteStatus
-        )
+        _recipeState.value?.let { currentState ->
+            _recipeState.value = currentState.copy(isFavorite = !currentState.isFavorite)
 
-        val recipeId = currentState.recipe?.id?.toString() ?: return
-        val favorites = getFavorites().apply {
-            if (currentFavoriteStatus) remove(recipeId) else add(recipeId)
+            currentState.recipe?.id?.toString()?.let { recipeId ->
+                val favorites = getFavorites().apply {
+                    if (currentState.isFavorite) remove(recipeId) else add(recipeId)
+                }
+                saveFavorites(favorites)
+            }
         }
-        saveFavorites(favorites)
+    }
+
+    fun updatePortionsCount(count: Int) {
+        _recipeState.value?.let { currentState ->
+            _recipeState.value = currentState.copy(portionsCount = count)
+        }
+    }
+
+    private fun checkIsFavorite(recipeId: Int): Boolean {
+        return getFavorites().contains(recipeId.toString())
+    }
+
+    private fun getFavorites(): MutableSet<String> {
+        val sharedPrefs = getApplication<Application>().applicationContext.getSharedPreferences(
+            FAVORITE_PREFS_KEY, Context.MODE_PRIVATE
+        )
+        return HashSet(
+            sharedPrefs?.getStringSet(FAVORITE_RECIPES_KEY, HashSet())
+                ?: mutableSetOf()
+        )
     }
 
     private fun getRecipeImage(): Drawable? {
@@ -61,20 +79,6 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    private fun checkIsFavorite(recipeId: Int): Boolean {
-        return getFavorites().contains(recipeId.toString())
-    }
-
-    private fun getFavorites(): MutableSet<String> {
-        val sharedPrefs = getApplication<Application>().applicationContext.getSharedPreferences(
-            FAVORITE_PREFS_KEY, Context.MODE_PRIVATE
-        )
-        return HashSet(
-            sharedPrefs?.getStringSet(FAVORITE_RECIPES_KEY, HashSet())
-                ?: mutableSetOf()
-        )
-    }
-
     private fun saveFavorites(favoritesId: Set<String>) {
         val sharedPrefs = getApplication<Application>().applicationContext.getSharedPreferences(
             FAVORITE_PREFS_KEY, Context.MODE_PRIVATE
@@ -92,7 +96,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
     data class RecipeState(
         val recipe: Recipe? = null,
         val isFavorite: Boolean = false,
-        val portionsCount: Int? = null,
+        val portionsCount: Int = 1,
         val recipeImage : Drawable? = null,
     )
 

@@ -59,15 +59,20 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
         recipeViewModel.recipeState.observe(viewLifecycleOwner) { state ->
             state.recipe?.let { recipe ->
 
-                binding.tvRecipeNameHeader.text = recipe.title
+                with(binding) {
+                    tvRecipeNameHeader.text = recipe.title
 
-                binding.ivRecipeImageHeader.setImageDrawable(state.recipeImage)
+                ivRecipeImageHeader.setImageDrawable(state.recipeImage)
 
-                updateHeartIconState(state.isFavorite)
+                    updateHeartIconState(state.isFavorite)
 
-                binding.ibHeartIcon.setOnClickListener {
-                    recipeViewModel.onFavoritesClicked()
-                }
+                    sbPortionsCount.progress = state.portionsCount
+                    tvPortionsCount.text = state.portionsCount.toString()
+
+                    ibHeartIcon.setOnClickListener {
+                        recipeViewModel.onFavoritesClicked()
+                        ingredientAdapter.updateIngredients(state.portionsCount)
+                    }
 
                 Log.i(
                     "!!!",
@@ -75,7 +80,7 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
                 )
             }
         }
-    }
+    }}
 
     private fun initRecycler() {
         with(binding) {
@@ -86,12 +91,15 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
             rvMethod.addItemDecoration(methodDecoration)
 
             recipeViewModel.recipeState.observe(viewLifecycleOwner) { state ->
-
                 val ingredients = state.recipe?.ingredients ?: emptyList()
                 val method = state.recipe?.method ?: emptyList()
 
-                rvIngredients.adapter = IngredientsAdapter(ingredients)
+                ingredientAdapter = IngredientsAdapter(ingredients)
+                rvIngredients.adapter = ingredientAdapter
                 rvMethod.adapter = MethodAdapter(method)
+
+                sbPortionsCount.progress = state.portionsCount
+                tvPortionsCount.text = state.portionsCount.toString()
 
                 sbPortionsCount.setOnSeekBarChangeListener(object :
                     SeekBar.OnSeekBarChangeListener {
@@ -101,6 +109,7 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
                         progress: Int,
                         fromUser: Boolean
                     ) {
+                        recipeViewModel.updatePortionsCount(progress)
                         tvPortionsCount.text = progress.toString()
                         ingredientAdapter.updateIngredients(progress)
                     }
