@@ -21,13 +21,11 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
         // TODO 'load from network'
 
         val recipe = STUB.getRecipeById(recipeId)
-        val image = getRecipeImage(recipe.imageUrl)
-
         _recipeState.value = RecipeState(
             recipe = recipe,
             isFavorite = checkIsFavorite(recipeId),
             portionsCount = _recipeState.value?.portionsCount ?: 1,
-            recipeImage = image,
+            recipeImage = getRecipeImage(recipe.imageUrl),
         )
     }
 
