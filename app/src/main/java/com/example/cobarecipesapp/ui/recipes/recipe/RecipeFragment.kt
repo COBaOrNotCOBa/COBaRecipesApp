@@ -53,7 +53,6 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
         val recipeId = arguments?.getInt(ARG_RECIPE_ID)
             ?: throw IllegalStateException("Recipe ID not found in arguments");
         recipeViewModel.loadRecipe(recipeId)
-        Log.d("RECIPE ID!!!", "Received recipeId: $recipeId")
     }
 
     private fun initUI() {
@@ -62,7 +61,7 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
 
                 binding.tvRecipeNameHeader.text = recipe.title
 
-                loadRecipeImage(recipe.imageUrl)
+                binding.ivRecipeImageHeader.setImageDrawable(state.recipeImage)
 
                 updateHeartIconState(state.isFavorite)
 
@@ -116,20 +115,6 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
                 })
             }
         }
-    }
-
-    private fun loadRecipeImage(imageUrl: String) {
-        val drawable = try {
-            Drawable.createFromStream(view?.context?.assets?.open(imageUrl), null)
-        } catch (e: Exception) {
-            Log.e(
-                "ImageLoadError",
-                "Image not found: ${recipeViewModel.recipeState.value?.recipe?.title}",
-                e
-            )
-            null
-        }
-        binding.ivRecipeImageHeader.setImageDrawable(drawable)
     }
 
     private fun updateHeartIconState(isFavorite: Boolean) {
