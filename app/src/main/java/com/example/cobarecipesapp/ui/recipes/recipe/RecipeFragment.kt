@@ -57,6 +57,8 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
         with(binding) {
             val ingredientsDecoration = createDividerDecoration()
             val methodDecoration = createDividerDecoration()
+            rvIngredients.addItemDecoration(ingredientsDecoration)
+            rvMethod.addItemDecoration(methodDecoration)
 
             recipeViewModel.recipeState.observe(viewLifecycleOwner) { state ->
                 state.recipe?.let { recipe ->
@@ -69,9 +71,6 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
                         sbPortionsCount.progress = state.portionsCount
                         tvPortionsCount.text = state.portionsCount.toString()
                     }
-
-                    rvIngredients.addItemDecoration(ingredientsDecoration)
-                    rvMethod.addItemDecoration(methodDecoration)
 
                     val ingredients = recipe.ingredients
                     val method = recipe.method
