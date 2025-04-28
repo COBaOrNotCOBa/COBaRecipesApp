@@ -60,18 +60,15 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
 
                 with(binding) {
                     tvRecipeNameHeader.text = recipe.title
-
                     ivRecipeImageHeader.setImageDrawable(state.recipeImage)
-
                     updateHeartIconState(state.isFavorite)
 
-                    sbPortionsCount.progress = state.portionsCount
-                    tvPortionsCount.text = state.portionsCount.toString()
-
-                    ibHeartIcon.setOnClickListener {
-                        recipeViewModel.onFavoritesClicked()
-                        ingredientAdapter.updateIngredients(state.portionsCount)
+                    if (sbPortionsCount.progress != state.portionsCount) {
+                        sbPortionsCount.progress = state.portionsCount
+                        tvPortionsCount.text = state.portionsCount.toString()
                     }
+
+                    ibHeartIcon.setOnClickListener { recipeViewModel.onFavoritesClicked() }
 
                     Log.i(
                         "!!!",
@@ -90,39 +87,36 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
             rvIngredients.addItemDecoration(ingredientsDecoration)
             rvMethod.addItemDecoration(methodDecoration)
 
-            recipeViewModel.recipeState.observe(viewLifecycleOwner) { state ->
-                val ingredients = state.recipe?.ingredients ?: emptyList()
-                val method = state.recipe?.method ?: emptyList()
+            val recipe = recipeViewModel.recipeState.value?.recipe
+            val ingredients = recipe?.ingredients ?: emptyList()
+            val method = recipe?.method ?: emptyList()
 
-                ingredientAdapter = IngredientsAdapter(ingredients)
-                rvIngredients.adapter = ingredientAdapter
-                rvMethod.adapter = MethodAdapter(method)
+            ingredientAdapter = IngredientsAdapter(ingredients)
+            rvIngredients.adapter = ingredientAdapter
+            rvMethod.adapter = MethodAdapter(method)
 
-                sbPortionsCount.progress = state.portionsCount
-                tvPortionsCount.text = state.portionsCount.toString()
+            sbPortionsCount.setOnSeekBarChangeListener(object :
+                SeekBar.OnSeekBarChangeListener {
+                @SuppressLint("SetTextI18n")
+                override fun onProgressChanged(
+                    seekBar: SeekBar,
+                    progress: Int,
+                    fromUser: Boolean
+                ) {
+                    recipeViewModel.updatePortionsCount(progress)
+                    tvPortionsCount.text = progress.toString()
+                    ingredientAdapter.updateIngredients(progress)
+                }
 
-                sbPortionsCount.setOnSeekBarChangeListener(object :
-                    SeekBar.OnSeekBarChangeListener {
-                    @SuppressLint("SetTextI18n")
-                    override fun onProgressChanged(
-                        seekBar: SeekBar,
-                        progress: Int,
-                        fromUser: Boolean
-                    ) {
-                        recipeViewModel.updatePortionsCount(progress)
-                        tvPortionsCount.text = progress.toString()
-                        ingredientAdapter.updateIngredients(progress)
-                    }
+                override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                    Log.d("SeekBar", "Начало перемещения ползунка")
+                }
 
-                    override fun onStartTrackingTouch(seekBar: SeekBar?) {
-                        Log.d("SeekBar", "Начало перемещения ползунка")
-                    }
+                override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                    Log.d("SeekBar", "Конец перемещения ползунка")
+                }
+            })
 
-                    override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                        Log.d("SeekBar", "Конец перемещения ползунка")
-                    }
-                })
-            }
         }
     }
 

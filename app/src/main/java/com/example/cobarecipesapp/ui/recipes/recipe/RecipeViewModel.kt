@@ -1,5 +1,6 @@
 package com.example.cobarecipesapp.ui.recipes.recipe
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.graphics.drawable.Drawable
@@ -78,14 +79,14 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
         )
     }
 
+
     private fun saveFavorites(favoritesId: Set<String>) {
         val sharedPrefs = getApplication<Application>().applicationContext.getSharedPreferences(
             FAVORITE_PREFS_KEY, Context.MODE_PRIVATE
         ) ?: return
 
-        sharedPrefs.edit(commit = true) {
-            putStringSet(FAVORITE_RECIPES_KEY, favoritesId)
-        }
+        sharedPrefs.edit { putStringSet(FAVORITE_RECIPES_KEY, favoritesId) }
+
     }
 
     init {
