@@ -39,7 +39,6 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
 
         initBundleData()
         initUI()
-        initRecycler()
 
     }
 
@@ -55,10 +54,13 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
     }
 
     private fun initUI() {
-        recipeViewModel.recipeState.observe(viewLifecycleOwner) { state ->
-            state.recipe?.let { recipe ->
+        with(binding) {
+            val ingredientsDecoration = createDividerDecoration()
+            val methodDecoration = createDividerDecoration()
 
-                with(binding) {
+            recipeViewModel.recipeState.observe(viewLifecycleOwner) { state ->
+                state.recipe?.let { recipe ->
+
                     tvRecipeNameHeader.text = recipe.title
                     ivRecipeImageHeader.setImageDrawable(state.recipeImage)
                     updateHeartIconState(state.isFavorite)
@@ -68,6 +70,16 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
                         tvPortionsCount.text = state.portionsCount.toString()
                     }
 
+                    rvIngredients.addItemDecoration(ingredientsDecoration)
+                    rvMethod.addItemDecoration(methodDecoration)
+
+                    val ingredients = recipe.ingredients
+                    val method = recipe.method
+
+                    ingredientAdapter = IngredientsAdapter(ingredients)
+                    rvIngredients.adapter = ingredientAdapter
+                    rvMethod.adapter = MethodAdapter(method)
+
                     ibHeartIcon.setOnClickListener { recipeViewModel.onFavoritesClicked() }
 
                     Log.i(
@@ -76,24 +88,6 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
                     )
                 }
             }
-        }
-    }
-
-    private fun initRecycler() {
-        with(binding) {
-            val ingredientsDecoration = createDividerDecoration()
-            val methodDecoration = createDividerDecoration()
-
-            rvIngredients.addItemDecoration(ingredientsDecoration)
-            rvMethod.addItemDecoration(methodDecoration)
-
-            val recipe = recipeViewModel.recipeState.value?.recipe
-            val ingredients = recipe?.ingredients ?: emptyList()
-            val method = recipe?.method ?: emptyList()
-
-            ingredientAdapter = IngredientsAdapter(ingredients)
-            rvIngredients.adapter = ingredientAdapter
-            rvMethod.adapter = MethodAdapter(method)
 
             sbPortionsCount.setOnSeekBarChangeListener(object :
                 SeekBar.OnSeekBarChangeListener {
@@ -116,7 +110,6 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
                     Log.d("SeekBar", "Конец перемещения ползунка")
                 }
             })
-
         }
     }
 
