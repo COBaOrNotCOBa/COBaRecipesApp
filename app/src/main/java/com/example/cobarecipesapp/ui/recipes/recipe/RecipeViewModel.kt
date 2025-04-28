@@ -1,6 +1,5 @@
 package com.example.cobarecipesapp.ui.recipes.recipe
 
-import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.graphics.drawable.Drawable
