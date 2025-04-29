@@ -24,11 +24,9 @@ class IngredientsAdapter(private val dataSet: List<Ingredient>) :
         @SuppressLint("SetTextI18n")
         fun bind(ingredient: Ingredient) {
             with(binding) {
-
                 tvIngredientDescription.text = ingredient.description
-                tvIngredientQuantity.text = checkQuantityType(ingredient.quantity)
+                tvIngredientQuantity.text = calculateQuantity(ingredient.quantity)
                 tvIngredientUnitOfMeasure.text = ingredient.unitOfMeasure
-
             }
         }
     }
@@ -57,8 +55,7 @@ class IngredientsAdapter(private val dataSet: List<Ingredient>) :
     }
 
     @SuppressLint("DefaultLocale")
-    private fun checkQuantityType(ingredientQuantity: String): String {
-        val totalQuantity = ingredientQuantity.multiply(quantity)
-        return totalQuantity.toRoundedString()
-    }
+    private fun calculateQuantity(ingredientQuantity: String): String =
+        ingredientQuantity.multiply(quantity).toRoundedString()
+
 }

@@ -39,7 +39,6 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
 
         initBundleData()
         initUI()
-
     }
 
     override fun onDestroyView() {
@@ -54,62 +53,63 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
     }
 
     private fun initUI() {
+        initRecycler()
+        initObserve()
+        initSeekBar()
+    }
+
+    private fun initRecycler() {
         with(binding) {
             val ingredientsDecoration = createDividerDecoration()
             val methodDecoration = createDividerDecoration()
             rvIngredients.addItemDecoration(ingredientsDecoration)
             rvMethod.addItemDecoration(methodDecoration)
 
-            recipeViewModel.recipeState.observe(viewLifecycleOwner) { state ->
-                state.recipe?.let { recipe ->
+            val ingredients = recipeViewModel.recipeState.value?.recipe?.ingredients ?: emptyList()
+            val method = recipeViewModel.recipeState.value?.recipe?.method ?: emptyList()
+            ingredientAdapter = IngredientsAdapter(ingredients)
+            rvIngredients.adapter = ingredientAdapter
+            rvMethod.adapter = MethodAdapter(method)
+        }
+    }
 
+    private fun initObserve() {
+        recipeViewModel.recipeState.observe(viewLifecycleOwner) { state ->
+            state.recipe?.let { recipe ->
+                with(binding) {
                     tvRecipeNameHeader.text = recipe.title
                     ivRecipeImageHeader.setImageDrawable(state.recipeImage)
                     updateHeartIconState(state.isFavorite)
-
-                    if (sbPortionsCount.progress != state.portionsCount) {
-                        sbPortionsCount.progress = state.portionsCount
-                        tvPortionsCount.text = state.portionsCount.toString()
-                    }
-
-                    val ingredients = recipe.ingredients
-                    val method = recipe.method
-
-                    ingredientAdapter = IngredientsAdapter(ingredients)
-                    rvIngredients.adapter = ingredientAdapter
-                    rvMethod.adapter = MethodAdapter(method)
+                    sbPortionsCount.progress = state.portionsCount
+                    tvPortionsCount.text = state.portionsCount.toString()
+                    ingredientAdapter.updateIngredients(state.portionsCount)
 
                     ibHeartIcon.setOnClickListener { recipeViewModel.onFavoritesClicked() }
-
-                    Log.i(
-                        "!!!",
-                        "isFavorite = ${state.isFavorite}"
-                    )
                 }
             }
-
-            sbPortionsCount.setOnSeekBarChangeListener(object :
-                SeekBar.OnSeekBarChangeListener {
-                @SuppressLint("SetTextI18n")
-                override fun onProgressChanged(
-                    seekBar: SeekBar,
-                    progress: Int,
-                    fromUser: Boolean
-                ) {
-                    recipeViewModel.updatePortionsCount(progress)
-                    tvPortionsCount.text = progress.toString()
-                    ingredientAdapter.updateIngredients(progress)
-                }
-
-                override fun onStartTrackingTouch(seekBar: SeekBar?) {
-                    Log.d("SeekBar", "Начало перемещения ползунка")
-                }
-
-                override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                    Log.d("SeekBar", "Конец перемещения ползунка")
-                }
-            })
         }
+    }
+
+    private fun initSeekBar() {
+        binding.sbPortionsCount.setOnSeekBarChangeListener(object :
+            SeekBar.OnSeekBarChangeListener {
+            @SuppressLint("SetTextI18n")
+            override fun onProgressChanged(
+                seekBar: SeekBar,
+                progress: Int,
+                fromUser: Boolean
+            ) {
+                recipeViewModel.updatePortionsCount(progress)
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                Log.d("SeekBar", "Начало перемещения ползунка")
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                Log.d("SeekBar", "Конец перемещения ползунка")
+            }
+        })
     }
 
     private fun updateHeartIconState(isFavorite: Boolean) {
