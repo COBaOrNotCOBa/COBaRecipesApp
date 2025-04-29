@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
+import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,6 +17,21 @@ import androidx.fragment.app.viewModels
 import com.example.cobarecipesapp.R
 
 
+class PortionSeekBarListener(val onChangeIngredients: (Int) -> Unit) : OnSeekBarChangeListener {
+    override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+        onChangeIngredients(progress)
+    }
+
+    override fun onStartTrackingTouch(seekBar: SeekBar?) {
+        Log.d("SeekBar", "Начало перемещения ползунка")
+    }
+
+    override fun onStopTrackingTouch(seekBar: SeekBar?) {
+        Log.d("SeekBar", "Конец перемещения ползунка")
+    }
+
+}
+
 class RecipeFragment : Fragment(R.layout.fragment_recipe) {
 
     private var _binding: FragmentRecipeBinding? = null
@@ -24,6 +40,7 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
 
     private val recipeViewModel: RecipeViewModel by viewModels()
     private lateinit var ingredientAdapter: IngredientsAdapter
+    private lateinit var methodAdapter: MethodAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -65,14 +82,15 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
             rvIngredients.addItemDecoration(ingredientsDecoration)
             rvMethod.addItemDecoration(methodDecoration)
 
-            val ingredients = recipeViewModel.recipeState.value?.recipe?.ingredients ?: emptyList()
-            val method = recipeViewModel.recipeState.value?.recipe?.method ?: emptyList()
-            ingredientAdapter = IngredientsAdapter(ingredients)
+            ingredientAdapter = IngredientsAdapter(emptyList())
+            methodAdapter = MethodAdapter(emptyList())
+
             rvIngredients.adapter = ingredientAdapter
-            rvMethod.adapter = MethodAdapter(method)
+            rvMethod.adapter = methodAdapter
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun initObserve() {
         recipeViewModel.recipeState.observe(viewLifecycleOwner) { state ->
             state.recipe?.let { recipe ->
@@ -82,7 +100,12 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
                     updateHeartIconState(state.isFavorite)
                     sbPortionsCount.progress = state.portionsCount
                     tvPortionsCount.text = state.portionsCount.toString()
+
+                    ingredientAdapter.dataSet = recipe.ingredients
                     ingredientAdapter.updateIngredients(state.portionsCount)
+
+                    methodAdapter.dataSet = recipe.method
+                    methodAdapter.notifyDataSetChanged()
 
                     ibHeartIcon.setOnClickListener { recipeViewModel.onFavoritesClicked() }
                 }
@@ -91,24 +114,8 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
     }
 
     private fun initSeekBar() {
-        binding.sbPortionsCount.setOnSeekBarChangeListener(object :
-            SeekBar.OnSeekBarChangeListener {
-            @SuppressLint("SetTextI18n")
-            override fun onProgressChanged(
-                seekBar: SeekBar,
-                progress: Int,
-                fromUser: Boolean
-            ) {
-                recipeViewModel.updatePortionsCount(progress)
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-                Log.d("SeekBar", "Начало перемещения ползунка")
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                Log.d("SeekBar", "Конец перемещения ползунка")
-            }
+        binding.sbPortionsCount.setOnSeekBarChangeListener(PortionSeekBarListener { progress ->
+            recipeViewModel.updatePortionsCount(progress)
         })
     }
 
