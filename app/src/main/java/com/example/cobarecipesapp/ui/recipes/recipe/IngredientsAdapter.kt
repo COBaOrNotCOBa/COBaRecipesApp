@@ -50,8 +50,10 @@ class IngredientsAdapter(private val dataSet: List<Ingredient>) :
 
     @SuppressLint("NotifyDataSetChanged")
     fun updateIngredients(progress: Int) {
-        quantity = progress
-        notifyDataSetChanged()
+        if (quantity != progress) {
+            quantity = progress
+            notifyDataSetChanged()
+        }
     }
 
     @SuppressLint("DefaultLocale")
