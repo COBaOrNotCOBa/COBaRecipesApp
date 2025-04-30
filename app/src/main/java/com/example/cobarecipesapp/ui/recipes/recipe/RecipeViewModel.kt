@@ -1,8 +1,8 @@
 package com.example.cobarecipesapp.ui.recipes.recipe
 
-import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.util.Log
 import androidx.core.content.edit
 import androidx.lifecycle.AndroidViewModel
@@ -25,6 +25,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
             recipe = recipe,
             isFavorite = checkIsFavorite(recipeId),
             portionsCount = _recipeState.value?.portionsCount ?: 1,
+            recipeImage = getRecipeImage(recipe.imageUrl),
         )
     }
 
@@ -49,6 +50,22 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
 
     private fun checkIsFavorite(recipeId: Int): Boolean {
         return getFavorites().contains(recipeId.toString())
+    }
+
+    private fun getRecipeImage(imageUrl : String): Drawable? {
+        return try {
+            Drawable.createFromStream(
+                getApplication<Application>().assets.open(imageUrl),
+                null
+            )
+        } catch (e: Exception) {
+            Log.e(
+                "ImageLoadError",
+                "Image not found: ${recipeState.value?.recipe?.title}",
+                e
+            )
+            null
+        }
     }
 
     private fun getFavorites(): MutableSet<String> {
@@ -79,6 +96,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
         val recipe: Recipe? = null,
         val isFavorite: Boolean = false,
         val portionsCount: Int = 1,
+        val recipeImage : Drawable? = null,
     )
 
     companion object {

@@ -1,7 +1,6 @@
 package com.example.cobarecipesapp.ui.recipes.recipe
 
 import android.annotation.SuppressLint
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -61,7 +60,7 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
 
                 with(binding) {
                     tvRecipeNameHeader.text = recipe.title
-                    loadRecipeImage(recipe.imageUrl)
+                    ivRecipeImageHeader.setImageDrawable(state.recipeImage)
                     updateHeartIconState(state.isFavorite)
 
                     if (sbPortionsCount.progress != state.portionsCount) {
@@ -119,20 +118,6 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
             })
 
         }
-    }
-
-    private fun loadRecipeImage(imageUrl: String) {
-        val drawable = try {
-            Drawable.createFromStream(view?.context?.assets?.open(imageUrl), null)
-        } catch (e: Exception) {
-            Log.e(
-                "ImageLoadError",
-                "Image not found: ${recipeViewModel.recipeState.value?.recipe?.title}",
-                e
-            )
-            null
-        }
-        binding.ivRecipeImageHeader.setImageDrawable(drawable)
     }
 
     private fun updateHeartIconState(isFavorite: Boolean) {
