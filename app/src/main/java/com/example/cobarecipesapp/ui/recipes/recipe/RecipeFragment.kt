@@ -24,6 +24,7 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
 
     private val recipeViewModel: RecipeViewModel by viewModels()
     private lateinit var ingredientAdapter: IngredientsAdapter
+    private lateinit var methodAdapter: MethodAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,23 +54,27 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
     }
 
     private fun initUI() {
+        initAdapters()
         initRecycler()
         initObserve()
         initSeekBar()
+    }
+
+    private fun initAdapters() {
+        ingredientAdapter = IngredientsAdapter()
+        methodAdapter = MethodAdapter()
     }
 
     private fun initRecycler() {
         with(binding) {
             val ingredientsDecoration = createDividerDecoration()
             val methodDecoration = createDividerDecoration()
+
             rvIngredients.addItemDecoration(ingredientsDecoration)
             rvMethod.addItemDecoration(methodDecoration)
 
-            val ingredients = recipeViewModel.recipeState.value?.recipe?.ingredients ?: emptyList()
-            val method = recipeViewModel.recipeState.value?.recipe?.method ?: emptyList()
-            ingredientAdapter = IngredientsAdapter(ingredients)
             rvIngredients.adapter = ingredientAdapter
-            rvMethod.adapter = MethodAdapter(method)
+            rvMethod.adapter = methodAdapter
         }
     }
 
@@ -82,7 +87,10 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
                     updateHeartIconState(state.isFavorite)
                     sbPortionsCount.progress = state.portionsCount
                     tvPortionsCount.text = state.portionsCount.toString()
+
+                    ingredientAdapter.updateData(recipe.ingredients)
                     ingredientAdapter.updateIngredients(state.portionsCount)
+                    methodAdapter.updateData(recipe.method)
 
                     ibHeartIcon.setOnClickListener { recipeViewModel.onFavoritesClicked() }
                 }
