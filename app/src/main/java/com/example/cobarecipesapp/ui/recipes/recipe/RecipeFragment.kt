@@ -82,8 +82,8 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
             rvIngredients.addItemDecoration(ingredientsDecoration)
             rvMethod.addItemDecoration(methodDecoration)
 
-            ingredientAdapter = IngredientsAdapter(emptyList())
-            methodAdapter = MethodAdapter(emptyList())
+            ingredientAdapter = IngredientsAdapter()
+            methodAdapter = MethodAdapter()
 
             rvIngredients.adapter = ingredientAdapter
             rvMethod.adapter = methodAdapter

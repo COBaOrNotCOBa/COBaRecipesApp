@@ -10,7 +10,7 @@ import com.example.cobarecipesapp.utils.multiply
 import com.example.cobarecipesapp.utils.toRoundedString
 
 
-class IngredientsAdapter(var dataSet: List<Ingredient>) :
+class IngredientsAdapter(var dataSet: List<Ingredient> = emptyList()) :
     RecyclerView.Adapter<IngredientsAdapter.ViewHolder>() {
 
     companion object {
