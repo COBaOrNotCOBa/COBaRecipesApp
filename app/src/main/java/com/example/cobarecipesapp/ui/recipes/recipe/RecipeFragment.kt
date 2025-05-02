@@ -75,8 +75,8 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
 
     private fun initObserve() {
         recipeViewModel.recipeState.observe(viewLifecycleOwner) { state ->
-            state.recipe?.let { recipe ->
-                with(binding) {
+            with(binding) {
+                state.recipe?.let { recipe ->
                     tvRecipeNameHeader.text = recipe.title
                     ivRecipeImageHeader.setImageDrawable(state.recipeImage)
                     updateHeartIconState(state.isFavorite)
