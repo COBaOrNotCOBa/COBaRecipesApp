@@ -52,7 +52,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
         return getFavorites().contains(recipeId.toString())
     }
 
-    private fun getRecipeImage(imageUrl : String): Drawable? {
+    private fun getRecipeImage(imageUrl: String): Drawable? {
         return try {
             Drawable.createFromStream(
                 getApplication<Application>().assets.open(imageUrl),
@@ -78,14 +78,12 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
         )
     }
 
-
     private fun saveFavorites(favoritesId: Set<String>) {
         val sharedPrefs = getApplication<Application>().applicationContext.getSharedPreferences(
             FAVORITE_PREFS_KEY, Context.MODE_PRIVATE
         ) ?: return
 
         sharedPrefs.edit { putStringSet(FAVORITE_RECIPES_KEY, favoritesId) }
-
     }
 
     init {
@@ -96,7 +94,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
         val recipe: Recipe? = null,
         val isFavorite: Boolean = false,
         val portionsCount: Int = 1,
-        val recipeImage : Drawable? = null,
+        val recipeImage: Drawable? = null,
     )
 
     companion object {

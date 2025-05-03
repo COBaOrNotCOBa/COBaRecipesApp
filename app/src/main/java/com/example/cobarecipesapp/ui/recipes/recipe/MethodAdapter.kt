@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cobarecipesapp.databinding.ItemMethodBinding
 
-class MethodAdapter(private val dataSet: List<String>) :
+class MethodAdapter(private var dataSet: List<String> = emptyList()) :
     RecyclerView.Adapter<MethodAdapter.ViewHolder>() {
 
     inner class ViewHolder(private val binding: ItemMethodBinding) :
@@ -34,5 +34,11 @@ class MethodAdapter(private val dataSet: List<String>) :
         viewHolder.bind(dataSet[position])
 
     override fun getItemCount(): Int = dataSet.size
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateData(newDataSet: List<String>) {
+        dataSet = newDataSet
+        notifyDataSetChanged()
+    }
 
 }

@@ -9,7 +9,7 @@ import com.example.cobarecipesapp.model.Ingredient
 import com.example.cobarecipesapp.utils.multiply
 import com.example.cobarecipesapp.utils.toRoundedString
 
-class IngredientsAdapter(private val dataSet: List<Ingredient>) :
+class IngredientsAdapter(private var dataSet: List<Ingredient> = emptyList()) :
     RecyclerView.Adapter<IngredientsAdapter.ViewHolder>() {
 
     companion object {
@@ -24,11 +24,9 @@ class IngredientsAdapter(private val dataSet: List<Ingredient>) :
         @SuppressLint("SetTextI18n")
         fun bind(ingredient: Ingredient) {
             with(binding) {
-
                 tvIngredientDescription.text = ingredient.description
-                tvIngredientQuantity.text = checkQuantityType(ingredient.quantity)
+                tvIngredientQuantity.text = calculateQuantity(ingredient.quantity)
                 tvIngredientUnitOfMeasure.text = ingredient.unitOfMeasure
-
             }
         }
     }
@@ -51,6 +49,12 @@ class IngredientsAdapter(private val dataSet: List<Ingredient>) :
     override fun getItemCount(): Int = dataSet.size
 
     @SuppressLint("NotifyDataSetChanged")
+    fun updateData(newDataSet: List<Ingredient>) {
+        dataSet = newDataSet
+        notifyDataSetChanged()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
     fun updateIngredients(progress: Int) {
         if (quantity != progress) {
             quantity = progress
@@ -59,8 +63,7 @@ class IngredientsAdapter(private val dataSet: List<Ingredient>) :
     }
 
     @SuppressLint("DefaultLocale")
-    private fun checkQuantityType(ingredientQuantity: String): String {
-        val totalQuantity = ingredientQuantity.multiply(quantity)
-        return totalQuantity.toRoundedString()
-    }
+    private fun calculateQuantity(ingredientQuantity: String): String =
+        ingredientQuantity.multiply(quantity).toRoundedString()
+
 }
