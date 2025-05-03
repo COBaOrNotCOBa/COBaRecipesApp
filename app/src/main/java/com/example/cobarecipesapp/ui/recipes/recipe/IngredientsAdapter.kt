@@ -50,6 +50,12 @@ class IngredientsAdapter(var dataSet: List<Ingredient> = emptyList()) :
     override fun getItemCount(): Int = dataSet.size
 
     @SuppressLint("NotifyDataSetChanged")
+    fun updateData(newDataSet: List<Ingredient>) {
+        dataSet = newDataSet
+        notifyDataSetChanged()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
     fun updateIngredients(progress: Int) {
         if (quantity != progress) {
             quantity = progress
