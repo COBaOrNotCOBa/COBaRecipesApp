@@ -1,6 +1,5 @@
 package com.example.cobarecipesapp.ui.recipes.recipe
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -94,7 +93,6 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     private fun initObserve() {
         recipeViewModel.recipeState.observe(viewLifecycleOwner) { state ->
             with(binding) {
@@ -105,8 +103,10 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
                     sbPortionsCount.progress = state.portionsCount
                     tvPortionsCount.text = state.portionsCount.toString()
 
-                    ingredientAdapter.updateData(recipe.ingredients)
-                    ingredientAdapter.updateIngredients(state.portionsCount)
+                    ingredientAdapter.apply {
+                        updateData(recipe.ingredients)
+                        updateIngredients(state.portionsCount)
+                    }
                     methodAdapter.updateData(recipe.method)
 
                     ibHeartIcon.setOnClickListener { recipeViewModel.onFavoritesClicked() }

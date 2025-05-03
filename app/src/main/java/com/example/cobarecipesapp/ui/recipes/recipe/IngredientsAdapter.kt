@@ -51,8 +51,10 @@ class IngredientsAdapter(var dataSet: List<Ingredient> = emptyList()) :
 
     @SuppressLint("NotifyDataSetChanged")
     fun updateData(newDataSet: List<Ingredient>) {
-        dataSet = newDataSet
-        notifyDataSetChanged()
+        if (dataSet != newDataSet) {
+            dataSet = newDataSet
+            notifyDataSetChanged()
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
