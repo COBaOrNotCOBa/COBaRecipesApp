@@ -1,6 +1,5 @@
 package com.example.cobarecipesapp.ui.recipes.recipe
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -70,42 +69,45 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
     }
 
     private fun initUI() {
+        initAdapters()
         initRecycler()
         initObserve()
         initSeekBar()
+    }
+
+    private fun initAdapters() {
+        ingredientAdapter = IngredientsAdapter()
+        methodAdapter = MethodAdapter()
     }
 
     private fun initRecycler() {
         with(binding) {
             val ingredientsDecoration = createDividerDecoration()
             val methodDecoration = createDividerDecoration()
+
             rvIngredients.addItemDecoration(ingredientsDecoration)
             rvMethod.addItemDecoration(methodDecoration)
-
-            ingredientAdapter = IngredientsAdapter(emptyList())
-            methodAdapter = MethodAdapter(emptyList())
 
             rvIngredients.adapter = ingredientAdapter
             rvMethod.adapter = methodAdapter
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     private fun initObserve() {
         recipeViewModel.recipeState.observe(viewLifecycleOwner) { state ->
-            state.recipe?.let { recipe ->
-                with(binding) {
+            with(binding) {
+                state.recipe?.let { recipe ->
                     tvRecipeNameHeader.text = recipe.title
                     ivRecipeImageHeader.setImageDrawable(state.recipeImage)
                     updateHeartIconState(state.isFavorite)
                     sbPortionsCount.progress = state.portionsCount
                     tvPortionsCount.text = state.portionsCount.toString()
 
-                    ingredientAdapter.dataSet = recipe.ingredients
-                    ingredientAdapter.updateIngredients(state.portionsCount)
-
-                    methodAdapter.dataSet = recipe.method
-                    methodAdapter.notifyDataSetChanged()
+                    ingredientAdapter.apply {
+                        updateData(recipe.ingredients)
+                        updateIngredients(state.portionsCount)
+                    }
+                    methodAdapter.updateData(recipe.method)
 
                     ibHeartIcon.setOnClickListener { recipeViewModel.onFavoritesClicked() }
                 }
