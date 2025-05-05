@@ -1,5 +1,6 @@
 package com.example.cobarecipesapp.ui.recipes.recipeList
 
+import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.LayoutInflater
@@ -74,8 +75,10 @@ class RecipesListAdapter(private var dataSet: List<Recipe> = emptyList()) :
         })
     }
 
-    private fun updateRecipes(){
-
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateRecipes(newDataSet: List<Recipe>) {
+        dataSet = newDataSet
+        notifyDataSetChanged()
     }
 
 }

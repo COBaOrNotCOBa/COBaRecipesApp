@@ -143,5 +143,4 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
     companion object {
         const val ARG_RECIPE_ID = "arg_recipe_id"
     }
-
 }

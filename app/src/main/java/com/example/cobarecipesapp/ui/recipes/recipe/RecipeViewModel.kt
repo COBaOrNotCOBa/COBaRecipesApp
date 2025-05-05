@@ -101,5 +101,4 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
         const val FAVORITE_RECIPES_KEY = "favorite_recipes_key"
         const val FAVORITE_PREFS_KEY = "favorite_prefs_key"
     }
-
 }

@@ -1,8 +1,6 @@
 package com.example.cobarecipesapp.ui.recipes.recipeList
 
-import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +10,6 @@ import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import androidx.fragment.app.viewModels
 import com.example.cobarecipesapp.R
-import com.example.cobarecipesapp.data.STUB
 import com.example.cobarecipesapp.databinding.FragmentListRecipesBinding
 import com.example.cobarecipesapp.ui.categories.CategoriesListFragment
 import com.example.cobarecipesapp.ui.recipes.recipe.RecipeFragment
@@ -24,10 +21,8 @@ class RecipesListFragment : Fragment(R.layout.fragment_list_recipes) {
     private val binding
         get() = _binding ?: throw IllegalStateException("Binding is null")
 
-    private var categoryId: Int? = null
-    private var categoryName: String? = null
-    private var categoryImageUrl: String? = null
     private val recipesListViewModel: RecipesListViewModel by viewModels()
+    private lateinit var recipesAdapter: RecipesListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,9 +46,11 @@ class RecipesListFragment : Fragment(R.layout.fragment_list_recipes) {
     }
 
     private fun initBundleData() {
-        val args = arguments ?: throw IllegalStateException("Arguments bundle is null")
-
-        val categoryId = args.getInt(CategoriesListFragment.ARG_CATEGORY_ID)
+        val args = arguments
+        val categoryId =
+            args?.getInt(CategoriesListFragment.ARG_CATEGORY_ID) ?: throw IllegalStateException(
+                "Category ID not found in arguments"
+            )
         val categoryName = args.getString(CategoriesListFragment.ARG_CATEGORY_NAME)
             ?: throw IllegalStateException("Category name not found in arguments")
         val categoryImageUrl = args.getString(CategoriesListFragment.ARG_CATEGORY_IMAGE_URL)
@@ -63,38 +60,23 @@ class RecipesListFragment : Fragment(R.layout.fragment_list_recipes) {
     }
 
     private fun initUI() {
-
-        initObserve()
+        recipesAdapter = RecipesListAdapter()
         initRecycler()
-//        binding.tvRecipesCategory.text = categoryName
-//        val drawable = try {
-//            Drawable.createFromStream(
-//                categoryImageUrl?.let { view.context.assets.open(it) },
-//                null
-//            )
-//        } catch (e: Exception) {
-//            Log.e("ImageLoadError", "Image not found: $categoryName", e)
-//            null
-//        }
-//        binding.ivRecipesHeader.setImageDrawable(drawable)
+        initObserve()
     }
 
     private fun initRecycler() {
-        val recipes = categoryId?.let { STUB.getRecipesByCategoryId(it) } ?: emptyList()
-        val recipesAdapter = RecipesListAdapter(recipes)
         binding.rvRecipes.adapter = recipesAdapter
-
         recipesAdapter.setOnItemClick { recipeId ->
             openRecipeByRecipeId(recipeId)
         }
-
     }
 
     private fun initObserve() {
         recipesListViewModel.recipesListState.observe(viewLifecycleOwner) { state ->
-
             binding.tvRecipesCategory.text = state.categoryName
             binding.ivRecipesHeader.setImageDrawable(state.categoryImage)
+            recipesAdapter.updateRecipes(state.recipes)
         }
     }
 
