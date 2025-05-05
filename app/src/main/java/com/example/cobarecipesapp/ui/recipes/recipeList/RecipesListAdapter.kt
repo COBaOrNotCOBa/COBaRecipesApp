@@ -9,7 +9,7 @@ import com.example.cobarecipesapp.R
 import com.example.cobarecipesapp.databinding.ItemRecipeBinding
 import com.example.cobarecipesapp.model.Recipe
 
-class RecipesListAdapter(private val dataSet: List<Recipe>) :
+class RecipesListAdapter(private var dataSet: List<Recipe> = emptyList()) :
     RecyclerView.Adapter<RecipesListAdapter.ViewHolder>() {
 
     interface OnItemClickListener {
@@ -18,7 +18,7 @@ class RecipesListAdapter(private val dataSet: List<Recipe>) :
 
     private var itemClickListener: OnItemClickListener? = null
 
-    fun setOnItemClickListener(listener: OnItemClickListener) {
+    private fun setOnItemClickListener(listener: OnItemClickListener) {
         this.itemClickListener = listener
     }
 
@@ -67,5 +67,15 @@ class RecipesListAdapter(private val dataSet: List<Recipe>) :
 
 
     override fun getItemCount() = dataSet.size
+
+    fun setOnItemClick(listener: (Int) -> Unit) {
+        setOnItemClickListener(object : OnItemClickListener {
+            override fun onItemClick(recipeId: Int) = listener(recipeId)
+        })
+    }
+
+    private fun updateRecipes(){
+
+    }
 
 }

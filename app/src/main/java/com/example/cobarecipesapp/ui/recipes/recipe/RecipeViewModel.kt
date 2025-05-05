@@ -61,7 +61,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
         } catch (e: Exception) {
             Log.e(
                 "ImageLoadError",
-                "Image not found: ${recipeState.value?.recipe?.title}",
+                "Image not found: ${_recipeState.value?.recipe?.title}",
                 e
             )
             null

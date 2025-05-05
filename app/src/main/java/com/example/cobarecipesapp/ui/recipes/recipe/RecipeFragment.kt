@@ -65,7 +65,7 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
 
     private fun initBundleData() {
         val recipeId = arguments?.getInt(ARG_RECIPE_ID)
-            ?: throw IllegalStateException("Recipe ID not found in arguments");
+            ?: throw IllegalStateException("Recipe ID not found in arguments")
         recipeViewModel.loadRecipe(recipeId)
     }
 
