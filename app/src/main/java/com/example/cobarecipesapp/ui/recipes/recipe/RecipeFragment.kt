@@ -16,21 +16,6 @@ import androidx.fragment.app.viewModels
 import com.example.cobarecipesapp.R
 
 
-class PortionSeekBarListener(val onChangeIngredients: (Int) -> Unit) : OnSeekBarChangeListener {
-    override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-        onChangeIngredients(progress)
-    }
-
-    override fun onStartTrackingTouch(seekBar: SeekBar?) {
-        Log.d("SeekBar", "Начало перемещения ползунка")
-    }
-
-    override fun onStopTrackingTouch(seekBar: SeekBar?) {
-        Log.d("SeekBar", "Конец перемещения ползунка")
-    }
-
-}
-
 class RecipeFragment : Fragment(R.layout.fragment_recipe) {
 
     private var _binding: FragmentRecipeBinding? = null
@@ -142,6 +127,22 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
 
     companion object {
         const val ARG_RECIPE_ID = "arg_recipe_id"
+    }
+
+    inner class PortionSeekBarListener(val onChangeIngredients: (Int) -> Unit) :
+        OnSeekBarChangeListener {
+        override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+            onChangeIngredients(progress)
+        }
+
+        override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            Log.d("SeekBar", "Начало перемещения ползунка")
+        }
+
+        override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            Log.d("SeekBar", "Конец перемещения ползунка")
+        }
+
     }
 
 }
