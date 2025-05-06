@@ -1,12 +1,12 @@
 package com.example.cobarecipesapp.ui.recipes.recipe
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
+import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -88,8 +88,10 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
                     sbPortionsCount.progress = state.portionsCount
                     tvPortionsCount.text = state.portionsCount.toString()
 
-                    ingredientAdapter.updateData(recipe.ingredients)
-                    ingredientAdapter.updateIngredients(state.portionsCount)
+                    ingredientAdapter.apply {
+                        updateData(recipe.ingredients)
+                        updateIngredients(state.portionsCount)
+                    }
                     methodAdapter.updateData(recipe.method)
 
                     ibHeartIcon.setOnClickListener { recipeViewModel.onFavoritesClicked() }
@@ -99,24 +101,8 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
     }
 
     private fun initSeekBar() {
-        binding.sbPortionsCount.setOnSeekBarChangeListener(object :
-            SeekBar.OnSeekBarChangeListener {
-            @SuppressLint("SetTextI18n")
-            override fun onProgressChanged(
-                seekBar: SeekBar,
-                progress: Int,
-                fromUser: Boolean
-            ) {
-                recipeViewModel.updatePortionsCount(progress)
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-                Log.d("SeekBar", "Начало перемещения ползунка")
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                Log.d("SeekBar", "Конец перемещения ползунка")
-            }
+        binding.sbPortionsCount.setOnSeekBarChangeListener(PortionSeekBarListener { progress ->
+            recipeViewModel.updatePortionsCount(progress)
         })
     }
 
@@ -141,6 +127,22 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
 
     companion object {
         const val ARG_RECIPE_ID = "arg_recipe_id"
+    }
+
+    inner class PortionSeekBarListener(val onChangeIngredients: (Int) -> Unit) :
+        OnSeekBarChangeListener {
+        override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+            onChangeIngredients(progress)
+        }
+
+        override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            Log.d("SeekBar", "Начало перемещения ползунка")
+        }
+
+        override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            Log.d("SeekBar", "Конец перемещения ползунка")
+        }
+
     }
 
 }

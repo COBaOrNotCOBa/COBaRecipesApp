@@ -9,7 +9,8 @@ import com.example.cobarecipesapp.model.Ingredient
 import com.example.cobarecipesapp.utils.multiply
 import com.example.cobarecipesapp.utils.toRoundedString
 
-class IngredientsAdapter(private var dataSet: List<Ingredient> = emptyList()) :
+
+class IngredientsAdapter(var dataSet: List<Ingredient> = emptyList()) :
     RecyclerView.Adapter<IngredientsAdapter.ViewHolder>() {
 
     companion object {
@@ -50,8 +51,10 @@ class IngredientsAdapter(private var dataSet: List<Ingredient> = emptyList()) :
 
     @SuppressLint("NotifyDataSetChanged")
     fun updateData(newDataSet: List<Ingredient>) {
-        dataSet = newDataSet
-        notifyDataSetChanged()
+        if (dataSet != newDataSet) {
+            dataSet = newDataSet
+            notifyDataSetChanged()
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")

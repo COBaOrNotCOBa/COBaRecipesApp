@@ -6,7 +6,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cobarecipesapp.databinding.ItemMethodBinding
 
-class MethodAdapter(private var dataSet: List<String> = emptyList()) :
+
+class MethodAdapter(var dataSet: List<String> = emptyList()) :
     RecyclerView.Adapter<MethodAdapter.ViewHolder>() {
 
     inner class ViewHolder(private val binding: ItemMethodBinding) :
