@@ -8,10 +8,11 @@
 /.idea/workspace.xml
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
+
 .DS_Store
 /build
 /captures
 .externalNativeBuild
 .cxx
 local.properties
-/.kotlin/sessions/kotlin-compiler-3830363822580613946.salive
+/.kotlin/*
