@@ -49,7 +49,7 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
 
     private fun initBundleData() {
         val recipeId = arguments?.getInt(ARG_RECIPE_ID)
-            ?: throw IllegalStateException("Recipe ID not found in arguments");
+            ?: throw IllegalStateException("Recipe ID not found in arguments")
         recipeViewModel.loadRecipe(recipeId)
     }
 
@@ -125,10 +125,6 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
         }
     }
 
-    companion object {
-        const val ARG_RECIPE_ID = "arg_recipe_id"
-    }
-
     inner class PortionSeekBarListener(val onChangeIngredients: (Int) -> Unit) :
         OnSeekBarChangeListener {
         override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -142,7 +138,10 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
         override fun onStopTrackingTouch(seekBar: SeekBar?) {
             Log.d("SeekBar", "Конец перемещения ползунка")
         }
+    }
 
+    companion object {
+        const val ARG_RECIPE_ID = "arg_recipe_id"
     }
 
 }

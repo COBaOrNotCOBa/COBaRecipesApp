@@ -1,5 +1,6 @@
 package com.example.cobarecipesapp.ui.categories
 
+import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,7 +10,7 @@ import com.example.cobarecipesapp.R
 import com.example.cobarecipesapp.databinding.ItemCategoryBinding
 import com.example.cobarecipesapp.model.Category
 
-class CategoriesListAdapter(private val dataSet: List<Category>) :
+class CategoriesListAdapter(private var dataSet: List<Category> = emptyList()) :
     RecyclerView.Adapter<CategoriesListAdapter.ViewHolder>() {
 
     interface OnItemClickListener {
@@ -67,5 +68,11 @@ class CategoriesListAdapter(private val dataSet: List<Category>) :
         viewHolder.bind(dataSet[position])
 
     override fun getItemCount() = dataSet.size
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateData(newDataSet: List<Category>) {
+        dataSet = newDataSet
+        notifyDataSetChanged()
+    }
 
 }

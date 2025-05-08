@@ -61,7 +61,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
         } catch (e: Exception) {
             Log.e(
                 "ImageLoadError",
-                "Image not found: ${recipeState.value?.recipe?.title}",
+                "Image not found: ${_recipeState.value?.recipe?.title}",
                 e
             )
             null
@@ -101,5 +101,4 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
         const val FAVORITE_RECIPES_KEY = "favorite_recipes_key"
         const val FAVORITE_PREFS_KEY = "favorite_prefs_key"
     }
-
 }

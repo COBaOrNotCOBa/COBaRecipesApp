@@ -8,8 +8,8 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
+import androidx.fragment.app.viewModels
 import com.example.cobarecipesapp.R
-import com.example.cobarecipesapp.data.STUB
 import com.example.cobarecipesapp.databinding.FragmentListCategoriesBinding
 import com.example.cobarecipesapp.ui.recipes.recipeList.RecipesListFragment
 
@@ -18,6 +18,9 @@ class CategoriesListFragment : Fragment(R.layout.fragment_list_categories) {
     private var _binding: FragmentListCategoriesBinding? = null
     private val binding
         get() = _binding ?: throw IllegalStateException("Binding is null")
+
+    private val categoriesViewModel: CategoryListViewModel by viewModels()
+    private lateinit var categoriesAdapter: CategoriesListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,7 +33,9 @@ class CategoriesListFragment : Fragment(R.layout.fragment_list_categories) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initRecycler()
+
+        categoriesViewModel.loadCategories()
+        initUI()
     }
 
     override fun onDestroyView() {
@@ -38,22 +43,32 @@ class CategoriesListFragment : Fragment(R.layout.fragment_list_categories) {
         _binding = null
     }
 
-    private fun initRecycler() {
-        val categoriesAdapter = CategoriesListAdapter(STUB.getCategories())
-        binding.rvCategories.adapter = categoriesAdapter
+    private fun initUI() {
+        initAdapter()
+        initObserve()
+    }
 
+    private fun initAdapter() {
+        categoriesAdapter = CategoriesListAdapter()
         categoriesAdapter.setOnItemClickListener(object :
             CategoriesListAdapter.OnItemClickListener {
             override fun onItemClick(categoryId: Int) {
                 openRecipesByCategoryId(categoryId)
             }
         })
+        binding.rvCategories.adapter = categoriesAdapter
+    }
+
+    private fun initObserve() {
+        categoriesViewModel.categoriesState.observe(viewLifecycleOwner) { state ->
+            categoriesAdapter.updateData(state.categories)
+        }
     }
 
     private fun openRecipesByCategoryId(categoryId: Int) {
-        val category = STUB.getCategories().first { categoryId == it.id }
-        val categoryName = category.title
-        val categoryImageUrl = category.imageUrl
+        val category = categoriesViewModel.loadCategoryById(categoryId)
+        val categoryName = category?.title ?: "Title category not found"
+        val categoryImageUrl = category?.imageUrl ?: "Image category not found"
         val bundle = bundleOf(
             ARG_CATEGORY_ID to categoryId,
             ARG_CATEGORY_NAME to categoryName,
