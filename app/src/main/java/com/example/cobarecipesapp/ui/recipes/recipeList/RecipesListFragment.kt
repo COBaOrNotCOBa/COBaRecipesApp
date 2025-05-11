@@ -4,14 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.cobarecipesapp.R
 import com.example.cobarecipesapp.databinding.FragmentListRecipesBinding
 import com.example.cobarecipesapp.ui.categories.CategoriesListFragment
-import com.example.cobarecipesapp.ui.recipes.recipe.RecipeFragment
 
 
 class RecipesListFragment : Fragment(R.layout.fragment_list_recipes) {
@@ -80,7 +78,8 @@ class RecipesListFragment : Fragment(R.layout.fragment_list_recipes) {
     }
 
     private fun openRecipeByRecipeId(recipeId: Int) {
-        val bundle = bundleOf(RecipeFragment.ARG_RECIPE_ID to recipeId)
-        findNavController().navigate(R.id.recipeFragment, args = bundle)
+        val action =
+            RecipesListFragmentDirections.actionRecipesListFragmentToRecipeFragment(recipeId)
+        findNavController().navigate(action)
     }
 }
