@@ -6,9 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
-import androidx.fragment.app.replace
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.example.cobarecipesapp.R
 import com.example.cobarecipesapp.databinding.FragmentListRecipesBinding
 import com.example.cobarecipesapp.ui.categories.CategoriesListFragment
@@ -82,11 +81,6 @@ class RecipesListFragment : Fragment(R.layout.fragment_list_recipes) {
 
     private fun openRecipeByRecipeId(recipeId: Int) {
         val bundle = bundleOf(RecipeFragment.ARG_RECIPE_ID to recipeId)
-
-        parentFragmentManager.commit {
-            setReorderingAllowed(true)
-            addToBackStack(null)
-            replace<RecipeFragment>(R.id.mainContainer, args = bundle)
-        }
+        findNavController().navigate(R.id.recipeFragment, args = bundle)
     }
 }
