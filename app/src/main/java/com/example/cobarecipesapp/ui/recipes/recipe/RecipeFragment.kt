@@ -24,9 +24,10 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
         get() = _binding ?: throw IllegalStateException("Binding is null")
 
     private val recipeViewModel: RecipeViewModel by viewModels()
+    private val argsRecipeFragment: RecipeFragmentArgs by navArgs()
     private lateinit var ingredientAdapter: IngredientsAdapter
     private lateinit var methodAdapter: MethodAdapter
-    private val argsRecipeFragment: RecipeFragmentArgs by navArgs()
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,7 +51,6 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
     }
 
     private fun initBundleData() {
-
         val recipeId = argsRecipeFragment.recipeId
         recipeViewModel.loadRecipe(recipeId)
     }
