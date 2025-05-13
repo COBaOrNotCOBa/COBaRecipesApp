@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import com.example.cobarecipesapp.R
 import com.example.cobarecipesapp.databinding.ActivityMainBinding
+import com.example.cobarecipesapp.ui.common.navigateWithAnimation
 
 
 class MainActivity : AppCompatActivity() {
@@ -19,11 +20,15 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.btnCategories.setOnClickListener {
-            findNavController(R.id.navHostFragment).navigate(R.id.categoriesListFragment)
+            findNavController(R.id.navHostFragment).navigateWithAnimation(
+                R.id.categoriesListFragment
+            )
         }
 
         binding.btnFavourites.setOnClickListener {
-            findNavController(R.id.navHostFragment).navigate(R.id.favoritesFragment)
+            findNavController(R.id.navHostFragment).navigateWithAnimation(
+                R.id.favoritesFragment,
+            )
         }
     }
 }
