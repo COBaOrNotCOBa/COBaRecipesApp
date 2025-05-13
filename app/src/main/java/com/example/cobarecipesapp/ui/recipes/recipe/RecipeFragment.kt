@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.cobarecipesapp.databinding.FragmentRecipeBinding
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.navArgs
 import com.example.cobarecipesapp.R
 
 
@@ -25,6 +26,7 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
     private val recipeViewModel: RecipeViewModel by viewModels()
     private lateinit var ingredientAdapter: IngredientsAdapter
     private lateinit var methodAdapter: MethodAdapter
+    private val argsRecipeFragment: RecipeFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,8 +50,8 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
     }
 
     private fun initBundleData() {
-        val recipeId = arguments?.getInt(ARG_RECIPE_ID)
-            ?: throw IllegalStateException("Recipe ID not found in arguments")
+
+        val recipeId = argsRecipeFragment.recipeId
         recipeViewModel.loadRecipe(recipeId)
     }
 
@@ -138,10 +140,6 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
         override fun onStopTrackingTouch(seekBar: SeekBar?) {
             Log.d("SeekBar", "Конец перемещения ползунка")
         }
-    }
-
-    companion object {
-        const val ARG_RECIPE_ID = "arg_recipe_id"
     }
 
 }
