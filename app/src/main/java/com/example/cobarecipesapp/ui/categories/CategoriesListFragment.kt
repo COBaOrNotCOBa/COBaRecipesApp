@@ -4,12 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.cobarecipesapp.R
 import com.example.cobarecipesapp.databinding.FragmentListCategoriesBinding
+import com.example.cobarecipesapp.ui.common.navigateWithAnimation
 
 
 class CategoriesListFragment : Fragment(R.layout.fragment_list_categories) {
@@ -66,19 +66,12 @@ class CategoriesListFragment : Fragment(R.layout.fragment_list_categories) {
 
     private fun openRecipesByCategoryId(categoryId: Int) {
         val category = categoriesViewModel.loadCategoryById(categoryId)
-        val categoryName = category?.title ?: "Title category not found"
-        val categoryImageUrl = category?.imageUrl ?: "Image category not found"
-        val bundle = bundleOf(
-            ARG_CATEGORY_ID to categoryId,
-            ARG_CATEGORY_NAME to categoryName,
-            ARG_CATEGORY_IMAGE_URL to categoryImageUrl
-        )
-        findNavController().navigate(R.id.recipesListFragment, args = bundle)
+            ?: throw IllegalStateException("Category with id $categoryId not found")
+        val action =
+            CategoriesListFragmentDirections.actionCategoriesListFragmentToRecipesListFragment(
+                category
+            )
+        findNavController().navigateWithAnimation(action)
     }
 
-    companion object {
-        const val ARG_CATEGORY_ID = "arg_category_id"
-        const val ARG_CATEGORY_NAME = "arg_category_name"
-        const val ARG_CATEGORY_IMAGE_URL = "arg_category_image_url"
-    }
 }

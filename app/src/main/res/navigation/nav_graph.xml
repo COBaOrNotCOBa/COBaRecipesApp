@@ -65,5 +65,9 @@
         <action
             android:id="@+id/action_recipesListFragment_to_favoritesFragment"
             app:destination="@id/favoritesFragment" />
+        <argument
+            android:name="category"
+            app:argType="com.example.cobarecipesapp.model.Category" />
     </fragment>
+
 </navigation>

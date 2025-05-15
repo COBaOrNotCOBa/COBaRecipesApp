@@ -7,9 +7,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.cobarecipesapp.R
 import com.example.cobarecipesapp.databinding.FragmentListRecipesBinding
-import com.example.cobarecipesapp.ui.categories.CategoriesListFragment
+import com.example.cobarecipesapp.ui.common.navigateWithAnimation
 
 
 class RecipesListFragment : Fragment(R.layout.fragment_list_recipes) {
@@ -19,6 +20,7 @@ class RecipesListFragment : Fragment(R.layout.fragment_list_recipes) {
         get() = _binding ?: throw IllegalStateException("Binding is null")
 
     private val recipesListViewModel: RecipesListViewModel by viewModels()
+    private val argsRecipeListFragment: RecipesListFragmentArgs by navArgs()
     private lateinit var recipesAdapter: RecipesListAdapter
 
     override fun onCreateView(
@@ -43,17 +45,8 @@ class RecipesListFragment : Fragment(R.layout.fragment_list_recipes) {
     }
 
     private fun initBundleData() {
-        val args = arguments
-        val categoryId =
-            args?.getInt(CategoriesListFragment.ARG_CATEGORY_ID) ?: throw IllegalStateException(
-                "Category ID not found in arguments"
-            )
-        val categoryName = args.getString(CategoriesListFragment.ARG_CATEGORY_NAME)
-            ?: throw IllegalStateException("Category name not found in arguments")
-        val categoryImageUrl = args.getString(CategoriesListFragment.ARG_CATEGORY_IMAGE_URL)
-            ?: throw IllegalStateException("Category image URL not found in arguments")
-
-        recipesListViewModel.loadRecipeList(categoryId, categoryName, categoryImageUrl)
+        val category = argsRecipeListFragment.category
+        recipesListViewModel.loadRecipeList(category.id, category.title, category.imageUrl)
     }
 
     private fun initUI() {
@@ -80,6 +73,6 @@ class RecipesListFragment : Fragment(R.layout.fragment_list_recipes) {
     private fun openRecipeByRecipeId(recipeId: Int) {
         val action =
             RecipesListFragmentDirections.actionRecipesListFragmentToRecipeFragment(recipeId)
-        findNavController().navigate(action)
+        findNavController().navigateWithAnimation(action)
     }
 }
