@@ -12,7 +12,7 @@ fun NavController.navigateWithAnimation(
 ) {
     val navOptions = NavOptions.Builder()
         .setEnterAnim(R.anim.slide_in_right)
-        .setExitAnim(R.anim.slide_out_left)
+        .setExitAnim(android.R.anim.slide_out_right)
         .setPopEnterAnim(android.R.anim.slide_in_left)
         .setPopExitAnim(android.R.anim.slide_out_right)
         .build()
@@ -24,7 +24,7 @@ fun NavController.navigateWithAnimation(
 ) {
     val navOptions = NavOptions.Builder()
         .setEnterAnim(R.anim.slide_in_right)
-        .setExitAnim(R.anim.slide_out_left)
+        .setExitAnim(android.R.anim.slide_out_right)
         .setPopEnterAnim(android.R.anim.slide_in_left)
         .setPopExitAnim(android.R.anim.slide_out_right)
         .build()
