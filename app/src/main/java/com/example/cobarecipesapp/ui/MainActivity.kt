@@ -38,10 +38,7 @@ class MainActivity : AppCompatActivity() {
             Log.i("!!!", "responseMessage: ${connection.responseMessage}")
             Log.i("!!!", "Body: $responseString")
 
-            val json = Json {
-                ignoreUnknownKeys = true
-                isLenient = true
-            }
+            val json = Json { ignoreUnknownKeys = true }
 
             val categories = json.decodeFromString<List<Category>>(responseString)
             Log.i("!!!", "Categories: $categories")
