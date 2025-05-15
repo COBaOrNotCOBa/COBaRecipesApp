@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.cobarecipesapp.R
 import com.example.cobarecipesapp.databinding.FragmentListRecipesBinding
+import com.example.cobarecipesapp.ui.common.navigateWithAnimation
 
 
 class RecipesListFragment : Fragment(R.layout.fragment_list_recipes) {
@@ -72,6 +73,6 @@ class RecipesListFragment : Fragment(R.layout.fragment_list_recipes) {
     private fun openRecipeByRecipeId(recipeId: Int) {
         val action =
             RecipesListFragmentDirections.actionRecipesListFragmentToRecipeFragment(recipeId)
-        findNavController().navigate(action)
+        findNavController().navigateWithAnimation(action)
     }
 }

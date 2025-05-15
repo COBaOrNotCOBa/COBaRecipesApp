@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.cobarecipesapp.R
 import com.example.cobarecipesapp.databinding.FragmentFavoritesBinding
+import com.example.cobarecipesapp.ui.common.navigateWithAnimation
 import com.example.cobarecipesapp.ui.recipes.recipeList.RecipesListAdapter
 
 
@@ -77,7 +78,7 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
     private fun openRecipeByRecipeId(recipeId: Int) {
         val action =
             FavoritesFragmentDirections.actionFavoritesFragmentToRecipeFragment(recipeId)
-        findNavController().navigate(action)
+        findNavController().navigateWithAnimation(action)
     }
 
     companion object {

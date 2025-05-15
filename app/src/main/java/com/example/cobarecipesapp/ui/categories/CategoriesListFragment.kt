@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.cobarecipesapp.R
 import com.example.cobarecipesapp.databinding.FragmentListCategoriesBinding
+import com.example.cobarecipesapp.ui.common.navigateWithAnimation
 
 
 class CategoriesListFragment : Fragment(R.layout.fragment_list_categories) {
@@ -70,7 +71,7 @@ class CategoriesListFragment : Fragment(R.layout.fragment_list_categories) {
             CategoriesListFragmentDirections.actionCategoriesListFragmentToRecipesListFragment(
                 category
             )
-        findNavController().navigate(action)
+        findNavController().navigateWithAnimation(action)
     }
 
 }
