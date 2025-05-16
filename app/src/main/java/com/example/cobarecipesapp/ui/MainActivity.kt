@@ -46,6 +46,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        threadPool.shutdown()
+        _binding = null
+    }
+
     private fun loadCategories() {
         threadPool.execute {
             Log.i("!!!", "Выполняю запрос на потоке: ${Thread.currentThread().name}")
@@ -81,12 +87,6 @@ class MainActivity : AppCompatActivity() {
                 Log.i("!!!", "RecipeList: $responseString в потоке:$threadName")
             }
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        threadPool.shutdown()
-        _binding = null
     }
 
 }
