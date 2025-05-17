@@ -7,10 +7,10 @@ import com.example.cobarecipesapp.R
 import com.example.cobarecipesapp.databinding.ActivityMainBinding
 import com.example.cobarecipesapp.model.Category
 import com.example.cobarecipesapp.ui.common.navigateWithAnimation
-import com.example.cobarecipesapp.utils.LoggingInterceptor
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.logging.HttpLoggingInterceptor
 import java.util.concurrent.Executors
 
 
@@ -22,12 +22,15 @@ class MainActivity : AppCompatActivity() {
 
     private val sizeThreadPool = 10
     private val threadPool = Executors.newFixedThreadPool(sizeThreadPool)
+
+    private val loggingInterceptor = HttpLoggingInterceptor().apply {
+        level = HttpLoggingInterceptor.Level.BODY
+    }
+
     private val client = OkHttpClient.Builder()
-        .addInterceptor(LoggingInterceptor())
+        .addInterceptor(loggingInterceptor)
         .build()
     private val json = Json { ignoreUnknownKeys = true }
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
