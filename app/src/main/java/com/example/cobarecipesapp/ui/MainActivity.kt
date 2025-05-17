@@ -1,16 +1,17 @@
 package com.example.cobarecipesapp.ui
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import com.example.cobarecipesapp.R
 import com.example.cobarecipesapp.databinding.ActivityMainBinding
 import com.example.cobarecipesapp.model.Category
 import com.example.cobarecipesapp.ui.common.navigateWithAnimation
+import com.example.cobarecipesapp.utils.LoggingInterceptor
 import kotlinx.serialization.json.Json
-import java.net.HttpURLConnection
-import java.net.URL
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import java.util.concurrent.Executors
 
 
 class MainActivity : AppCompatActivity() {
@@ -19,34 +20,19 @@ class MainActivity : AppCompatActivity() {
     private val binding
         get() = _binding ?: throw IllegalStateException("Binding is null")
 
+    private val sizeThreadPool = 10
+    private val threadPool = Executors.newFixedThreadPool(sizeThreadPool)
+    private val client = OkHttpClient.Builder()
+        .addInterceptor(LoggingInterceptor())
+        .build()
+    private val json = Json { ignoreUnknownKeys = true }
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val threadNameMainActivity = Thread.currentThread().name
-        Log.i("!!!", "Метод onCreate() выполняется на потоке: $threadNameMainActivity")
-
-        val thread = Thread {
-            val threadName = Thread.currentThread().name
-            Log.i("!!!", "Выполняю запрос на потоке: $threadName")
-
-            val url = URL("https://recipes.androidsprint.ru/api/category")
-            val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
-            connection.connect()
-
-            val responseString = connection.inputStream.bufferedReader().readText()
-            Log.i("!!!", "responseCode: ${connection.responseCode}")
-            Log.i("!!!", "responseMessage: ${connection.responseMessage}")
-            Log.i("!!!", "Body: $responseString")
-
-            val json = Json { ignoreUnknownKeys = true }
-
-            val categories = json.decodeFromString<List<Category>>(responseString)
-            Log.i("!!!", "Categories: $categories")
-
-        }
-
-        thread.start()
-
+        loadCategories()
 
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -63,4 +49,37 @@ class MainActivity : AppCompatActivity() {
             )
         }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        threadPool.shutdown()
+        _binding = null
+    }
+
+    private fun loadCategories() {
+        threadPool.execute {
+            val request: Request = Request.Builder()
+                .url("https://recipes.androidsprint.ru/api/category")
+                .build()
+
+            client.newCall(request).execute().use { response ->
+                val responseBody = response.body?.string() ?: return@execute
+                val categories = json.decodeFromString<List<Category>>(responseBody)
+                val categoryListId = categories.map { it.id }
+                loadRecipeList(categoryListId)
+            }
+        }
+    }
+
+    private fun loadRecipeList(categoryListId: List<Int>) {
+        categoryListId.forEach { id ->
+            threadPool.execute {
+                val request: Request = Request.Builder()
+                    .url("https://recipes.androidsprint.ru/api/recipes?ids=$id")
+                    .build()
+                client.newCall(request).execute()
+            }
+        }
+    }
+
 }
