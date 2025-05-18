@@ -33,6 +33,7 @@ class CategoriesListFragment : Fragment(R.layout.fragment_list_categories) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        categoriesViewModel.clearNavigation()
         categoriesViewModel.loadCategories()
         initUI()
     }
@@ -60,18 +61,21 @@ class CategoriesListFragment : Fragment(R.layout.fragment_list_categories) {
 
     private fun initObserve() {
         categoriesViewModel.categoriesState.observe(viewLifecycleOwner) { state ->
-            categoriesAdapter.updateData(state.categories)
+            state.categories.let {
+                categoriesAdapter.updateData(state.categories)
+            }
+        }
+        categoriesViewModel.selectedCategory.observe(viewLifecycleOwner) { category ->
+            category?.let {
+                val action = CategoriesListFragmentDirections
+                    .actionCategoriesListFragmentToRecipesListFragment(it)
+                findNavController().navigateWithAnimation(action)
+                categoriesViewModel.clearNavigation()
+            }
         }
     }
 
     private fun openRecipesByCategoryId(categoryId: Int) {
-        val category = categoriesViewModel.loadCategoryById(categoryId)
-            ?: throw IllegalStateException("Category with id $categoryId not found")
-        val action =
-            CategoriesListFragmentDirections.actionCategoriesListFragmentToRecipesListFragment(
-                category
-            )
-        findNavController().navigateWithAnimation(action)
+        categoriesViewModel.loadCategoryById(categoryId)
     }
-
 }

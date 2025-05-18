@@ -3,20 +3,33 @@ package com.example.cobarecipesapp.ui.recipes.favorites
 import android.app.Application
 import android.content.Context
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.cobarecipesapp.data.STUB
+import com.example.cobarecipesapp.data.ThreadPoolApp
+import com.example.cobarecipesapp.data.RecipesRepository
 import com.example.cobarecipesapp.model.Recipe
+import com.example.cobarecipesapp.utils.ToastHelper
 
 
 class FavoritesViewModel(application: Application) : AndroidViewModel(application) {
 
     private var _favoritesState = MutableLiveData(FavoritesState())
-    val favoritesState = _favoritesState
+    val favoritesState: LiveData<FavoritesState> = _favoritesState
+
+    val recipesRepository = RecipesRepository()
 
     fun loadFavorites() {
-        val favoritesId = getFavorites().map { it.toInt() }.toSet()
-        val favorites = STUB.getRecipesByIds(favoritesId)
-        _favoritesState.value = FavoritesState(favorites)
+        ThreadPoolApp.threadPool.execute {
+            try {
+                val favoritesId = getFavorites().joinToString(",")
+                val favorites = recipesRepository.getRecipesByIds(favoritesId)
+                favorites?.let {
+                    _favoritesState.postValue(FavoritesState(favorites))
+                } ?: ToastHelper.showToast("Ошибка получения данных")
+            } catch (e: Exception) {
+                ToastHelper.showToast("Ошибка сети")
+            }
+        }
     }
 
     private fun getFavorites(): MutableSet<String> {

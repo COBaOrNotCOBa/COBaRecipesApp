@@ -8,12 +8,8 @@ import kotlinx.serialization.SerialName
 @Serializable
 @Parcelize
 data class Category(
-    @SerialName("id")
     val id: Int,
-    @SerialName("title")
     val title: String,
-    @SerialName("description")
     val description: String,
-    @SerialName("imageUrl")
     val imageUrl: String,
 ) : Parcelable

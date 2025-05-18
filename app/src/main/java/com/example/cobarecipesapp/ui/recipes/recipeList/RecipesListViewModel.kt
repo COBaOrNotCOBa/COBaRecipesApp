@@ -4,27 +4,42 @@ import android.app.Application
 import android.graphics.drawable.Drawable
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.cobarecipesapp.data.STUB
+import com.example.cobarecipesapp.data.ThreadPoolApp
+import com.example.cobarecipesapp.data.RecipesRepository
 import com.example.cobarecipesapp.model.Recipe
+import com.example.cobarecipesapp.utils.ToastHelper
 
 
 class RecipesListViewModel(application: Application) : AndroidViewModel(application) {
 
     private var _recipesListState = MutableLiveData(RecipesListState())
-    val recipesListState = _recipesListState
+    val recipesListState: LiveData<RecipesListState> = _recipesListState
 
-    fun loadRecipeList(
-        categoryId: Int,
-        categoryName: String,
-        categoryImage: String,
-    ) {
-        val recipes = STUB.getRecipesByCategoryId(categoryId)
-        _recipesListState.value = RecipesListState(
-            recipes = recipes,
-            categoryName = categoryName,
-            categoryImage = getCategoryImage(categoryImage)
-        )
+    val recipesRepository = RecipesRepository()
+
+    fun loadRecipeList(categoryId: Int) {
+        ThreadPoolApp.threadPool.execute {
+            try {
+                val category = recipesRepository.getCategoryById(categoryId)
+                val recipes = recipesRepository.getRecipesByCategoryId(categoryId)
+
+                category?.let { category ->
+                    recipes?.let { recipes ->
+                        _recipesListState.postValue(
+                            RecipesListState(
+                                recipes = recipes,
+                                categoryName = category.title,
+                                categoryImage = getCategoryImage(category.imageUrl)
+                            )
+                        )
+                    } ?: ToastHelper.showToast("Ошибка получения данных")
+                } ?: ToastHelper.showToast("Ошибка получения данных")
+            } catch (e: Exception) {
+                ToastHelper.showToast("Ошибка сети")
+            }
+        }
     }
 
     private fun getCategoryImage(imageUrl: String): Drawable? {

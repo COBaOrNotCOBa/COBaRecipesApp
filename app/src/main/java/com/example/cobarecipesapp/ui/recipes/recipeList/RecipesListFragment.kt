@@ -45,8 +45,8 @@ class RecipesListFragment : Fragment(R.layout.fragment_list_recipes) {
     }
 
     private fun initBundleData() {
-        val category = argsRecipeListFragment.category
-        recipesListViewModel.loadRecipeList(category.id, category.title, category.imageUrl)
+        val categoryId = argsRecipeListFragment.category.id
+        recipesListViewModel.loadRecipeList(categoryId)
     }
 
     private fun initUI() {
