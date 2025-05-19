@@ -24,8 +24,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
     fun loadRecipe(recipeId: Int) {
         ThreadPoolApp.threadPool.execute {
             try {
-                val recipe = recipesRepository.getRecipeById(recipeId)
-                recipe?.let {
+                recipesRepository.getRecipeById(recipeId)?.let { recipe ->
                     _recipeState.postValue(
                         RecipeState(
                             recipe = recipe,

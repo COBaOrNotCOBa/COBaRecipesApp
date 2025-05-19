@@ -22,8 +22,7 @@ class FavoritesViewModel(application: Application) : AndroidViewModel(applicatio
         ThreadPoolApp.threadPool.execute {
             try {
                 val favoritesId = getFavorites().joinToString(",")
-                val favorites = recipesRepository.getRecipesByIds(favoritesId)
-                favorites?.let {
+                recipesRepository.getRecipesByIds(favoritesId)?.let { favorites ->
                     _favoritesState.postValue(FavoritesState(favorites))
                 } ?: ToastHelper.showToast("Ошибка получения данных")
             } catch (e: Exception) {
