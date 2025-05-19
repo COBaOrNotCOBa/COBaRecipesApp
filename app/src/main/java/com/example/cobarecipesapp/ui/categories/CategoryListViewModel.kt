@@ -36,8 +36,7 @@ class CategoryListViewModel(application: Application) : AndroidViewModel(applica
 
         ThreadPoolApp.threadPool.execute {
             try {
-                val category = recipesRepository.getCategoryById(categoryId)
-                category?.let {
+                recipesRepository.getCategoryById(categoryId)?.let { category ->
                     _selectedCategory.postValue(category)
                 } ?: ToastHelper.showToast("Ошибка получения данных")
             } catch (e: Exception) {
