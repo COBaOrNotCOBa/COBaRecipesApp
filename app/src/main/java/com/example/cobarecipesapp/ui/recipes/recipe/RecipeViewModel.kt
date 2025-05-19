@@ -2,8 +2,6 @@ package com.example.cobarecipesapp.ui.recipes.recipe
 
 import android.app.Application
 import android.content.Context
-import android.graphics.drawable.Drawable
-import android.util.Log
 import androidx.core.content.edit
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -19,11 +17,10 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
     private val _recipeState = MutableLiveData(RecipeState())
     val recipeState: LiveData<RecipeState> = _recipeState
 
-    val recipesRepository = RecipesRepository()
-
     fun loadRecipe(recipeId: Int) {
         ThreadPoolApp.threadPool.execute {
             try {
+                val recipesRepository = RecipesRepository()
                 val recipe = recipesRepository.getRecipeById(recipeId)
                 recipe?.let {
                     _recipeState.postValue(
@@ -31,11 +28,11 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
                             recipe = recipe,
                             isFavorite = checkIsFavorite(recipeId),
                             portionsCount = _recipeState.value?.portionsCount ?: 1,
-                            recipeImage = getRecipeImage(recipe.imageUrl),
+                            recipeImageUrl = recipesRepository.getFullImageUrl(recipe.imageUrl),
                         )
                     )
                 } ?: ToastHelper.showToast("Ошибка получения данных")
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 ToastHelper.showToast("Ошибка сети")
             }
         }
@@ -64,22 +61,6 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
         return getFavorites().contains(recipeId.toString())
     }
 
-    private fun getRecipeImage(imageUrl: String): Drawable? {
-        return try {
-            Drawable.createFromStream(
-                getApplication<Application>().assets.open(imageUrl),
-                null
-            )
-        } catch (e: Exception) {
-            Log.e(
-                "ImageLoadError",
-                "Image not found: ${_recipeState.value?.recipe?.title}",
-                e
-            )
-            null
-        }
-    }
-
     private fun getFavorites(): MutableSet<String> {
         val sharedPrefs = getApplication<Application>().applicationContext.getSharedPreferences(
             FAVORITE_PREFS_KEY, Context.MODE_PRIVATE
@@ -102,7 +83,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
         val recipe: Recipe? = null,
         val isFavorite: Boolean = false,
         val portionsCount: Int = 1,
-        val recipeImage: Drawable? = null,
+        val recipeImageUrl: String? = null,
     )
 
     companion object {

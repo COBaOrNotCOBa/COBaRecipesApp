@@ -14,6 +14,8 @@ import com.example.cobarecipesapp.databinding.FragmentRecipeBinding
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.cobarecipesapp.R
 
 
@@ -84,8 +86,10 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
         recipeViewModel.recipeState.observe(viewLifecycleOwner) { state ->
             with(binding) {
                 state.recipe?.let { recipe ->
-                    tvRecipeNameHeader.text = recipe.title
-                    ivRecipeImageHeader.setImageDrawable(state.recipeImage)
+                    if (binding.tvRecipeNameHeader.text.isEmpty()) {
+                        tvRecipeNameHeader.text = recipe.title
+                        loadRecipeImage(state.recipeImageUrl)
+                    }
                     updateHeartIconState(state.isFavorite)
                     sbPortionsCount.progress = state.portionsCount
                     tvPortionsCount.text = state.portionsCount.toString()
@@ -106,6 +110,16 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
         binding.sbPortionsCount.setOnSeekBarChangeListener(PortionSeekBarListener { progress ->
             recipeViewModel.updatePortionsCount(progress)
         })
+    }
+
+    private fun loadRecipeImage(recipeImageUrl: String?) {
+        Glide.with(requireContext())
+            .load(recipeImageUrl)
+            .transition(DrawableTransitionOptions.withCrossFade())
+            .placeholder(R.drawable.img_placeholder)
+            .error(R.drawable.img_error)
+            .centerCrop()
+            .into(binding.ivRecipeImageHeader)
     }
 
     private fun updateHeartIconState(isFavorite: Boolean) {

@@ -35,7 +35,7 @@ class RecipesRepository {
         return try {
             val recipeResponse = service.getRecipeById(recipeId).execute()
             recipeResponse.body()
-        } catch (e: IOException) {
+        } catch (_: IOException) {
             null
         }
     }
@@ -45,7 +45,7 @@ class RecipesRepository {
         return try {
             val recipesResponse = service.getRecipesByIds(favoritesId).execute()
             recipesResponse.body()
-        } catch (e: IOException) {
+        } catch (_: IOException) {
             null
         }
     }
@@ -55,7 +55,7 @@ class RecipesRepository {
         return try {
             val categoryByIdResponse = service.getCategoryById(categoryId).execute()
             categoryByIdResponse.body()
-        } catch (e: IOException) {
+        } catch (_: IOException) {
             null
         }
     }
@@ -65,7 +65,7 @@ class RecipesRepository {
         return try {
             val recipesByCategoryId = service.getRecipesByCategoryId(categoryId).execute()
             recipesByCategoryId.body()
-        } catch (e: IOException) {
+        } catch (_: IOException) {
             null
         }
     }
@@ -75,13 +75,16 @@ class RecipesRepository {
         return try {
             val categoriesResponse: Response<List<Category>> = service.getCategories().execute()
             categoriesResponse.body()
-        } catch (e: IOException) {
+        } catch (_: IOException) {
             null
         }
     }
 
+    fun getFullImageUrl(imageName: String) = "$BASE_IMAGES_URL$imageName"
+
     companion object {
         private const val BASE_URL = "https://recipes.androidsprint.ru/api/"
+        private const val BASE_IMAGES_URL = "${BASE_URL}images/"
     }
 
 }

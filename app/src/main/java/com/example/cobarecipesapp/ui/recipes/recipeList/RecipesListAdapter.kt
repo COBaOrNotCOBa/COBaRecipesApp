@@ -1,12 +1,13 @@
 package com.example.cobarecipesapp.ui.recipes.recipeList
 
 import android.annotation.SuppressLint
-import android.graphics.drawable.Drawable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.cobarecipesapp.R
+import com.example.cobarecipesapp.data.RecipesRepository
 import com.example.cobarecipesapp.databinding.ItemRecipeBinding
 import com.example.cobarecipesapp.model.Recipe
 
@@ -27,28 +28,29 @@ class RecipesListAdapter(private var dataSet: List<Recipe> = emptyList()) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(recipe: Recipe) {
-            with(binding) {
-                tvRecipeTitle.text = recipe.title
+            binding.tvRecipeTitle.text = recipe.title
 
-                val drawable = try {
-                    Drawable.createFromStream(
-                        itemView.context.assets.open(recipe.imageUrl),
-                        null
-                    )
-                } catch (e: Exception) {
-                    Log.e("ImageLoadError", "Image not found: ${recipe.title}", e)
-                    null
-                }
-                ivRecipeImage.setImageDrawable(drawable)
+            val recipesRepository = RecipesRepository()
+            val imageUrl = recipesRepository.getFullImageUrl(recipe.imageUrl)
+            loadRecipeImage(imageUrl)
 
-                val description = itemView.context.getString(
-                    R.string.image_recipe_description,
-                    recipe.title
-                )
-                ivRecipeImage.contentDescription = description
+            val description = itemView.context.getString(
+                R.string.image_recipe_description,
+                recipe.title
+            )
+            binding.ivRecipeImage.contentDescription = description
 
-                root.setOnClickListener { itemClickListener?.onItemClick(recipe.id) }
-            }
+            binding.root.setOnClickListener { itemClickListener?.onItemClick(recipe.id) }
+        }
+
+        private fun loadRecipeImage(imageUrl: String) {
+            Glide.with(itemView.context)
+                .load(imageUrl)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .placeholder(R.drawable.img_placeholder)
+                .error(R.drawable.img_error)
+                .centerCrop()
+                .into(binding.ivRecipeImage)
         }
 
     }

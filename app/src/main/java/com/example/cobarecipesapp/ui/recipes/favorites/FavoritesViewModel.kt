@@ -16,17 +16,16 @@ class FavoritesViewModel(application: Application) : AndroidViewModel(applicatio
     private var _favoritesState = MutableLiveData(FavoritesState())
     val favoritesState: LiveData<FavoritesState> = _favoritesState
 
-    val recipesRepository = RecipesRepository()
-
     fun loadFavorites() {
         ThreadPoolApp.threadPool.execute {
             try {
+                val recipesRepository = RecipesRepository()
                 val favoritesId = getFavorites().joinToString(",")
                 val favorites = recipesRepository.getRecipesByIds(favoritesId)
                 favorites?.let {
                     _favoritesState.postValue(FavoritesState(favorites))
                 } ?: ToastHelper.showToast("Ошибка получения данных")
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 ToastHelper.showToast("Ошибка сети")
             }
         }
