@@ -23,9 +23,8 @@ class CategoryListViewModel(application: Application) : AndroidViewModel(applica
     fun loadCategories() {
         ThreadPoolApp.threadPool.execute {
             try {
-                val categories = recipesRepository.getCategories()
-                categories?.let {
-                    _categoriesState.postValue(CategoriesState(categories = it))
+                recipesRepository.getCategories()?.let { categories ->
+                    _categoriesState.postValue(CategoriesState(categories = categories))
                 } ?: ToastHelper.showToast("Ошибка получения данных")
             } catch (_: Exception) {
                 ToastHelper.showToast("Ошибка сети")
@@ -36,8 +35,7 @@ class CategoryListViewModel(application: Application) : AndroidViewModel(applica
     fun loadCategoryById(categoryId: Int) {
         ThreadPoolApp.threadPool.execute {
             try {
-                val category = recipesRepository.getCategoryById(categoryId)
-                category?.let {
+                recipesRepository.getCategoryById(categoryId)?.let { category ->
                     _selectedCategory.postValue(category)
                 } ?: ToastHelper.showToast("Ошибка получения данных")
             } catch (_: Exception) {
