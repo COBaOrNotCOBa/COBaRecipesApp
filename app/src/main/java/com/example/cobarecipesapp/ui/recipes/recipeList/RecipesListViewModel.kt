@@ -4,10 +4,11 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.cobarecipesapp.data.ThreadPoolApp
 import com.example.cobarecipesapp.data.RecipesRepository
 import com.example.cobarecipesapp.model.Recipe
 import com.example.cobarecipesapp.utils.ToastHelper
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 
 class RecipesListViewModel(application: Application) : AndroidViewModel(application) {
@@ -16,7 +17,7 @@ class RecipesListViewModel(application: Application) : AndroidViewModel(applicat
     val recipesListState: LiveData<RecipesListState> = _recipesListState
 
     fun loadRecipeList(categoryId: Int) {
-        ThreadPoolApp.threadPool.execute {
+        withContext(Dispatchers.IO) {
             try {
                 val recipesRepository = RecipesRepository()
                 recipesRepository

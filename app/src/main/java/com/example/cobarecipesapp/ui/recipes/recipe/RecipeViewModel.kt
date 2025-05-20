@@ -6,10 +6,11 @@ import androidx.core.content.edit
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.cobarecipesapp.data.ThreadPoolApp
 import com.example.cobarecipesapp.data.RecipesRepository
 import com.example.cobarecipesapp.model.Recipe
 import com.example.cobarecipesapp.utils.ToastHelper
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 
 class RecipeViewModel(application: Application) : AndroidViewModel(application) {
@@ -18,7 +19,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
     val recipeState: LiveData<RecipeState> = _recipeState
 
     fun loadRecipe(recipeId: Int) {
-        ThreadPoolApp.threadPool.execute {
+        withContext(Dispatchers.IO) {
             try {
                 val recipesRepository = RecipesRepository()
                 recipesRepository.getRecipeById(recipeId)?.let { recipe ->

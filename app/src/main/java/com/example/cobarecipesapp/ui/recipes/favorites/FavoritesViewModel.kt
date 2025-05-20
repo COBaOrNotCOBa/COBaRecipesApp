@@ -5,10 +5,11 @@ import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.cobarecipesapp.data.ThreadPoolApp
 import com.example.cobarecipesapp.data.RecipesRepository
 import com.example.cobarecipesapp.model.Recipe
 import com.example.cobarecipesapp.utils.ToastHelper
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 
 class FavoritesViewModel(application: Application) : AndroidViewModel(application) {
@@ -17,7 +18,7 @@ class FavoritesViewModel(application: Application) : AndroidViewModel(applicatio
     val favoritesState: LiveData<FavoritesState> = _favoritesState
 
     fun loadFavorites() {
-        ThreadPoolApp.threadPool.execute {
+        withContext(Dispatchers.IO) {
             try {
                 val recipesRepository = RecipesRepository()
                 val favoritesId = getFavorites().joinToString(",")

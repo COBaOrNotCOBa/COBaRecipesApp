@@ -4,10 +4,13 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.cobarecipesapp.data.ThreadPoolApp
+import androidx.lifecycle.viewModelScope
 import com.example.cobarecipesapp.data.RecipesRepository
 import com.example.cobarecipesapp.model.Category
 import com.example.cobarecipesapp.utils.ToastHelper
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class CategoryListViewModel(application: Application) : AndroidViewModel(application) {
@@ -20,24 +23,28 @@ class CategoryListViewModel(application: Application) : AndroidViewModel(applica
 
     private val recipesRepository = RecipesRepository()
 
-    fun loadCategories() {
-        ThreadPoolApp.threadPool.execute {
+    suspend fun loadCategories() {
+        withContext(Dispatchers.IO) {
             try {
-                recipesRepository.getCategories()?.let { categories ->
-                    _categoriesState.postValue(CategoriesState(categories = categories))
-                } ?: ToastHelper.showToast("Ошибка получения данных")
+                viewModelScope.launch {
+                    recipesRepository.getCategories()?.let { categories ->
+                        _categoriesState.postValue(CategoriesState(categories = categories))
+                    } ?: ToastHelper.showToast("Ошибка получения данных")
+                }
             } catch (_: Exception) {
                 ToastHelper.showToast("Ошибка сети")
             }
         }
     }
 
-    fun loadCategoryById(categoryId: Int) {
-        ThreadPoolApp.threadPool.execute {
+    suspend fun loadCategoryById(categoryId: Int) {
+        withContext(Dispatchers.IO) {
             try {
-                recipesRepository.getCategoryById(categoryId)?.let { category ->
-                    _selectedCategory.postValue(category)
-                } ?: ToastHelper.showToast("Ошибка получения данных")
+                viewModelScope.launch {
+                    recipesRepository.getCategoryById(categoryId)?.let { category ->
+                        _selectedCategory.postValue(category)
+                    } ?: ToastHelper.showToast("Ошибка получения данных")
+                }
             } catch (_: Exception) {
                 ToastHelper.showToast("Ошибка сети")
             }
