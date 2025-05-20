@@ -17,10 +17,11 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
     private val _recipeState = MutableLiveData(RecipeState())
     val recipeState: LiveData<RecipeState> = _recipeState
 
+    private val recipesRepository = RecipesRepository()
+
     fun loadRecipe(recipeId: Int) {
         ThreadPoolApp.threadPool.execute {
             try {
-                val recipesRepository = RecipesRepository()
                 recipesRepository.getRecipeById(recipeId)?.let { recipe ->
                     _recipeState.postValue(
                         RecipeState(

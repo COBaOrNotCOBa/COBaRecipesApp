@@ -16,10 +16,11 @@ class FavoritesViewModel(application: Application) : AndroidViewModel(applicatio
     private var _favoritesState = MutableLiveData(FavoritesState())
     val favoritesState: LiveData<FavoritesState> = _favoritesState
 
+    private val recipesRepository = RecipesRepository()
+
     fun loadFavorites() {
         ThreadPoolApp.threadPool.execute {
             try {
-                val recipesRepository = RecipesRepository()
                 val favoritesId = getFavorites().joinToString(",")
                 recipesRepository.getRecipesByIds(favoritesId)?.let { favorites ->
                     _favoritesState.postValue(FavoritesState(favorites))

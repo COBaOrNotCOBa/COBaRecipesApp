@@ -15,10 +15,11 @@ class RecipesListViewModel(application: Application) : AndroidViewModel(applicat
     private var _recipesListState = MutableLiveData(RecipesListState())
     val recipesListState: LiveData<RecipesListState> = _recipesListState
 
+    private val recipesRepository = RecipesRepository()
+
     fun loadRecipeList(categoryId: Int) {
         ThreadPoolApp.threadPool.execute {
             try {
-                val recipesRepository = RecipesRepository()
                 recipesRepository
                     .getCategoryById(categoryId)
                     ?.let { category ->
