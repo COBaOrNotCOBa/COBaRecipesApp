@@ -5,11 +5,11 @@ import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.cobarecipesapp.data.RecipesRepository
 import com.example.cobarecipesapp.model.Recipe
 import com.example.cobarecipesapp.utils.ToastHelper
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.launch
 
 
 class FavoritesViewModel(application: Application) : AndroidViewModel(application) {
@@ -17,17 +17,18 @@ class FavoritesViewModel(application: Application) : AndroidViewModel(applicatio
     private var _favoritesState = MutableLiveData(FavoritesState())
     val favoritesState: LiveData<FavoritesState> = _favoritesState
 
+    private val recipesRepository = RecipesRepository()
+
     fun loadFavorites() {
-        withContext(Dispatchers.IO) {
-            try {
-                val recipesRepository = RecipesRepository()
+        try {
+            viewModelScope.launch {
                 val favoritesId = getFavorites().joinToString(",")
                 recipesRepository.getRecipesByIds(favoritesId)?.let { favorites ->
                     _favoritesState.postValue(FavoritesState(favorites))
                 } ?: ToastHelper.showToast("Ошибка получения данных")
-            } catch (_: Exception) {
-                ToastHelper.showToast("Ошибка сети")
             }
+        } catch (_: Exception) {
+            ToastHelper.showToast("Ошибка сети")
         }
     }
 

@@ -6,11 +6,11 @@ import androidx.core.content.edit
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.cobarecipesapp.data.RecipesRepository
 import com.example.cobarecipesapp.model.Recipe
 import com.example.cobarecipesapp.utils.ToastHelper
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.launch
 
 
 class RecipeViewModel(application: Application) : AndroidViewModel(application) {
@@ -18,10 +18,11 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
     private val _recipeState = MutableLiveData(RecipeState())
     val recipeState: LiveData<RecipeState> = _recipeState
 
+    private val recipesRepository = RecipesRepository()
+
     fun loadRecipe(recipeId: Int) {
-        withContext(Dispatchers.IO) {
-            try {
-                val recipesRepository = RecipesRepository()
+        try {
+            viewModelScope.launch {
                 recipesRepository.getRecipeById(recipeId)?.let { recipe ->
                     _recipeState.postValue(
                         RecipeState(
@@ -32,9 +33,9 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
                         )
                     )
                 } ?: ToastHelper.showToast("Ошибка получения данных")
-            } catch (_: Exception) {
-                ToastHelper.showToast("Ошибка сети")
             }
+        } catch (_: Exception) {
+            ToastHelper.showToast("Ошибка сети")
         }
     }
 
