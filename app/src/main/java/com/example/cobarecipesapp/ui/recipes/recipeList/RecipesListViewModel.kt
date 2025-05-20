@@ -15,26 +15,47 @@ class RecipesListViewModel(application: Application) : AndroidViewModel(applicat
     private var _recipesListState = MutableLiveData(RecipesListState())
     val recipesListState: LiveData<RecipesListState> = _recipesListState
 
+
     fun loadRecipeList(categoryId: Int) {
         ThreadPoolApp.threadPool.execute {
+            val recipesRepository = RecipesRepository()
             try {
-                val recipesRepository = RecipesRepository()
-                val category = recipesRepository.getCategoryById(categoryId)
-                val recipes = recipesRepository.getRecipesByCategoryId(categoryId)
-
-                category?.let { category ->
-                    recipes?.let { recipes ->
-                        _recipesListState.postValue(
-                            RecipesListState(
-                                recipes = recipes,
-                                categoryName = category.title,
-                                categoryImageUrl =
-                                    recipesRepository.getFullImageUrl(category.imageUrl),
-                            )
-                        )
-                    } ?: ToastHelper.showToast("Ошибка получения данных")
-                } ?: ToastHelper.showToast("Ошибка получения данных")
-            } catch (_: Exception) {
+                recipesRepository
+                    .getCategoryById(categoryId)
+                    ?.let { category ->
+                        recipesRepository.getRecipesByCategoryId(categoryId)
+                            ?.let { recipes ->
+                                _recipesListState.postValue(
+                                    RecipesListState(
+                                        recipes = recipes,
+                                        categoryName = category.title,
+                                        categoryImageUrl =
+                                            recipesRepository.getFullImageUrl(category.imageUrl),
+                                    )
+                                )
+                            }
+                            ?: ToastHelper.showToast("Ошибка получения данных")
+                    }
+                    ?: ToastHelper.showToast("Ошибка получения данных")
+            } catch (e: Exception) {
+                recipesRepository
+                    .getCategoryById(categoryId)
+                    ?.let { category ->
+                        recipesRepository.getRecipesByCategoryId(categoryId)
+                            ?.let { recipes ->
+                                _recipesListState.postValue(
+                                    RecipesListState(
+                                        recipes = recipes,
+                                        categoryName = category.title,
+                                        categoryImageUrl =
+                                            recipesRepository.getFullImageUrl(category.imageUrl),
+                                    )
+                                )
+                            }
+                            ?: ToastHelper.showToast("Ошибка получения данных")
+                    }
+                    ?: ToastHelper.showToast("Ошибка получения данных")
+            } catch (e: Exception) {
                 ToastHelper.showToast("Ошибка сети")
             }
         }
