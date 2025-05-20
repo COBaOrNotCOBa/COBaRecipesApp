@@ -30,8 +30,7 @@ class RecipesRepository {
 
     private val service: RecipeApiService = retrofit.create(RecipeApiService::class.java)
 
-    //recipe by ID
-    fun getRecipeById(recipeId: Int): Recipe? {
+    suspend fun getRecipeById(recipeId: Int): Recipe? {
         return try {
             val recipeResponse = service.getRecipeById(recipeId).execute()
             recipeResponse.body()
@@ -40,8 +39,7 @@ class RecipesRepository {
         }
     }
 
-    //recipes by ID
-    fun getRecipesByIds(favoritesId: String): List<Recipe>? {
+    suspend fun getRecipesByIds(favoritesId: String): List<Recipe>? {
         return try {
             val recipesResponse = service.getRecipesByIds(favoritesId).execute()
             recipesResponse.body()
@@ -50,8 +48,7 @@ class RecipesRepository {
         }
     }
 
-    //category by ID
-    fun getCategoryById(categoryId: Int): Category? {
+    suspend fun getCategoryById(categoryId: Int): Category? {
         return try {
             val categoryByIdResponse = service.getCategoryById(categoryId).execute()
             categoryByIdResponse.body()
@@ -60,8 +57,7 @@ class RecipesRepository {
         }
     }
 
-    //category {id} recipes
-    fun getRecipesByCategoryId(categoryId: Int): List<Recipe>? {
+    suspend fun getRecipesByCategoryId(categoryId: Int): List<Recipe>? {
         return try {
             val recipesByCategoryId = service.getRecipesByCategoryId(categoryId).execute()
             recipesByCategoryId.body()
@@ -70,8 +66,7 @@ class RecipesRepository {
         }
     }
 
-    //category
-    fun getCategories(): List<Category>? {
+    suspend fun getCategories(): List<Category>? {
         return try {
             val categoriesResponse: Response<List<Category>> = service.getCategories().execute()
             categoriesResponse.body()
