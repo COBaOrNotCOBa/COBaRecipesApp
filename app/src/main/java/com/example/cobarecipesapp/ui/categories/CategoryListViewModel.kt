@@ -33,7 +33,6 @@ class CategoryListViewModel(application: Application) : AndroidViewModel(applica
     }
 
     fun loadCategoryById(categoryId: Int) {
-
         ThreadPoolApp.threadPool.execute {
             try {
                 recipesRepository.getCategoryById(categoryId)?.let { category ->

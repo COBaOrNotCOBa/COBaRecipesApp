@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.cobarecipesapp.R
 import com.example.cobarecipesapp.databinding.FragmentListRecipesBinding
 import com.example.cobarecipesapp.ui.common.navigateWithAnimation
@@ -65,8 +67,20 @@ class RecipesListFragment : Fragment(R.layout.fragment_list_recipes) {
     private fun initObserve() {
         recipesListViewModel.recipesListState.observe(viewLifecycleOwner) { state ->
             binding.tvRecipesCategory.text = state.categoryName
-            binding.ivRecipesHeader.setImageDrawable(state.categoryImage)
+            loadRecipeImage(state.categoryImageUrl)
             recipesAdapter.updateRecipes(state.recipes)
+        }
+    }
+
+    private fun loadRecipeImage(categoryImageUrl: String?) {
+        categoryImageUrl?.let { imageUrl ->
+            Glide.with(this)
+                .load(imageUrl)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .placeholder(R.drawable.img_placeholder)
+                .error(R.drawable.img_error)
+                .centerCrop()
+                .into(binding.ivRecipesHeader)
         }
     }
 
