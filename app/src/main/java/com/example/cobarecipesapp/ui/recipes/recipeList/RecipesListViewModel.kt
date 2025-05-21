@@ -17,28 +17,25 @@ class RecipesListViewModel(application: Application) : AndroidViewModel(applicat
     private var _recipesListState = MutableLiveData(RecipesListState())
     val recipesListState: LiveData<RecipesListState> = _recipesListState
 
-    val recipesRepository = RecipesRepository()
+    private val recipesRepository = RecipesRepository()
 
     fun loadRecipeList(categoryId: Int) {
         ThreadPoolApp.threadPool.execute {
             try {
-                recipesRepository
-                    .getCategoryById(categoryId)
-                    ?.let { category ->
-                        recipesRepository.getRecipesByCategoryId(categoryId)
-                            ?.let { recipes ->
-                                _recipesListState.postValue(
-                                    RecipesListState(
-                                        recipes = recipes,
-                                        categoryName = category.title,
-                                        categoryImage = getCategoryImage(category.imageUrl)
-                                    )
-                                )
-                            }
-                            ?: ToastHelper.showToast("Ошибка получения данных")
+                recipesRepository.getCategoryById(categoryId)?.let { category ->
+                    recipesRepository.getRecipesByCategoryId(categoryId)?.let { recipes ->
+                        _recipesListState.postValue(
+                            RecipesListState(
+                                recipes = recipes,
+                                categoryName = category.title,
+                                categoryImage = getCategoryImage(category.imageUrl)
+                            )
+                        )
                     }
+                        ?: ToastHelper.showToast("Ошибка получения данных")
+                }
                     ?: ToastHelper.showToast("Ошибка получения данных")
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 ToastHelper.showToast("Ошибка сети")
             }
         }

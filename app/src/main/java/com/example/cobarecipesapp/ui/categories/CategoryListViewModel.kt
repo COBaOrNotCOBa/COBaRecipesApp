@@ -18,7 +18,7 @@ class CategoryListViewModel(application: Application) : AndroidViewModel(applica
     private val _selectedCategory = MutableLiveData<Category?>()
     val selectedCategory: LiveData<Category?> = _selectedCategory
 
-    val recipesRepository = RecipesRepository()
+    private val recipesRepository = RecipesRepository()
 
     fun loadCategories() {
         ThreadPoolApp.threadPool.execute {
@@ -26,7 +26,7 @@ class CategoryListViewModel(application: Application) : AndroidViewModel(applica
                 recipesRepository.getCategories()?.let { categories ->
                     _categoriesState.postValue(CategoriesState(categories = categories))
                 } ?: ToastHelper.showToast("Ошибка получения данных")
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 ToastHelper.showToast("Ошибка сети")
             }
         }
@@ -39,7 +39,7 @@ class CategoryListViewModel(application: Application) : AndroidViewModel(applica
                 recipesRepository.getCategoryById(categoryId)?.let { category ->
                     _selectedCategory.postValue(category)
                 } ?: ToastHelper.showToast("Ошибка получения данных")
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 ToastHelper.showToast("Ошибка сети")
             }
         }

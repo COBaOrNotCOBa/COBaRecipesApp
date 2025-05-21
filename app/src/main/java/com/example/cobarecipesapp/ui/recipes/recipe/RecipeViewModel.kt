@@ -19,7 +19,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
     private val _recipeState = MutableLiveData(RecipeState())
     val recipeState: LiveData<RecipeState> = _recipeState
 
-    val recipesRepository = RecipesRepository()
+    private val recipesRepository = RecipesRepository()
 
     fun loadRecipe(recipeId: Int) {
         ThreadPoolApp.threadPool.execute {
@@ -34,7 +34,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
                         )
                     )
                 } ?: ToastHelper.showToast("Ошибка получения данных")
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 ToastHelper.showToast("Ошибка сети")
             }
         }
