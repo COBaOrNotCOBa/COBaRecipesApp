@@ -20,23 +20,18 @@ class RecipesListViewModel(application: Application) : AndroidViewModel(applicat
     fun loadRecipeList(categoryId: Int) {
         ThreadPoolApp.threadPool.execute {
             try {
-                recipesRepository
-                    .getCategoryById(categoryId)
-                    ?.let { category ->
-                        recipesRepository.getRecipesByCategoryId(categoryId)
-                            ?.let { recipes ->
-                                _recipesListState.postValue(
-                                    RecipesListState(
-                                        recipes = recipes,
-                                        categoryName = category.title,
-                                        categoryImageUrl =
-                                            recipesRepository.getFullImageUrl(category.imageUrl),
-                                    )
-                                )
-                            }
-                            ?: ToastHelper.showToast("Ошибка получения данных")
-                    }
-                    ?: ToastHelper.showToast("Ошибка получения данных")
+                recipesRepository.getCategoryById(categoryId)?.let { category ->
+                    recipesRepository.getRecipesByCategoryId(categoryId)?.let { recipes ->
+                        _recipesListState.postValue(
+                            RecipesListState(
+                                recipes = recipes,
+                                categoryName = category.title,
+                                categoryImageUrl =
+                                    recipesRepository.getFullImageUrl(category.imageUrl),
+                            )
+                        )
+                    } ?: ToastHelper.showToast("Ошибка получения данных")
+                } ?: ToastHelper.showToast("Ошибка получения данных")
             } catch (_: Exception) {
                 ToastHelper.showToast("Ошибка сети")
             }
