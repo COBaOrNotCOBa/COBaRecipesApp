@@ -8,8 +8,10 @@ import androidx.core.content.edit
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.cobarecipesapp.data.ThreadPoolApp
+import com.example.cobarecipesapp.data.RecipesRepository
 import com.example.cobarecipesapp.model.Recipe
-import com.example.cobarecipesapp.data.STUB
+import com.example.cobarecipesapp.utils.ToastHelper
 
 
 class RecipeViewModel(application: Application) : AndroidViewModel(application) {
@@ -17,16 +19,25 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
     private val _recipeState = MutableLiveData(RecipeState())
     val recipeState: LiveData<RecipeState> = _recipeState
 
-    fun loadRecipe(recipeId: Int) {
-        // TODO 'load from network'
+    private val recipesRepository = RecipesRepository()
 
-        val recipe = STUB.getRecipeById(recipeId)
-        _recipeState.value = RecipeState(
-            recipe = recipe,
-            isFavorite = checkIsFavorite(recipeId),
-            portionsCount = _recipeState.value?.portionsCount ?: 1,
-            recipeImage = getRecipeImage(recipe.imageUrl),
-        )
+    fun loadRecipe(recipeId: Int) {
+        ThreadPoolApp.threadPool.execute {
+            try {
+                recipesRepository.getRecipeById(recipeId)?.let { recipe ->
+                    _recipeState.postValue(
+                        RecipeState(
+                            recipe = recipe,
+                            isFavorite = checkIsFavorite(recipeId),
+                            portionsCount = _recipeState.value?.portionsCount ?: 1,
+                            recipeImage = getRecipeImage(recipe.imageUrl),
+                        )
+                    )
+                } ?: ToastHelper.showToast("Ошибка получения данных")
+            } catch (_: Exception) {
+                ToastHelper.showToast("Ошибка сети")
+            }
+        }
     }
 
     fun onFavoritesClicked() {
@@ -84,10 +95,6 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
         ) ?: return
 
         sharedPrefs.edit { putStringSet(FAVORITE_RECIPES_KEY, favoritesId) }
-    }
-
-    init {
-        Log.i("!!!", "RecipeViewModel инициализирована")
     }
 
     data class RecipeState(
