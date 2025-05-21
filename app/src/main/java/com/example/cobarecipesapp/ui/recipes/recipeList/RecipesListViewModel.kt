@@ -31,10 +31,8 @@ class RecipesListViewModel(application: Application) : AndroidViewModel(applicat
                                 categoryImage = getCategoryImage(category.imageUrl)
                             )
                         )
-                    }
-                        ?: ToastHelper.showToast("Ошибка получения данных")
-                }
-                    ?: ToastHelper.showToast("Ошибка получения данных")
+                    } ?: ToastHelper.showToast("Ошибка получения данных")
+                } ?: ToastHelper.showToast("Ошибка получения данных")
             } catch (_: Exception) {
                 ToastHelper.showToast("Ошибка сети")
             }
