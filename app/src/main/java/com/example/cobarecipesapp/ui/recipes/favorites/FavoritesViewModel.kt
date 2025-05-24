@@ -20,15 +20,15 @@ class FavoritesViewModel(application: Application) : AndroidViewModel(applicatio
     private val recipesRepository = RecipesRepository(application)
 
     fun loadFavorites() {
-        try {
-            viewModelScope.launch {
+        viewModelScope.launch {
+            try {
                 val favoritesId = getFavorites().joinToString(",")
                 recipesRepository.getRecipesByIds(favoritesId)?.let { favorites ->
                     _favoritesState.postValue(FavoritesState(favorites))
                 } ?: ToastHelper.showToast("Ошибка получения данных")
+            } catch (_: Exception) {
+                ToastHelper.showToast("Ошибка сети")
             }
-        } catch (_: Exception) {
-            ToastHelper.showToast("Ошибка сети")
         }
     }
 

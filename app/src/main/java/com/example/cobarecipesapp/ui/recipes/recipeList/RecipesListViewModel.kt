@@ -19,8 +19,8 @@ class RecipesListViewModel(application: Application) : AndroidViewModel(applicat
     private val recipesRepository = RecipesRepository(application)
 
     fun loadRecipeList(categoryId: Int) {
-        try {
-            viewModelScope.launch {
+        viewModelScope.launch {
+            try {
                 recipesRepository.getCategoryById(categoryId)?.let { category ->
                     recipesRepository.getRecipesByCategoryId(categoryId)?.let { recipes ->
                         _recipesListState.postValue(
@@ -33,9 +33,9 @@ class RecipesListViewModel(application: Application) : AndroidViewModel(applicat
                         )
                     } ?: ToastHelper.showToast("Ошибка получения данных")
                 } ?: ToastHelper.showToast("Ошибка получения данных")
+            } catch (_: Exception) {
+                ToastHelper.showToast("Ошибка сети")
             }
-        } catch (_: Exception) {
-            ToastHelper.showToast("Ошибка сети")
         }
     }
 

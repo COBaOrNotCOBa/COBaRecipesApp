@@ -22,26 +22,26 @@ class CategoryListViewModel(application: Application) : AndroidViewModel(applica
     private val recipesRepository = RecipesRepository(application)
 
     fun loadCategories() {
-        try {
-            viewModelScope.launch {
+        viewModelScope.launch {
+            try {
                 recipesRepository.getCategories()?.let { categories ->
                     _categoriesState.postValue(CategoriesState(categories = categories))
                 } ?: ToastHelper.showToast("Ошибка получения данных")
+            } catch (_: Exception) {
+                ToastHelper.showToast("Ошибка сети")
             }
-        } catch (_: Exception) {
-            ToastHelper.showToast("Ошибка сети")
         }
     }
 
     fun loadCategoryById(categoryId: Int) {
-        try {
-            viewModelScope.launch {
+        viewModelScope.launch {
+            try {
                 recipesRepository.getCategoryById(categoryId)?.let { category ->
                     _selectedCategory.postValue(category)
                 } ?: ToastHelper.showToast("Ошибка получения данных")
+            } catch (_: Exception) {
+                ToastHelper.showToast("Ошибка сети")
             }
-        } catch (_: Exception) {
-            ToastHelper.showToast("Ошибка сети")
         }
     }
 
