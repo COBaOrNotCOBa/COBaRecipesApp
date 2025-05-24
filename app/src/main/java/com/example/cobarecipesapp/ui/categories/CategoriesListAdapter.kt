@@ -27,7 +27,7 @@ class CategoriesListAdapter(private var dataSet: List<Category> = emptyList()) :
     inner class ViewHolder(private val binding: ItemCategoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        private val recipesRepository = RecipesRepository()
+        private val recipesRepository = RecipesRepository(itemView.context)
 
         fun bind(category: Category) {
             with(binding) {

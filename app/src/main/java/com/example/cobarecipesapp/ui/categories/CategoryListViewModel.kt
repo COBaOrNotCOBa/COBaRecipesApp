@@ -19,7 +19,7 @@ class CategoryListViewModel(application: Application) : AndroidViewModel(applica
     private val _selectedCategory = MutableLiveData<Category?>()
     val selectedCategory: LiveData<Category?> = _selectedCategory
 
-    private val recipesRepository = RecipesRepository()
+    private val recipesRepository = RecipesRepository(application)
 
     fun loadCategories() {
         try {

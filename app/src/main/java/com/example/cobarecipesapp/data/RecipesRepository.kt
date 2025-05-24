@@ -1,5 +1,7 @@
 package com.example.cobarecipesapp.data
 
+import android.content.Context
+import androidx.room.Room
 import com.example.cobarecipesapp.model.Category
 import com.example.cobarecipesapp.model.Recipe
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
@@ -9,12 +11,11 @@ import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Response
 import retrofit2.Retrofit
 import java.io.IOException
 
 
-class RecipesRepository {
+class RecipesRepository(context: Context) {
 
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
@@ -32,10 +33,16 @@ class RecipesRepository {
 
     private val service: RecipeApiService = retrofit.create(RecipeApiService::class.java)
 
+    private val dbCategories = Room.databaseBuilder(
+        context.applicationContext,
+        AppDatabase::class.java,
+        "database-categories"
+    ).build()
+
     suspend fun getRecipeById(recipeId: Int): Recipe? = withContext(Dispatchers.IO) {
         try {
-            val recipeResponse = service.getRecipeById(recipeId).execute()
-            recipeResponse.body()
+            val recipe = service.getRecipeById(recipeId).execute().body()
+            recipe
         } catch (_: IOException) {
             null
         }
@@ -43,8 +50,8 @@ class RecipesRepository {
 
     suspend fun getRecipesByIds(favoritesId: String): List<Recipe>? = withContext(Dispatchers.IO) {
         try {
-            val recipesResponse = service.getRecipesByIds(favoritesId).execute()
-            recipesResponse.body()
+            val recipes = service.getRecipesByIds(favoritesId).execute().body()
+            recipes
         } catch (_: IOException) {
             null
         }
@@ -52,8 +59,8 @@ class RecipesRepository {
 
     suspend fun getCategoryById(categoryId: Int): Category? = withContext(Dispatchers.IO) {
         try {
-            val categoryByIdResponse = service.getCategoryById(categoryId).execute()
-            categoryByIdResponse.body()
+            val categoryById = service.getCategoryById(categoryId).execute().body()
+            categoryById
         } catch (_: IOException) {
             null
         }
@@ -62,8 +69,9 @@ class RecipesRepository {
     suspend fun getRecipesByCategoryId(categoryId: Int): List<Recipe>? =
         withContext(Dispatchers.IO) {
             try {
-                val recipesByCategoryId = service.getRecipesByCategoryId(categoryId).execute()
-                recipesByCategoryId.body()
+                val recipesByCategoryId =
+                    service.getRecipesByCategoryId(categoryId).execute().body()
+                recipesByCategoryId
             } catch (_: IOException) {
                 null
             }
@@ -71,14 +79,24 @@ class RecipesRepository {
 
     suspend fun getCategories(): List<Category>? = withContext(Dispatchers.IO) {
         try {
-            val categoriesResponse: Response<List<Category>> = service.getCategories().execute()
-            categoriesResponse.body()
+            val cachedCategories = getCategoriesFromCache()
+            if (cachedCategories.isNotEmpty()) {
+                return@withContext cachedCategories
+            }
+
+            val categories = service.getCategories().execute().body()
+            categories?.let { dbCategories.categoriesDao().insertCategories(*it.toTypedArray()) }
+            categories
         } catch (_: IOException) {
             null
         }
     }
 
     fun getFullImageUrl(imageName: String) = "$BASE_IMAGES_URL$imageName"
+
+    private suspend fun getCategoriesFromCache() = withContext(Dispatchers.IO) {
+        dbCategories.categoriesDao().getCategories()
+    }
 
     companion object {
         private const val BASE_URL = "https://recipes.androidsprint.ru/api/"
