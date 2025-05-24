@@ -3,6 +3,8 @@ package com.example.cobarecipesapp.data
 import com.example.cobarecipesapp.model.Category
 import com.example.cobarecipesapp.model.Recipe
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -30,8 +32,8 @@ class RecipesRepository {
 
     private val service: RecipeApiService = retrofit.create(RecipeApiService::class.java)
 
-    fun getRecipeById(recipeId: Int): Recipe? {
-        return try {
+    suspend fun getRecipeById(recipeId: Int): Recipe? = withContext(Dispatchers.IO) {
+        try {
             val recipeResponse = service.getRecipeById(recipeId).execute()
             recipeResponse.body()
         } catch (_: IOException) {
@@ -39,8 +41,8 @@ class RecipesRepository {
         }
     }
 
-    fun getRecipesByIds(favoritesId: String): List<Recipe>? {
-        return try {
+    suspend fun getRecipesByIds(favoritesId: String): List<Recipe>? = withContext(Dispatchers.IO) {
+        try {
             val recipesResponse = service.getRecipesByIds(favoritesId).execute()
             recipesResponse.body()
         } catch (_: IOException) {
@@ -48,8 +50,8 @@ class RecipesRepository {
         }
     }
 
-    fun getCategoryById(categoryId: Int): Category? {
-        return try {
+    suspend fun getCategoryById(categoryId: Int): Category? = withContext(Dispatchers.IO) {
+        try {
             val categoryByIdResponse = service.getCategoryById(categoryId).execute()
             categoryByIdResponse.body()
         } catch (_: IOException) {
@@ -57,17 +59,18 @@ class RecipesRepository {
         }
     }
 
-    fun getRecipesByCategoryId(categoryId: Int): List<Recipe>? {
-        return try {
-            val recipesByCategoryId = service.getRecipesByCategoryId(categoryId).execute()
-            recipesByCategoryId.body()
-        } catch (_: IOException) {
-            null
+    suspend fun getRecipesByCategoryId(categoryId: Int): List<Recipe>? =
+        withContext(Dispatchers.IO) {
+            try {
+                val recipesByCategoryId = service.getRecipesByCategoryId(categoryId).execute()
+                recipesByCategoryId.body()
+            } catch (_: IOException) {
+                null
+            }
         }
-    }
 
-    fun getCategories(): List<Category>? {
-        return try {
+    suspend fun getCategories(): List<Category>? = withContext(Dispatchers.IO) {
+        try {
             val categoriesResponse: Response<List<Category>> = service.getCategories().execute()
             categoriesResponse.body()
         } catch (_: IOException) {
