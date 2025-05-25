@@ -33,10 +33,10 @@ class RecipesRepository(context: Context) {
 
     private val service: RecipeApiService = retrofit.create(RecipeApiService::class.java)
 
-    private val dbRecipes = Room.databaseBuilder(
+    private val recipesDatabase = Room.databaseBuilder(
         context.applicationContext,
         AppDatabase::class.java,
-        "database-categories"
+        "recipes-db"
     ).build()
 
     suspend fun getRecipeById(recipeId: Int): Recipe? = withContext(Dispatchers.IO) {
@@ -91,13 +91,13 @@ class RecipesRepository(context: Context) {
 
     suspend fun getCategories(): List<Category>? = withContext(Dispatchers.IO) {
         try {
-            val cachedCategories = getCategoriesFromCache()
+            val cachedCategories = recipesDatabase.categoriesDao().getCategories()
             if (cachedCategories.isNotEmpty()) {
                 return@withContext cachedCategories
             }
 
             val categories = service.getCategories().execute().body()
-            categories?.let { saveCategoriesInCache(it) }
+            categories?.let { recipesDatabase.categoriesDao().insertCategories(*it.toTypedArray()) }
             categories
         } catch (_: IOException) {
             null
