@@ -33,10 +33,10 @@ class RecipesRepository(context: Context) {
 
     private val service: RecipeApiService = retrofit.create(RecipeApiService::class.java)
 
-    private val dbCategories = Room.databaseBuilder(
+    private val recipesDatabase = Room.databaseBuilder(
         context.applicationContext,
         AppDatabase::class.java,
-        "database-categories"
+        "recipes-db"
     ).build()
 
     suspend fun getRecipeById(recipeId: Int): Recipe? = withContext(Dispatchers.IO) {
@@ -79,13 +79,13 @@ class RecipesRepository(context: Context) {
 
     suspend fun getCategories(): List<Category>? = withContext(Dispatchers.IO) {
         try {
-            val cachedCategories = getCategoriesFromCache()
+            val cachedCategories = recipesDatabase.categoriesDao().getCategories()
             if (cachedCategories.isNotEmpty()) {
                 return@withContext cachedCategories
             }
 
             val categories = service.getCategories().execute().body()
-            categories?.let { dbCategories.categoriesDao().insertCategories(*it.toTypedArray()) }
+            categories?.let { recipesDatabase.categoriesDao().insertCategories(*it.toTypedArray()) }
             categories
         } catch (_: IOException) {
             null
@@ -93,10 +93,6 @@ class RecipesRepository(context: Context) {
     }
 
     fun getFullImageUrl(imageName: String) = "$BASE_IMAGES_URL$imageName"
-
-    private suspend fun getCategoriesFromCache() = withContext(Dispatchers.IO) {
-        dbCategories.categoriesDao().getCategories()
-    }
 
     companion object {
         private const val BASE_URL = "https://recipes.androidsprint.ru/api/"
