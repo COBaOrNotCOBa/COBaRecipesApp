@@ -33,7 +33,7 @@ class RecipesRepository(context: Context) {
 
     private val service: RecipeApiService = retrofit.create(RecipeApiService::class.java)
 
-    private val dbCategories = Room.databaseBuilder(
+    private val dbRecipes = Room.databaseBuilder(
         context.applicationContext,
         AppDatabase::class.java,
         "database-categories"
@@ -69,9 +69,21 @@ class RecipesRepository(context: Context) {
     suspend fun getRecipesByCategoryId(categoryId: Int): List<Recipe>? =
         withContext(Dispatchers.IO) {
             try {
+//                val cachedRecipesList = getRecipesListFromCache(categoryId)
+//                if (cachedRecipesList.isNotEmpty()) {
+//                    return@withContext cachedRecipesList
+//                }
+
                 val recipesByCategoryId =
                     service.getRecipesByCategoryId(categoryId).execute().body()
+                recipesByCategoryId?.let { saveRecipesListInCache(it) }
                 recipesByCategoryId
+//                recipesByCategoryId?.map { recipe ->
+//                    recipe.copy(categoryId = categoryId)
+//                }?.let { recipesWithCategoryId ->
+//                    saveRecipesListInCache(recipesWithCategoryId)
+//                    recipesWithCategoryId
+//                }
             } catch (_: IOException) {
                 null
             }
@@ -85,7 +97,7 @@ class RecipesRepository(context: Context) {
             }
 
             val categories = service.getCategories().execute().body()
-            categories?.let { dbCategories.categoriesDao().insertCategories(*it.toTypedArray()) }
+            categories?.let { saveCategoriesInCache(it) }
             categories
         } catch (_: IOException) {
             null
@@ -95,8 +107,23 @@ class RecipesRepository(context: Context) {
     fun getFullImageUrl(imageName: String) = "$BASE_IMAGES_URL$imageName"
 
     private suspend fun getCategoriesFromCache() = withContext(Dispatchers.IO) {
-        dbCategories.categoriesDao().getCategories()
+        dbRecipes.categoriesDao().getCategories()
     }
+
+    private suspend fun saveCategoriesInCache(categories: List<Category>) =
+        withContext(Dispatchers.IO) {
+            dbRecipes.categoriesDao().insertCategories(*categories.toTypedArray())
+        }
+
+
+//    private suspend fun getRecipesListFromCache(categoryId: Int) = withContext(Dispatchers.IO) {
+//        dbRecipes.recipesDao().getRecipesByCategoryId(categoryId)
+//    }
+
+    private suspend fun saveRecipesListInCache(recipesList: List<Recipe>) =
+        withContext(Dispatchers.IO) {
+            dbRecipes.recipesDao().insertRecipesList(*recipesList.toTypedArray())
+        }
 
     companion object {
         private const val BASE_URL = "https://recipes.androidsprint.ru/api/"
