@@ -5,6 +5,7 @@ import androidx.room.Entity
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 import androidx.room.PrimaryKey
+import androidx.room.ColumnInfo
 
 
 @Entity(tableName = "recipes")
@@ -13,8 +14,10 @@ import androidx.room.PrimaryKey
 data class Recipe(
     @PrimaryKey val id: Int,
     val title: String,
+    @ColumnInfo("ingredients_json")
     val ingredients: List<Ingredient>,
+    @ColumnInfo("method_json")
     val method: List<String>,
     val imageUrl: String,
-//    val categoryId: Int,
+    val categoryId: Int,
 ) : Parcelable

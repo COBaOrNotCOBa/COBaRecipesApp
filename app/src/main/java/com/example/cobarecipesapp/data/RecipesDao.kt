@@ -8,11 +8,11 @@ import androidx.room.Query
 
 @Dao
 interface RecipesDao {
-    @Query("SELECT * FROM recipes")
-    fun getRecipesList(): List<Recipe>
+//    @Query("SELECT * FROM recipes")
+//    fun getRecipesList(): List<Recipe>
 
-//    @Query("SELECT * FROM recipes WHERE categoryId = :categoryId")
-//    fun getRecipesByCategoryId(categoryId: Int): List<Recipe>
+    @Query("SELECT * FROM recipes WHERE categoryId = :categoryId")
+    fun getRecipesByCategoryId(categoryId: Int): List<Recipe>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertRecipesList(vararg recipes: Recipe)

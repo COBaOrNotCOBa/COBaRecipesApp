@@ -5,19 +5,38 @@ import com.example.cobarecipesapp.model.Ingredient
 import kotlinx.serialization.json.Json
 
 class TypeConverter {
+    private val json = Json {
+        ignoreUnknownKeys = true
+        isLenient = true
+    }
+
+    // Для List<Ingredient>
     @TypeConverter
     fun fromIngredientsList(ingredients: List<Ingredient>): String {
-        return Json.encodeToString(ingredients)
+        return json.encodeToString(ingredients)
     }
 
     @TypeConverter
-    fun toIngredientsList(json: String): List<Ingredient> {
-        return Json.decodeFromString(json)
+    fun toIngredientsList(jsonString: String): List<Ingredient> {
+        return try {
+            json.decodeFromString(jsonString)
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    // Для List<String> (method)
+    @TypeConverter
+    fun fromMethodList(method: List<String>): String {
+        return json.encodeToString(method)
     }
 
     @TypeConverter
-    fun fromStringList(list: List<String>): String = list.joinToString("|")
-
-    @TypeConverter
-    fun toStringList(data: String): List<String> = data.split("|")
+    fun toMethodList(jsonString: String): List<String> {
+        return try {
+            json.decodeFromString(jsonString)
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
 }

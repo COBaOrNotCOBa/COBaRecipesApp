@@ -1,6 +1,7 @@
 package com.example.cobarecipesapp.data
 
 import android.content.Context
+import android.util.Log
 import androidx.room.Room
 import com.example.cobarecipesapp.model.Category
 import com.example.cobarecipesapp.model.Recipe
@@ -33,11 +34,13 @@ class RecipesRepository(context: Context) {
 
     private val service: RecipeApiService = retrofit.create(RecipeApiService::class.java)
 
-    private val recipesDatabase = Room.databaseBuilder(
-        context.applicationContext,
-        AppDatabase::class.java,
-        "recipes-db"
-    ).build()
+    private val recipesDatabase by lazy {
+        Room.databaseBuilder(
+            context.applicationContext,
+            AppDatabase::class.java,
+            "recipes-db"
+        ).build()
+    }
 
     suspend fun getRecipeById(recipeId: Int): Recipe? = withContext(Dispatchers.IO) {
         try {
@@ -69,21 +72,38 @@ class RecipesRepository(context: Context) {
     suspend fun getRecipesByCategoryId(categoryId: Int): List<Recipe>? =
         withContext(Dispatchers.IO) {
             try {
-//                val cachedRecipesList = getRecipesListFromCache(categoryId)
-//                if (cachedRecipesList.isNotEmpty()) {
-//                    return@withContext cachedRecipesList
-//                }
+                Log.d("RECIPE_LOAD", "Checking cache for category $categoryId")
+                val cachedRecipesList =
+                    recipesDatabase.recipesDao().getRecipesByCategoryId(categoryId)
+                if (cachedRecipesList.isNotEmpty()) {
+                    Log.d("RECIPE_LOAD", "Returning ${cachedRecipesList.size} cached recipes")
+                    return@withContext cachedRecipesList
+                }
+
+                Log.d("RECIPE_LOAD", "Fetching from network for category $categoryId")
+                val response = service.getRecipesByCategoryId(categoryId).execute()
+                Log.d("API_RESPONSE", "Code: ${response.code()}, Body: ${response.body()}")
+                if (!response.isSuccessful) {
+                    Log.e("RECIPE_LOAD", "Network error: ${response.code()}")
+                    return@withContext null
+                }
 
                 val recipesByCategoryId =
-                    service.getRecipesByCategoryId(categoryId).execute().body()
-                recipesByCategoryId?.let { saveRecipesListInCache(it) }
+                    service.getRecipesByCategoryId(categoryId)
+                        .execute()
+                        .body()
+                        ?.map { it.copy(categoryId = categoryId) }
+
+                if (recipesByCategoryId.isNullOrEmpty()) {
+                    Log.w("RECIPE_LOAD", "Empty recipes list from API")
+                    return@withContext null
+                }
+
+                Log.d("RECIPE_LOAD", "Saving ${recipesByCategoryId.size} recipes to DB")
+                recipesByCategoryId?.let {
+                    recipesDatabase.recipesDao().insertRecipesList(*it.toTypedArray())
+                }
                 recipesByCategoryId
-//                recipesByCategoryId?.map { recipe ->
-//                    recipe.copy(categoryId = categoryId)
-//                }?.let { recipesWithCategoryId ->
-//                    saveRecipesListInCache(recipesWithCategoryId)
-//                    recipesWithCategoryId
-//                }
             } catch (_: IOException) {
                 null
             }
@@ -91,12 +111,16 @@ class RecipesRepository(context: Context) {
 
     suspend fun getCategories(): List<Category>? = withContext(Dispatchers.IO) {
         try {
+            Log.d("DB_CHECK", "Is DB open: ${recipesDatabase.isOpen}")
+
             val cachedCategories = recipesDatabase.categoriesDao().getCategories()
+            Log.d("CACHE_CHECK", "Cached categories count: ${cachedCategories.size}")
             if (cachedCategories.isNotEmpty()) {
                 return@withContext cachedCategories
             }
 
             val categories = service.getCategories().execute().body()
+            Log.d("NETWORK_DATA", "Received categories: ${categories?.size ?: "null"}")
             categories?.let { recipesDatabase.categoriesDao().insertCategories(*it.toTypedArray()) }
             categories
         } catch (_: IOException) {
@@ -105,25 +129,6 @@ class RecipesRepository(context: Context) {
     }
 
     fun getFullImageUrl(imageName: String) = "$BASE_IMAGES_URL$imageName"
-
-    private suspend fun getCategoriesFromCache() = withContext(Dispatchers.IO) {
-        dbRecipes.categoriesDao().getCategories()
-    }
-
-    private suspend fun saveCategoriesInCache(categories: List<Category>) =
-        withContext(Dispatchers.IO) {
-            dbRecipes.categoriesDao().insertCategories(*categories.toTypedArray())
-        }
-
-
-//    private suspend fun getRecipesListFromCache(categoryId: Int) = withContext(Dispatchers.IO) {
-//        dbRecipes.recipesDao().getRecipesByCategoryId(categoryId)
-//    }
-
-    private suspend fun saveRecipesListInCache(recipesList: List<Recipe>) =
-        withContext(Dispatchers.IO) {
-            dbRecipes.recipesDao().insertRecipesList(*recipesList.toTypedArray())
-        }
 
     companion object {
         private const val BASE_URL = "https://recipes.androidsprint.ru/api/"
