@@ -19,5 +19,5 @@ data class Recipe(
     @ColumnInfo("method_json")
     val method: List<String>,
     val imageUrl: String,
-    val categoryId: Int,
+    val categoryId: Int = -1,
 ) : Parcelable

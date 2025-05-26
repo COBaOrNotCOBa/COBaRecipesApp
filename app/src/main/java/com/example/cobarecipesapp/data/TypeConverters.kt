@@ -10,7 +10,6 @@ class TypeConverter {
         isLenient = true
     }
 
-    // Для List<Ingredient>
     @TypeConverter
     fun fromIngredientsList(ingredients: List<Ingredient>): String {
         return json.encodeToString(ingredients)
@@ -20,12 +19,11 @@ class TypeConverter {
     fun toIngredientsList(jsonString: String): List<Ingredient> {
         return try {
             json.decodeFromString(jsonString)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             emptyList()
         }
     }
 
-    // Для List<String> (method)
     @TypeConverter
     fun fromMethodList(method: List<String>): String {
         return json.encodeToString(method)
@@ -35,7 +33,7 @@ class TypeConverter {
     fun toMethodList(jsonString: String): List<String> {
         return try {
             json.decodeFromString(jsonString)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             emptyList()
         }
     }

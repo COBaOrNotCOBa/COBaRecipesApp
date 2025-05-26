@@ -2,7 +2,6 @@ package com.example.cobarecipesapp.data
 
 import android.content.Context
 import android.util.Log
-import androidx.room.Room
 import com.example.cobarecipesapp.model.Category
 import com.example.cobarecipesapp.model.Recipe
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
@@ -34,13 +33,7 @@ class RecipesRepository(context: Context) {
 
     private val service: RecipeApiService = retrofit.create(RecipeApiService::class.java)
 
-    private val recipesDatabase by lazy {
-        Room.databaseBuilder(
-            context.applicationContext,
-            AppDatabase::class.java,
-            "recipes-db"
-        ).build()
-    }
+    private val recipesDatabase by lazy { AppDatabase.getDatabase(context) }
 
     suspend fun getRecipeById(recipeId: Int): Recipe? = withContext(Dispatchers.IO) {
         try {
@@ -62,6 +55,9 @@ class RecipesRepository(context: Context) {
 
     suspend fun getCategoryById(categoryId: Int): Category? = withContext(Dispatchers.IO) {
         try {
+            val cachedCategory = recipesDatabase.categoriesDao().getCategoryById(categoryId)
+            cachedCategory?.let { return@withContext it }
+
             val categoryById = service.getCategoryById(categoryId).execute().body()
             categoryById
         } catch (_: IOException) {
@@ -72,20 +68,10 @@ class RecipesRepository(context: Context) {
     suspend fun getRecipesByCategoryId(categoryId: Int): List<Recipe>? =
         withContext(Dispatchers.IO) {
             try {
-                Log.d("RECIPE_LOAD", "Checking cache for category $categoryId")
                 val cachedRecipesList =
                     recipesDatabase.recipesDao().getRecipesByCategoryId(categoryId)
                 if (cachedRecipesList.isNotEmpty()) {
-                    Log.d("RECIPE_LOAD", "Returning ${cachedRecipesList.size} cached recipes")
                     return@withContext cachedRecipesList
-                }
-
-                Log.d("RECIPE_LOAD", "Fetching from network for category $categoryId")
-                val response = service.getRecipesByCategoryId(categoryId).execute()
-                Log.d("API_RESPONSE", "Code: ${response.code()}, Body: ${response.body()}")
-                if (!response.isSuccessful) {
-                    Log.e("RECIPE_LOAD", "Network error: ${response.code()}")
-                    return@withContext null
                 }
 
                 val recipesByCategoryId =
@@ -94,33 +80,24 @@ class RecipesRepository(context: Context) {
                         .body()
                         ?.map { it.copy(categoryId = categoryId) }
 
-                if (recipesByCategoryId.isNullOrEmpty()) {
-                    Log.w("RECIPE_LOAD", "Empty recipes list from API")
-                    return@withContext null
-                }
-
-                Log.d("RECIPE_LOAD", "Saving ${recipesByCategoryId.size} recipes to DB")
                 recipesByCategoryId?.let {
                     recipesDatabase.recipesDao().insertRecipesList(*it.toTypedArray())
                 }
                 recipesByCategoryId
-            } catch (_: IOException) {
+            } catch (e: Exception) {
+                Log.e("NETWORK_ERROR", "Error fetching recipes for category $categoryId", e)
                 null
             }
         }
 
     suspend fun getCategories(): List<Category>? = withContext(Dispatchers.IO) {
         try {
-            Log.d("DB_CHECK", "Is DB open: ${recipesDatabase.isOpen}")
-
             val cachedCategories = recipesDatabase.categoriesDao().getCategories()
-            Log.d("CACHE_CHECK", "Cached categories count: ${cachedCategories.size}")
             if (cachedCategories.isNotEmpty()) {
                 return@withContext cachedCategories
             }
 
             val categories = service.getCategories().execute().body()
-            Log.d("NETWORK_DATA", "Received categories: ${categories?.size ?: "null"}")
             categories?.let { recipesDatabase.categoriesDao().insertCategories(*it.toTypedArray()) }
             categories
         } catch (_: IOException) {
