@@ -33,7 +33,7 @@ class RecipesRepository(context: Context) {
 
     private val service: RecipeApiService = retrofit.create(RecipeApiService::class.java)
 
-    private val recipesDatabase by lazy { AppDatabase.getDatabase(context) }
+    val recipesDatabase by lazy { AppDatabase.getDatabase(context) }
 
     suspend fun getRecipeById(recipeId: Int): Recipe? = withContext(Dispatchers.IO) {
         try {
@@ -48,8 +48,13 @@ class RecipesRepository(context: Context) {
         }
     }
 
-    suspend fun getRecipesByIds(favoritesId: String): List<Recipe>? = withContext(Dispatchers.IO) {
+    suspend fun getFavoriteRecipes(favoritesId: String): List<Recipe>? = withContext(Dispatchers.IO) {
         try {
+            val cachedFavorites = recipesDatabase.recipesDao().getFavoriteRecipes()
+            if (cachedFavorites.isNotEmpty()) {
+                return@withContext cachedFavorites
+            }
+
             val recipes = service.getRecipesByIds(favoritesId).execute().body()
             recipes
         } catch (e: IOException) {

@@ -20,4 +20,5 @@ data class Recipe(
     val method: List<String>,
     val imageUrl: String,
     val categoryId: Int = -1,
+    val isFavorite: Boolean = false,
 ) : Parcelable

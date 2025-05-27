@@ -41,13 +41,19 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
 
     fun onFavoritesClicked() {
         _recipeState.value?.let { currentState ->
-            _recipeState.value = currentState.copy(isFavorite = !currentState.isFavorite)
+            val newFavoriteStatus = !currentState.isFavorite
+            _recipeState.value = currentState.copy(isFavorite = newFavoriteStatus)
 
             currentState.recipe?.id?.toString()?.let { recipeId ->
                 val favorites = getFavorites().apply {
                     if (currentState.isFavorite) remove(recipeId) else add(recipeId)
                 }
                 saveFavorites(favorites)
+
+                viewModelScope.launch {
+                    recipesRepository.recipesDatabase.recipesDao()
+                        .updateFavoriteStatus(recipeId.toInt(), newFavoriteStatus)
+                }
             }
         }
     }
