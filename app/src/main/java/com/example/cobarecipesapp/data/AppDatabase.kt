@@ -15,6 +15,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun recipesDao(): RecipesDao
 
     companion object {
+        private const val DATABASE_NAME = "recipes-database"
+
         @Volatile
         private var INSTANCE: AppDatabase? = null
 
@@ -23,7 +25,7 @@ abstract class AppDatabase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
-                    "recipes-database"
+                    DATABASE_NAME
                 ).fallbackToDestructiveMigration(false)
                     .build()
                 INSTANCE = instance

@@ -39,7 +39,8 @@ class RecipesRepository(context: Context) {
         try {
             val recipe = service.getRecipeById(recipeId).execute().body()
             recipe
-        } catch (_: IOException) {
+        } catch (e: IOException) {
+            Log.e("RecipesRepository", "Error when call getRecipeById() ", e)
             null
         }
     }
@@ -48,7 +49,8 @@ class RecipesRepository(context: Context) {
         try {
             val recipes = service.getRecipesByIds(favoritesId).execute().body()
             recipes
-        } catch (_: IOException) {
+        } catch (e: IOException) {
+            Log.e("RecipesRepository", "Error when call getRecipesByIds() ", e)
             null
         }
     }
@@ -60,7 +62,8 @@ class RecipesRepository(context: Context) {
 
             val categoryById = service.getCategoryById(categoryId).execute().body()
             categoryById
-        } catch (_: IOException) {
+        } catch (e: IOException) {
+            Log.e("RecipesRepository", "Error when call getCategoryById() ", e)
             null
         }
     }
@@ -84,8 +87,8 @@ class RecipesRepository(context: Context) {
                     recipesDatabase.recipesDao().insertRecipesList(*it.toTypedArray())
                 }
                 recipesByCategoryId
-            } catch (e: Exception) {
-                Log.e("NETWORK_ERROR", "Error fetching recipes for category $categoryId", e)
+            } catch (e: IOException) {
+                Log.e("RecipesRepository", "Error when call getRecipesByCategoryId() ", e)
                 null
             }
         }
@@ -100,7 +103,8 @@ class RecipesRepository(context: Context) {
             val categories = service.getCategories().execute().body()
             categories?.let { recipesDatabase.categoriesDao().insertCategories(*it.toTypedArray()) }
             categories
-        } catch (_: IOException) {
+        } catch (e: IOException) {
+            Log.e("RecipesRepository", "Error when call getCategories() ", e)
             null
         }
     }
