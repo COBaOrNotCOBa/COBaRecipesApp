@@ -1,7 +1,6 @@
 package com.example.cobarecipesapp.ui.recipes.favorites
 
 import android.app.Application
-import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -22,24 +21,13 @@ class FavoritesViewModel(application: Application) : AndroidViewModel(applicatio
     fun loadFavorites() {
         viewModelScope.launch {
             try {
-                val favoritesId = getFavorites().joinToString(",")
-                recipesRepository.getFavoriteRecipes(favoritesId)?.let { favorites ->
+                recipesRepository.getFavoriteRecipes()?.let { favorites ->
                     _favoritesState.postValue(FavoritesState(favorites))
                 } ?: ToastHelper.showToast("Ошибка получения данных")
             } catch (_: Exception) {
                 ToastHelper.showToast("Ошибка сети")
             }
         }
-    }
-
-    private fun getFavorites(): MutableSet<String> {
-        val sharedPrefs = getApplication<Application>().applicationContext.getSharedPreferences(
-            FavoritesFragment.FAVORITE_PREFS_KEY, Context.MODE_PRIVATE
-        )
-        return HashSet(
-            sharedPrefs?.getStringSet(FavoritesFragment.FAVORITE_RECIPES_KEY, HashSet())
-                ?: mutableSetOf()
-        )
     }
 
     data class FavoritesState(

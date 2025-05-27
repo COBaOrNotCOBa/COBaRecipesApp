@@ -48,20 +48,8 @@ class RecipesRepository(context: Context) {
         }
     }
 
-    suspend fun getFavoriteRecipes(favoritesId: String): List<Recipe>? = withContext(Dispatchers.IO) {
-        try {
-            val cachedFavorites = recipesDatabase.recipesDao().getFavoriteRecipes()
-            if (cachedFavorites.isNotEmpty()) {
-                return@withContext cachedFavorites
-            }
-
-            val recipes = service.getRecipesByIds(favoritesId).execute().body()
-            recipes
-        } catch (e: IOException) {
-            Log.e("RecipesRepository", "Error when call getRecipesByIds() ", e)
-            null
-        }
-    }
+    suspend fun getFavoriteRecipes(): List<Recipe>? =
+        withContext(Dispatchers.IO) { recipesDatabase.recipesDao().getFavoriteRecipes() }
 
     suspend fun getCategoryById(categoryId: Int): Category? = withContext(Dispatchers.IO) {
         try {
@@ -116,6 +104,12 @@ class RecipesRepository(context: Context) {
             null
         }
     }
+
+    suspend fun updateFavoriteStatus(recipeId: Int, isFavorite: Boolean) =
+        withContext(Dispatchers.IO) {
+            recipesDatabase.recipesDao().updateFavoriteStatus(recipeId, isFavorite)
+        }
+
 
     fun getFullImageUrl(imageName: String) = "$BASE_IMAGES_URL$imageName"
 
