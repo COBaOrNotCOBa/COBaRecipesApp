@@ -30,7 +30,7 @@ class RecipesListAdapter(private var dataSet: List<Recipe> = emptyList()) :
         fun bind(recipe: Recipe) {
             binding.tvRecipeTitle.text = recipe.title
 
-            val recipesRepository = RecipesRepository()
+            val recipesRepository = RecipesRepository(itemView.context)
             val imageUrl = recipesRepository.getFullImageUrl(recipe.imageUrl)
             loadRecipeImage(imageUrl)
 
