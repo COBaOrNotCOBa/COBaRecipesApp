@@ -37,6 +37,9 @@ class RecipesRepository(context: Context) {
 
     suspend fun getRecipeById(recipeId: Int): Recipe? = withContext(Dispatchers.IO) {
         try {
+            val cachedRecipe = recipesDatabase.recipesDao().getRecipeById(recipeId)
+            cachedRecipe?.let { return@withContext it }
+
             val recipe = service.getRecipeById(recipeId).execute().body()
             recipe
         } catch (e: IOException) {
