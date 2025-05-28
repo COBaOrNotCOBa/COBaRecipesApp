@@ -6,6 +6,7 @@ import androidx.navigation.findNavController
 import com.example.cobarecipesapp.R
 import com.example.cobarecipesapp.databinding.ActivityMainBinding
 import com.example.cobarecipesapp.ui.common.navigateWithAnimation
+import com.example.cobarecipesapp.utils.ToastHelper
 
 
 class MainActivity : AppCompatActivity() {
@@ -19,6 +20,8 @@ class MainActivity : AppCompatActivity() {
 
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        ToastHelper.init(application)
 
         binding.btnCategories.setOnClickListener {
             findNavController(R.id.navHostFragment).navigateWithAnimation(
