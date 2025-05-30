@@ -50,7 +50,7 @@ class RecipesRepository(context: Context) {
                         ingredients = it.ingredients,
                         method = it.method,
                     )
-                    recipesDatabase.recipesDao().updateRecipe(updatedRecipe)
+                    recipesDatabase.recipesDao().insertRecipe(updatedRecipe)
                     return@withContext updatedRecipe
                 } ?: run {
                     recipesDatabase.recipesDao().insertRecipe(it)
@@ -144,7 +144,6 @@ class RecipesRepository(context: Context) {
         withContext(Dispatchers.IO) {
             recipesDatabase.recipesDao().updateFavoriteStatus(recipeId, isFavorite)
         }
-
 
     fun getFullImageUrl(imageName: String) = "$BASE_IMAGES_URL$imageName"
 

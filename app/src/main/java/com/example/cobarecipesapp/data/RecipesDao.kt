@@ -5,7 +5,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Update
+
 
 @Dao
 interface RecipesDao {
@@ -26,10 +26,4 @@ interface RecipesDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRecipe(recipe: Recipe)
-
-    @Update
-    suspend fun updateRecipe(recipe: Recipe)
-
-//    @Query("INSERT INTO recipes (id, title, ...) VALUES (:recipe.id, :recipe.title, ...) ON CONFLICT(id) DO UPDATE SET title = :recipe.title, ...")
-//    suspend fun upsertRecipe(recipe: Recipe)
 }
