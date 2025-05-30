@@ -90,7 +90,7 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
                         tvRecipeNameHeader.text = recipe.title
                         loadRecipeImage(state.recipeImageUrl)
                     }
-                    updateHeartIconState(state.isFavorite)
+                    updateHeartIconState(recipe.isFavorite)
                     sbPortionsCount.progress = state.portionsCount
                     tvPortionsCount.text = state.portionsCount.toString()
 

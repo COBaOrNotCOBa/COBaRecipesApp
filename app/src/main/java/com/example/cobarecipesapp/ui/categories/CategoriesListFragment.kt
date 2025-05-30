@@ -10,7 +10,6 @@ import androidx.navigation.fragment.findNavController
 import com.example.cobarecipesapp.R
 import com.example.cobarecipesapp.databinding.FragmentListCategoriesBinding
 import com.example.cobarecipesapp.ui.common.navigateWithAnimation
-import com.example.cobarecipesapp.utils.ToastHelper
 
 
 class CategoriesListFragment : Fragment(R.layout.fragment_list_categories) {

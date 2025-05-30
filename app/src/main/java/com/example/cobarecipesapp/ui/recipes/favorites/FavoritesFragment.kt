@@ -81,8 +81,4 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
         findNavController().navigateWithAnimation(action)
     }
 
-    companion object {
-        const val FAVORITE_RECIPES_KEY = "favorite_recipes_key"
-        const val FAVORITE_PREFS_KEY = "favorite_prefs_key"
-    }
 }

@@ -1,7 +1,10 @@
 package com.example.cobarecipesapp.ui
 
 import android.os.Bundle
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.findNavController
 import com.example.cobarecipesapp.R
 import com.example.cobarecipesapp.databinding.ActivityMainBinding
@@ -21,8 +24,26 @@ class MainActivity : AppCompatActivity() {
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        initEdgeToEdge()
         ToastHelper.init(application)
+        initNavigation()
+    }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
+
+    private fun initEdgeToEdge() {
+        enableEdgeToEdge()
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+    }
+
+    private fun initNavigation() {
         binding.btnCategories.setOnClickListener {
             findNavController(R.id.navHostFragment).navigateWithAnimation(
                 R.id.categoriesListFragment
@@ -35,10 +56,4 @@ class MainActivity : AppCompatActivity() {
             )
         }
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
-    }
-
 }

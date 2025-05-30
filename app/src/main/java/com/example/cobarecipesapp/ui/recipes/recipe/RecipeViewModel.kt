@@ -1,8 +1,6 @@
 package com.example.cobarecipesapp.ui.recipes.recipe
 
 import android.app.Application
-import android.content.Context
-import androidx.core.content.edit
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -27,7 +25,6 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
                     _recipeState.postValue(
                         RecipeState(
                             recipe = recipe,
-                            isFavorite = checkIsFavorite(recipeId),
                             portionsCount = _recipeState.value?.portionsCount ?: 1,
                             recipeImageUrl = recipesRepository.getFullImageUrl(recipe.imageUrl),
                         )
@@ -40,55 +37,29 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun onFavoritesClicked() {
-        _recipeState.value?.let { currentState ->
-            _recipeState.value = currentState.copy(isFavorite = !currentState.isFavorite)
+        recipeState.value?.let { currentState ->
+            currentState.recipe?.let { recipe ->
+                val newFavoriteStatus = !recipe.isFavorite
+                _recipeState.value =
+                    (currentState.copy(recipe = recipe.copy(isFavorite = newFavoriteStatus)))
 
-            currentState.recipe?.id?.toString()?.let { recipeId ->
-                val favorites = getFavorites().apply {
-                    if (currentState.isFavorite) remove(recipeId) else add(recipeId)
+                viewModelScope.launch {
+                    recipesRepository.updateFavoriteStatus(recipe.id, newFavoriteStatus)
                 }
-                saveFavorites(favorites)
             }
         }
     }
 
     fun updatePortionsCount(count: Int) {
-        _recipeState.value?.let { currentState ->
+        recipeState.value?.let { currentState ->
             _recipeState.value = currentState.copy(portionsCount = count)
         }
     }
 
-    private fun checkIsFavorite(recipeId: Int): Boolean {
-        return getFavorites().contains(recipeId.toString())
-    }
-
-    private fun getFavorites(): MutableSet<String> {
-        val sharedPrefs = getApplication<Application>().applicationContext.getSharedPreferences(
-            FAVORITE_PREFS_KEY, Context.MODE_PRIVATE
-        )
-        return HashSet(
-            sharedPrefs?.getStringSet(FAVORITE_RECIPES_KEY, HashSet())
-                ?: mutableSetOf()
-        )
-    }
-
-    private fun saveFavorites(favoritesId: Set<String>) {
-        val sharedPrefs = getApplication<Application>().applicationContext.getSharedPreferences(
-            FAVORITE_PREFS_KEY, Context.MODE_PRIVATE
-        ) ?: return
-
-        sharedPrefs.edit { putStringSet(FAVORITE_RECIPES_KEY, favoritesId) }
-    }
-
     data class RecipeState(
         val recipe: Recipe? = null,
-        val isFavorite: Boolean = false,
         val portionsCount: Int = 1,
         val recipeImageUrl: String? = null,
     )
 
-    companion object {
-        const val FAVORITE_RECIPES_KEY = "favorite_recipes_key"
-        const val FAVORITE_PREFS_KEY = "favorite_prefs_key"
-    }
 }
