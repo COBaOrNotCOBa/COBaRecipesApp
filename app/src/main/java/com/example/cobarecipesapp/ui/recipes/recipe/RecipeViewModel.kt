@@ -37,7 +37,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun onFavoritesClicked() {
-        _recipeState.value?.let { currentState ->
+        recipeState.value?.let { currentState ->
             currentState.recipe?.let { recipe ->
                 val newFavoriteStatus = !recipe.isFavorite
                 _recipeState.value =
@@ -51,7 +51,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun updatePortionsCount(count: Int) {
-        _recipeState.value?.let { currentState ->
+        recipeState.value?.let { currentState ->
             _recipeState.value = currentState.copy(portionsCount = count)
         }
     }
