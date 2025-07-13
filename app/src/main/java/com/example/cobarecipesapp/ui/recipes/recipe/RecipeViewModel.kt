@@ -8,7 +8,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.cobarecipesapp.data.RecipesRepository
 import com.example.cobarecipesapp.model.Recipe
-import com.example.cobarecipesapp.utils.ToastHelper
 import kotlinx.coroutines.launch
 
 
@@ -16,6 +15,9 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
 
     private val _recipeState = MutableLiveData(RecipeState())
     val recipeState: LiveData<RecipeState> = _recipeState
+
+    private val _toastMessage = MutableLiveData<String?>()
+    val toastMessage: LiveData<String?> = _toastMessage
 
     private val recipesRepository = RecipesRepository(application)
 
@@ -46,6 +48,10 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+    fun clearToastMessage() {
+        _toastMessage.value = null
+    }
+
     private suspend fun showCachedRecipe(recipeId: Int) {
         try {
             recipesRepository.getRecipeByIdFromCache(recipeId)?.let { recipe ->
@@ -71,7 +77,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
         } catch (e: Exception) {
             Log.e("RecipeViewModel", "Network error", e)
             if (_recipeState.value?.recipe == null) {
-                ToastHelper.showToast("Ошибка сети")
+                _toastMessage.postValue("Ошибка сети")
             }
         }
     }

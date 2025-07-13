@@ -8,7 +8,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.cobarecipesapp.data.RecipesRepository
 import com.example.cobarecipesapp.model.Recipe
-import com.example.cobarecipesapp.utils.ToastHelper
 import kotlinx.coroutines.launch
 
 
@@ -17,6 +16,9 @@ class FavoritesViewModel(application: Application) : AndroidViewModel(applicatio
     private var _favoritesState = MutableLiveData(FavoritesState())
     val favoritesState: LiveData<FavoritesState> = _favoritesState
 
+    private val _toastMessage = MutableLiveData<String?>()
+    val toastMessage: LiveData<String?> = _toastMessage
+
     private val recipesRepository = RecipesRepository(application)
 
     fun loadFavorites() {
@@ -24,6 +26,10 @@ class FavoritesViewModel(application: Application) : AndroidViewModel(applicatio
             showCachedFavorites()
             refreshFavoritesFromNetwork()
         }
+    }
+
+    fun clearToastMessage() {
+        _toastMessage.value = null
     }
 
     private suspend fun showCachedFavorites() {
@@ -59,7 +65,7 @@ class FavoritesViewModel(application: Application) : AndroidViewModel(applicatio
             _favoritesState.postValue(FavoritesState(recipes = updatedRecipes))
         } catch (e: Exception) {
             Log.e("FavoritesViewModel", "Ошибка сети", e)
-            ToastHelper.showToast("Ошибка сети")
+            _toastMessage.postValue("Ошибка сети")
         }
     }
 

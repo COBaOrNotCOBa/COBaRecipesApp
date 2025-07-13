@@ -9,7 +9,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.cobarecipesapp.data.RecipesRepository
 import com.example.cobarecipesapp.model.Category
 import com.example.cobarecipesapp.model.Recipe
-import com.example.cobarecipesapp.utils.ToastHelper
 import kotlinx.coroutines.launch
 
 
@@ -17,6 +16,9 @@ class RecipesListViewModel(application: Application) : AndroidViewModel(applicat
 
     private var _recipesListState = MutableLiveData(RecipesListState())
     val recipesListState: LiveData<RecipesListState> = _recipesListState
+
+    private val _toastMessage = MutableLiveData<String?>()
+    val toastMessage: LiveData<String?> = _toastMessage
 
     private val recipesRepository = RecipesRepository(application)
     private var currentCategory: Category? = null
@@ -29,6 +31,10 @@ class RecipesListViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
+    fun clearToastMessage() {
+        _toastMessage.value = null
+    }
+
     private suspend fun loadCategory(categoryId: Int) {
         try {
             currentCategory = recipesRepository.getCategoryFromCache(categoryId)
@@ -39,7 +45,7 @@ class RecipesListViewModel(application: Application) : AndroidViewModel(applicat
             _recipesListState.postValue(createState(emptyList()))
         } catch (e: Exception) {
             Log.e("RecipesListViewModel", "Ошибка загрузки категории", e)
-            ToastHelper.showToast("Ошибка загрузки категории")
+            _toastMessage.postValue("Ошибка загрузки категории")
         }
     }
 
@@ -51,7 +57,7 @@ class RecipesListViewModel(application: Application) : AndroidViewModel(applicat
             }
         } catch (e: Exception) {
             Log.e("RecipesListViewModel", "Ошибка загрузки рецепта", e)
-            ToastHelper.showToast("Ошибка загрузки рецепта")
+            _toastMessage.postValue("Ошибка загрузки рецепта")
         }
     }
 
@@ -60,7 +66,7 @@ class RecipesListViewModel(application: Application) : AndroidViewModel(applicat
             val currentRecipes = recipesRepository.getRecipesByCategoryFromCache(categoryId)
             val networkRecipes = recipesRepository.fetchRecipesByCategory(categoryId) ?: run {
                 if (currentRecipes.isEmpty()) {
-                    ToastHelper.showToast("Не удалось загрузить рецепты")
+                    _toastMessage.postValue("Не удалось загрузить рецепты")
                 }
                 return
             }
@@ -80,7 +86,7 @@ class RecipesListViewModel(application: Application) : AndroidViewModel(applicat
             _recipesListState.postValue(createState(finalRecipes))
         } catch (e: Exception) {
             Log.e("RecipesListViewModel", "Ошибка сети", e)
-            ToastHelper.showToast("Ошибка сети")
+            _toastMessage.postValue("Ошибка сети")
         }
     }
 
