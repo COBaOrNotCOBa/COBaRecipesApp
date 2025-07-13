@@ -1,6 +1,7 @@
 package com.example.cobarecipesapp.ui.recipes.recipe
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -20,19 +21,8 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
 
     fun loadRecipe(recipeId: Int) {
         viewModelScope.launch {
-            try {
-                recipesRepository.getRecipeById(recipeId)?.let { recipe ->
-                    _recipeState.postValue(
-                        RecipeState(
-                            recipe = recipe,
-                            portionsCount = _recipeState.value?.portionsCount ?: 1,
-                            recipeImageUrl = recipesRepository.getFullImageUrl(recipe.imageUrl),
-                        )
-                    )
-                } ?: ToastHelper.showToast("Ошибка получения данных")
-            } catch (_: Exception) {
-                ToastHelper.showToast("Ошибка сети")
-            }
+            showCachedRecipe(recipeId)
+            refreshRecipeFromNetwork(recipeId)
         }
     }
 
@@ -56,10 +46,47 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+    private suspend fun showCachedRecipe(recipeId: Int) {
+        try {
+            recipesRepository.getRecipeByIdFromCache(recipeId)?.let { recipe ->
+                _recipeState.postValue(createRecipeState(recipe))
+            }
+        } catch (e: Exception) {
+            Log.e("RecipeViewModel", "Error loading cached recipe", e)
+        }
+    }
+
+    private suspend fun refreshRecipeFromNetwork(recipeId: Int) {
+        try {
+            val cachedRecipe = recipesRepository.getRecipeByIdFromCache(recipeId)
+            val networkRecipe = recipesRepository.fetchRecipeById(recipeId) ?: return
+
+            val currentRecipe = networkRecipe.copy(
+                isFavorite = cachedRecipe?.isFavorite ?: false,
+                categoryId = cachedRecipe?.categoryId ?: -1
+            )
+
+            recipesRepository.saveRecipe(currentRecipe)
+            _recipeState.postValue(createRecipeState(currentRecipe))
+        } catch (e: Exception) {
+            Log.e("RecipeViewModel", "Network error", e)
+            if (_recipeState.value?.recipe == null) {
+                ToastHelper.showToast("Ошибка сети")
+            }
+        }
+    }
+
+    private fun createRecipeState(recipe: Recipe): RecipeState {
+        return RecipeState(
+            recipe = recipe,
+            portionsCount = _recipeState.value?.portionsCount ?: 1,
+            recipeImageUrl = recipesRepository.getFullImageUrl(recipe.imageUrl)
+        )
+    }
+
     data class RecipeState(
         val recipe: Recipe? = null,
         val portionsCount: Int = 1,
         val recipeImageUrl: String? = null,
     )
-
 }

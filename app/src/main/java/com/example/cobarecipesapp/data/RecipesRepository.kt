@@ -33,112 +33,110 @@ class RecipesRepository(context: Context) {
         .build()
 
     private val service: RecipeApiService = retrofit.create(RecipeApiService::class.java)
+    private val recipesDatabase by lazy { AppDatabase.getDatabase(context) }
 
-    val recipesDatabase by lazy { AppDatabase.getDatabase(context) }
 
-    suspend fun getRecipeById(recipeId: Int): Recipe? = withContext(Dispatchers.IO) {
+    suspend fun fetchRecipeById(recipeId: Int): Recipe? = withContext(Dispatchers.IO) {
         try {
-            val recipeFromNetwork = service.getRecipeById(recipeId)
-                .execute()
-                .body()
-            recipeFromNetwork?.let {
-                val recipeFromDb = recipesDatabase.recipesDao().getRecipeById(it.id)
-                recipeFromDb?.let { recipe ->
-                    val updatedRecipe = recipe.copy(
-                        title = it.title,
-                        imageUrl = it.imageUrl,
-                        ingredients = it.ingredients,
-                        method = it.method,
-                    )
-                    recipesDatabase.recipesDao().insertRecipe(updatedRecipe)
-                    return@withContext updatedRecipe
-                } ?: run {
-                    recipesDatabase.recipesDao().insertRecipe(it)
-                    return@withContext it
-                }
-            }
-            recipesDatabase.recipesDao().getRecipeById(recipeId)
+            service.getRecipeById(recipeId).execute().body()
         } catch (e: IOException) {
-            Log.e("RecipesRepository", "Error when call getRecipeById() ", e)
-            recipesDatabase.recipesDao().getRecipeById(recipeId)
+            Log.e("RecipesRepository", "Network error in fetchRecipeById()", e)
+            null
         }
     }
 
-    suspend fun getFavoriteRecipes(): List<Recipe>? =
+    suspend fun fetchRecipesByCategory(categoryId: Int): List<Recipe>? =
         withContext(Dispatchers.IO) {
             try {
-                val favoritesIdString =
-                    recipesDatabase.recipesDao().getFavoriteRecipes().map { it.id }
-                        .joinToString(",")
-                val recipesFromNetwork = service.getRecipesByIds(favoritesIdString).execute().body()
-                recipesFromNetwork?.let {
-                    return@withContext it
-                }
-                recipesDatabase.recipesDao().getFavoriteRecipes()
+                service.getRecipesByCategoryId(categoryId).execute().body()
             } catch (e: IOException) {
-                Log.e("RecipesRepository", "Error when call getRecipesByIds() ", e)
-                recipesDatabase.recipesDao().getFavoriteRecipes()
+                Log.e("RecipesRepository", "Network error in fetchRecipesByCategory()", e)
+                null
             }
         }
 
-    suspend fun getCategoryById(categoryId: Int): Category? = withContext(Dispatchers.IO) {
-        try {
-            val categoryByIdFromNetwork = service.getCategoryById(categoryId).execute().body()
-            categoryByIdFromNetwork?.let {
-                recipesDatabase.categoriesDao().updateCategory(it)
-                return@withContext it
-            }
-            recipesDatabase.categoriesDao().getCategoryById(categoryId)
-        } catch (e: IOException) {
-            Log.e("RecipesRepository", "Error when call getCategoryById() ", e)
-            recipesDatabase.categoriesDao().getCategoryById(categoryId)
-        }
-    }
-
-    suspend fun getRecipesByCategoryId(categoryId: Int): List<Recipe>? =
+    suspend fun fetchFavoriteRecipes(favoriteIds: String): List<Recipe>? =
         withContext(Dispatchers.IO) {
             try {
-                val recipesFromNetwork =
-                    service.getRecipesByCategoryId(categoryId)
-                        .execute()
-                        .body()
-                        ?.map { it.copy(categoryId = categoryId) }
-
-                recipesFromNetwork?.forEach { networkRecipe ->
-                    recipesDatabase.recipesDao().getRecipeById(networkRecipe.id)
-                        ?.let { localRecipe ->
-                            val updatedRecipe = localRecipe.copy(
-                                title = networkRecipe.title,
-                                ingredients = networkRecipe.ingredients,
-                                method = networkRecipe.method,
-                                imageUrl = networkRecipe.imageUrl,
-                                categoryId = categoryId
-                            )
-                            recipesDatabase.recipesDao().insertRecipesList(updatedRecipe)
-                        } ?: run {
-                        recipesDatabase.recipesDao().insertRecipesList(networkRecipe)
-                    }
-                }
-                return@withContext recipesDatabase.recipesDao().getRecipesByCategoryId(categoryId)
+                service.getRecipesByIds(favoriteIds).execute().body()
             } catch (e: IOException) {
-                Log.e("RecipesRepository", "Error when call getRecipesByCategoryId() ", e)
-                recipesDatabase.recipesDao().getRecipesByCategoryId(categoryId)
+                Log.e("RecipesRepository", "Network error in fetchFavoriteRecipes()", e)
+                null
             }
         }
 
-    suspend fun getCategories(): List<Category>? = withContext(Dispatchers.IO) {
-        try {
-            val categoriesFromNetwork = service.getCategories().execute().body()
-            categoriesFromNetwork?.let {
-                recipesDatabase.categoriesDao().insertCategories(*it.toTypedArray())
-                return@withContext it
+    suspend fun fetchCategoryById(categoryId: Int): Category? =
+        withContext(Dispatchers.IO) {
+            try {
+                service.getCategoryById(categoryId).execute().body()
+            } catch (e: IOException) {
+                Log.e("RecipesRepository", "Network error in fetchCategoryById()", e)
+                null
             }
-            recipesDatabase.categoriesDao().getCategories()
-        } catch (e: IOException) {
-            Log.e("RecipesRepository", "Error when call getCategories() ", e)
+        }
+
+    suspend fun fetchAllCategories(): List<Category>? =
+        withContext(Dispatchers.IO) {
+            try {
+                service.getCategories().execute().body()
+            } catch (e: IOException) {
+                Log.e("RecipesRepository", "Network error in fetchAllCategories()", e)
+                null
+            }
+        }
+
+
+    suspend fun getRecipeByIdFromCache(recipeId: Int): Recipe? =
+        withContext(Dispatchers.IO) {
+            recipesDatabase.recipesDao().getRecipeById(recipeId)
+        }
+
+    suspend fun getRecipesByCategoryFromCache(categoryId: Int): List<Recipe> =
+        withContext(Dispatchers.IO) {
+            recipesDatabase.recipesDao().getRecipesByCategoryId(categoryId)
+        }
+
+    suspend fun getFavoriteRecipesFromCache(): List<Recipe> =
+        withContext(Dispatchers.IO) {
+            recipesDatabase.recipesDao().getFavoriteRecipes()
+        }
+
+    suspend fun getFavoriteListFromCache(): String =
+        withContext(Dispatchers.IO) {
+            recipesDatabase.recipesDao().getFavoriteRecipes().map { it.id }
+                .joinToString(",")
+        }
+
+    suspend fun getCategoryFromCache(categoryId: Int): Category? =
+        withContext(Dispatchers.IO) {
+            recipesDatabase.categoriesDao().getCategoryById(categoryId)
+        }
+
+    suspend fun getAllCategoriesFromCache(): List<Category> =
+        withContext(Dispatchers.IO) {
             recipesDatabase.categoriesDao().getCategories()
         }
-    }
+
+
+    suspend fun saveRecipe(recipe: Recipe) =
+        withContext(Dispatchers.IO) {
+            recipesDatabase.recipesDao().insertRecipe(recipe)
+        }
+
+    suspend fun saveRecipes(recipes: List<Recipe>) =
+        withContext(Dispatchers.IO) {
+            recipesDatabase.recipesDao().insertRecipesList(*recipes.toTypedArray())
+        }
+
+    suspend fun saveCategory(category: Category) =
+        withContext(Dispatchers.IO) {
+            recipesDatabase.categoriesDao().insertCategories(category)
+        }
+
+    suspend fun saveCategories(categories: List<Category>) =
+        withContext(Dispatchers.IO) {
+            recipesDatabase.categoriesDao().insertCategories(*categories.toTypedArray())
+        }
 
     suspend fun updateFavoriteStatus(recipeId: Int, isFavorite: Boolean) =
         withContext(Dispatchers.IO) {
@@ -151,5 +149,4 @@ class RecipesRepository(context: Context) {
         private const val BASE_URL = "https://recipes.androidsprint.ru/api/"
         private const val BASE_IMAGES_URL = "${BASE_URL}images/"
     }
-
 }
