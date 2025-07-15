@@ -11,6 +11,7 @@ import com.example.cobarecipesapp.data.RecipesRepository
 import com.example.cobarecipesapp.databinding.ItemRecipeBinding
 import com.example.cobarecipesapp.model.Recipe
 
+
 class RecipesListAdapter(private var dataSet: List<Recipe> = emptyList()) :
     RecyclerView.Adapter<RecipesListAdapter.ViewHolder>() {
 

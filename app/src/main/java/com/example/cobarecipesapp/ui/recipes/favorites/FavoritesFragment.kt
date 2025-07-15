@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -73,6 +74,13 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
                 }
             }
         }
+
+        favoritesViewModel.toastMessage.observe(viewLifecycleOwner) {message ->
+            message?.let {
+                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                favoritesViewModel.clearToastMessage()
+            }
+        }
     }
 
     private fun openRecipeByRecipeId(recipeId: Int) {
@@ -81,8 +89,4 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
         findNavController().navigateWithAnimation(action)
     }
 
-    companion object {
-        const val FAVORITE_RECIPES_KEY = "favorite_recipes_key"
-        const val FAVORITE_PREFS_KEY = "favorite_prefs_key"
-    }
 }

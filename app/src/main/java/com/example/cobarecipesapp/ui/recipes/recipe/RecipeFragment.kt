@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -90,7 +91,7 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
                         tvRecipeNameHeader.text = recipe.title
                         loadRecipeImage(state.recipeImageUrl)
                     }
-                    updateHeartIconState(state.isFavorite)
+                    updateHeartIconState(recipe.isFavorite)
                     sbPortionsCount.progress = state.portionsCount
                     tvPortionsCount.text = state.portionsCount.toString()
 
@@ -102,6 +103,13 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
 
                     ibHeartIcon.setOnClickListener { recipeViewModel.onFavoritesClicked() }
                 }
+            }
+        }
+
+        recipeViewModel.toastMessage.observe(viewLifecycleOwner){message ->
+            message?.let {
+                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                recipeViewModel.clearToastMessage()
             }
         }
     }

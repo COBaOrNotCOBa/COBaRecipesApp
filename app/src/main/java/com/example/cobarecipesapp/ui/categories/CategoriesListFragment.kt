@@ -4,13 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.cobarecipesapp.R
 import com.example.cobarecipesapp.databinding.FragmentListCategoriesBinding
 import com.example.cobarecipesapp.ui.common.navigateWithAnimation
-import com.example.cobarecipesapp.utils.ToastHelper
 
 
 class CategoriesListFragment : Fragment(R.layout.fragment_list_categories) {
@@ -66,12 +66,20 @@ class CategoriesListFragment : Fragment(R.layout.fragment_list_categories) {
                 categoriesAdapter.updateData(state.categories)
             }
         }
+
         categoriesViewModel.selectedCategory.observe(viewLifecycleOwner) { category ->
             category?.let {
                 val action = CategoriesListFragmentDirections
                     .actionCategoriesListFragmentToRecipesListFragment(it)
                 findNavController().navigateWithAnimation(action)
                 categoriesViewModel.clearNavigation()
+            }
+        }
+
+        categoriesViewModel.toastMessage.observe(viewLifecycleOwner) { message ->
+            message?.let {
+                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                categoriesViewModel.clearToastMessage()
             }
         }
     }
