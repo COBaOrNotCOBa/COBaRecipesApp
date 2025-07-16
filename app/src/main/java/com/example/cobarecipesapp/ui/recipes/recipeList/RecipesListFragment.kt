@@ -6,13 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.cobarecipesapp.R
+import com.example.cobarecipesapp.RecipesApplication
 import com.example.cobarecipesapp.databinding.FragmentListRecipesBinding
+import com.example.cobarecipesapp.di.AppContainer
 import com.example.cobarecipesapp.ui.common.navigateWithAnimation
 
 
@@ -22,9 +23,17 @@ class RecipesListFragment : Fragment(R.layout.fragment_list_recipes) {
     private val binding
         get() = _binding ?: throw IllegalStateException("Binding is null")
 
-    private val recipesListViewModel: RecipesListViewModel by viewModels()
     private val argsRecipeListFragment: RecipesListFragmentArgs by navArgs()
+    private lateinit var recipesListViewModel: RecipesListViewModel
     private lateinit var recipesAdapter: RecipesListAdapter
+    private lateinit var appContainer: AppContainer
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        appContainer = (requireActivity().application as RecipesApplication).appContainer
+        recipesListViewModel = appContainer.recipesListViewModelFactory.create()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,7 +62,7 @@ class RecipesListFragment : Fragment(R.layout.fragment_list_recipes) {
     }
 
     private fun initUI() {
-        recipesAdapter = RecipesListAdapter()
+        recipesAdapter = RecipesListAdapter(appContainer.repository)
         initRecycler()
         initObserve()
     }

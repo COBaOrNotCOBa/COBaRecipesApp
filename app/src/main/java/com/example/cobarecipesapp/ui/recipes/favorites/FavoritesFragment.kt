@@ -6,10 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.cobarecipesapp.R
+import com.example.cobarecipesapp.RecipesApplication
 import com.example.cobarecipesapp.databinding.FragmentFavoritesBinding
+import com.example.cobarecipesapp.di.AppContainer
 import com.example.cobarecipesapp.ui.common.navigateWithAnimation
 import com.example.cobarecipesapp.ui.recipes.recipeList.RecipesListAdapter
 
@@ -20,8 +21,16 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
     private val binding
         get() = _binding ?: throw IllegalStateException("Binding is null")
 
-    private val favoritesViewModel: FavoritesViewModel by viewModels()
+    private lateinit var favoritesViewModel: FavoritesViewModel
     private lateinit var favoritesAdapter: RecipesListAdapter
+    private lateinit var appContainer: AppContainer
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        appContainer = (requireActivity().application as RecipesApplication).appContainer
+        favoritesViewModel = appContainer.favoritesViewModelFactory.create()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,7 +54,7 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
     }
 
     private fun initUI() {
-        favoritesAdapter = RecipesListAdapter()
+        favoritesAdapter = RecipesListAdapter(appContainer.repository)
         initRecycler()
         initObserve()
     }
@@ -75,7 +84,7 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
             }
         }
 
-        favoritesViewModel.toastMessage.observe(viewLifecycleOwner) {message ->
+        favoritesViewModel.toastMessage.observe(viewLifecycleOwner) { message ->
             message?.let {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
                 favoritesViewModel.clearToastMessage()

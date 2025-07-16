@@ -6,10 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.cobarecipesapp.R
+import com.example.cobarecipesapp.RecipesApplication
 import com.example.cobarecipesapp.databinding.FragmentListCategoriesBinding
+import com.example.cobarecipesapp.di.AppContainer
 import com.example.cobarecipesapp.ui.common.navigateWithAnimation
 
 
@@ -19,8 +20,16 @@ class CategoriesListFragment : Fragment(R.layout.fragment_list_categories) {
     private val binding
         get() = _binding ?: throw IllegalStateException("Binding is null")
 
-    private val categoriesViewModel: CategoryListViewModel by viewModels()
+    private lateinit var categoriesListViewModel: CategoriesListViewModel
     private lateinit var categoriesAdapter: CategoriesListAdapter
+    private lateinit var appContainer: AppContainer
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        appContainer = (requireActivity().application as RecipesApplication).appContainer
+        categoriesListViewModel = appContainer.categoriesListViewModelFactory.create()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,8 +43,8 @@ class CategoriesListFragment : Fragment(R.layout.fragment_list_categories) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        categoriesViewModel.clearNavigation()
-        categoriesViewModel.loadCategories()
+        categoriesListViewModel.clearNavigation()
+        categoriesListViewModel.loadCategories()
         initUI()
     }
 
@@ -50,7 +59,8 @@ class CategoriesListFragment : Fragment(R.layout.fragment_list_categories) {
     }
 
     private fun initAdapter() {
-        categoriesAdapter = CategoriesListAdapter()
+//        val appContainer = (requireActivity().application as RecipesApplication).appContainer
+        categoriesAdapter = CategoriesListAdapter(appContainer.repository)
         categoriesAdapter.setOnItemClickListener(object :
             CategoriesListAdapter.OnItemClickListener {
             override fun onItemClick(categoryId: Int) {
@@ -61,30 +71,30 @@ class CategoriesListFragment : Fragment(R.layout.fragment_list_categories) {
     }
 
     private fun initObserve() {
-        categoriesViewModel.categoriesState.observe(viewLifecycleOwner) { state ->
+        categoriesListViewModel.categoriesState.observe(viewLifecycleOwner) { state ->
             state.categories.let {
                 categoriesAdapter.updateData(state.categories)
             }
         }
 
-        categoriesViewModel.selectedCategory.observe(viewLifecycleOwner) { category ->
+        categoriesListViewModel.selectedCategory.observe(viewLifecycleOwner) { category ->
             category?.let {
                 val action = CategoriesListFragmentDirections
                     .actionCategoriesListFragmentToRecipesListFragment(it)
                 findNavController().navigateWithAnimation(action)
-                categoriesViewModel.clearNavigation()
+                categoriesListViewModel.clearNavigation()
             }
         }
 
-        categoriesViewModel.toastMessage.observe(viewLifecycleOwner) { message ->
+        categoriesListViewModel.toastMessage.observe(viewLifecycleOwner) { message ->
             message?.let {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
-                categoriesViewModel.clearToastMessage()
+                categoriesListViewModel.clearToastMessage()
             }
         }
     }
 
     private fun openRecipesByCategoryId(categoryId: Int) {
-        categoriesViewModel.loadCategoryById(categoryId)
+        categoriesListViewModel.loadCategoryById(categoryId)
     }
 }
