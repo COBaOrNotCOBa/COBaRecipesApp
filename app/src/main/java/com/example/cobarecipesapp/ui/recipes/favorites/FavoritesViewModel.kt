@@ -1,25 +1,22 @@
 package com.example.cobarecipesapp.ui.recipes.favorites
 
-import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cobarecipesapp.data.RecipesRepository
 import com.example.cobarecipesapp.model.Recipe
 import kotlinx.coroutines.launch
 
 
-class FavoritesViewModel(application: Application) : AndroidViewModel(application) {
+class FavoritesViewModel(private val recipesRepository: RecipesRepository) : ViewModel() {
 
     private var _favoritesState = MutableLiveData(FavoritesState())
     val favoritesState: LiveData<FavoritesState> = _favoritesState
 
     private val _toastMessage = MutableLiveData<String?>()
     val toastMessage: LiveData<String?> = _toastMessage
-
-    private val recipesRepository = RecipesRepository(application)
 
     fun loadFavorites() {
         viewModelScope.launch {

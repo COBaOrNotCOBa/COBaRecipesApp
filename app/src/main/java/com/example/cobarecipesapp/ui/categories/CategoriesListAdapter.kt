@@ -11,8 +11,11 @@ import com.example.cobarecipesapp.data.RecipesRepository
 import com.example.cobarecipesapp.databinding.ItemCategoryBinding
 import com.example.cobarecipesapp.model.Category
 
-class CategoriesListAdapter(private var dataSet: List<Category> = emptyList()) :
-    RecyclerView.Adapter<CategoriesListAdapter.ViewHolder>() {
+
+class CategoriesListAdapter(
+    private val recipesRepository: RecipesRepository,
+    private var dataSet: List<Category> = emptyList()
+) : RecyclerView.Adapter<CategoriesListAdapter.ViewHolder>() {
 
     interface OnItemClickListener {
         fun onItemClick(categoryId: Int)
@@ -26,8 +29,6 @@ class CategoriesListAdapter(private var dataSet: List<Category> = emptyList()) :
 
     inner class ViewHolder(private val binding: ItemCategoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
-
-        private val recipesRepository = RecipesRepository(itemView.context)
 
         fun bind(category: Category) {
             with(binding) {

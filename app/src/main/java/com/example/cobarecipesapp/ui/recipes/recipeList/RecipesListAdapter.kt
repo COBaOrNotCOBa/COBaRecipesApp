@@ -12,8 +12,10 @@ import com.example.cobarecipesapp.databinding.ItemRecipeBinding
 import com.example.cobarecipesapp.model.Recipe
 
 
-class RecipesListAdapter(private var dataSet: List<Recipe> = emptyList()) :
-    RecyclerView.Adapter<RecipesListAdapter.ViewHolder>() {
+class RecipesListAdapter(
+    private val recipesRepository: RecipesRepository,
+    private var dataSet: List<Recipe> = emptyList()
+) : RecyclerView.Adapter<RecipesListAdapter.ViewHolder>() {
 
     interface OnItemClickListener {
         fun onItemClick(recipeId: Int)
@@ -31,7 +33,6 @@ class RecipesListAdapter(private var dataSet: List<Recipe> = emptyList()) :
         fun bind(recipe: Recipe) {
             binding.tvRecipeTitle.text = recipe.title
 
-            val recipesRepository = RecipesRepository(itemView.context)
             val imageUrl = recipesRepository.getFullImageUrl(recipe.imageUrl)
             loadRecipeImage(imageUrl)
 

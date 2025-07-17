@@ -13,11 +13,11 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.cobarecipesapp.databinding.FragmentRecipeBinding
 import com.google.android.material.divider.MaterialDividerItemDecoration
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.cobarecipesapp.R
+import com.example.cobarecipesapp.RecipesApplication
 
 
 class RecipeFragment : Fragment(R.layout.fragment_recipe) {
@@ -26,11 +26,18 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
     private val binding
         get() = _binding ?: throw IllegalStateException("Binding is null")
 
-    private val recipeViewModel: RecipeViewModel by viewModels()
+    private lateinit var recipeViewModel: RecipeViewModel
     private val argsRecipeFragment: RecipeFragmentArgs by navArgs()
     private lateinit var ingredientAdapter: IngredientsAdapter
     private lateinit var methodAdapter: MethodAdapter
 
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val appContainer = (requireActivity().application as RecipesApplication).appContainer
+        recipeViewModel = appContainer.recipeViewModelFactory.create()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -106,7 +113,7 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
             }
         }
 
-        recipeViewModel.toastMessage.observe(viewLifecycleOwner){message ->
+        recipeViewModel.toastMessage.observe(viewLifecycleOwner) { message ->
             message?.let {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
                 recipeViewModel.clearToastMessage()

@@ -1,17 +1,16 @@
 package com.example.cobarecipesapp.ui.categories
 
-import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cobarecipesapp.data.RecipesRepository
 import com.example.cobarecipesapp.model.Category
 import kotlinx.coroutines.launch
 
 
-class CategoryListViewModel(application: Application) : AndroidViewModel(application) {
+class CategoriesListViewModel(private val recipesRepository: RecipesRepository) : ViewModel() {
 
     private var _categoriesState = MutableLiveData(CategoriesState())
     val categoriesState: LiveData<CategoriesState> = _categoriesState
@@ -21,8 +20,6 @@ class CategoryListViewModel(application: Application) : AndroidViewModel(applica
 
     private val _toastMessage = MutableLiveData<String?>()
     val toastMessage: LiveData<String?> = _toastMessage
-
-    private val recipesRepository = RecipesRepository(application)
 
     fun loadCategories() {
         viewModelScope.launch {
