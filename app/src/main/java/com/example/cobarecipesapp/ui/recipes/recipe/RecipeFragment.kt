@@ -10,6 +10,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.cobarecipesapp.databinding.FragmentRecipeBinding
 import com.google.android.material.divider.MaterialDividerItemDecoration
@@ -18,15 +19,19 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.cobarecipesapp.R
 import com.example.cobarecipesapp.RecipesApplication
+import com.example.cobarecipesapp.ui.recipes.favorites.FavoritesViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlin.getValue
 
-
+@AndroidEntryPoint
 class RecipeFragment : Fragment(R.layout.fragment_recipe) {
 
     private var _binding: FragmentRecipeBinding? = null
     private val binding
         get() = _binding ?: throw IllegalStateException("Binding is null")
 
-    private lateinit var recipeViewModel: RecipeViewModel
+    private val recipeViewModel: RecipeViewModel by viewModels()
+//    private lateinit var recipeViewModel: RecipeViewModel
     private val argsRecipeFragment: RecipeFragmentArgs by navArgs()
     private lateinit var ingredientAdapter: IngredientsAdapter
     private lateinit var methodAdapter: MethodAdapter
@@ -34,9 +39,6 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val appContainer = (requireActivity().application as RecipesApplication).appContainer
-        recipeViewModel = appContainer.recipeViewModelFactory.create()
     }
 
     override fun onCreateView(

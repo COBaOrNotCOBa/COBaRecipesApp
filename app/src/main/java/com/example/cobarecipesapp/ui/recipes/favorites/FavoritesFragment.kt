@@ -6,30 +6,35 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.cobarecipesapp.R
-import com.example.cobarecipesapp.RecipesApplication
 import com.example.cobarecipesapp.databinding.FragmentFavoritesBinding
-import com.example.cobarecipesapp.di.AppContainer
+import com.example.cobarecipesapp.di.RecipeModule
+import com.example.cobarecipesapp.ui.categories.CategoriesListViewModel
 import com.example.cobarecipesapp.ui.common.navigateWithAnimation
 import com.example.cobarecipesapp.ui.recipes.recipeList.RecipesListAdapter
+import dagger.hilt.android.AndroidEntryPoint
+import kotlin.getValue
 
 
+@AndroidEntryPoint
 class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
 
     private var _binding: FragmentFavoritesBinding? = null
     private val binding
         get() = _binding ?: throw IllegalStateException("Binding is null")
 
-    private lateinit var favoritesViewModel: FavoritesViewModel
+    private val favoritesViewModel: FavoritesViewModel by viewModels()
+//    private lateinit var favoritesViewModel: FavoritesViewModel
     private lateinit var favoritesAdapter: RecipesListAdapter
-    private lateinit var appContainer: AppContainer
+    private lateinit var recipeModule: RecipeModule
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        appContainer = (requireActivity().application as RecipesApplication).appContainer
-        favoritesViewModel = appContainer.favoritesViewModelFactory.create()
+//        appContainer = (requireActivity().application as RecipesApplication).appContainer
+//        favoritesViewModel = appContainer.favoritesViewModelFactory.create()
     }
 
     override fun onCreateView(
@@ -54,7 +59,7 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
     }
 
     private fun initUI() {
-        favoritesAdapter = RecipesListAdapter(appContainer.repository)
+        favoritesAdapter = RecipesListAdapter(recipeModule.repository)
         initRecycler()
         initObserve()
     }

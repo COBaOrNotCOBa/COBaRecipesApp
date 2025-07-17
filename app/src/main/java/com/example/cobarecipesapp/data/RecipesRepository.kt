@@ -4,17 +4,21 @@ import android.util.Log
 import com.example.cobarecipesapp.model.Category
 import com.example.cobarecipesapp.model.Recipe
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.IOException
+import javax.inject.Inject
 import kotlin.collections.map
 
 
-class RecipesRepository(
+class RecipesRepository @Inject constructor(
     private val recipesDao: RecipesDao,
     private val categoriesDao: CategoriesDao,
     private val recipeApiService: RecipeApiService,
-    private val ioDispatcher: CoroutineDispatcher,
+
 ) {
+
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 
     suspend fun fetchRecipeById(recipeId: Int): Recipe? = withContext(ioDispatcher) {
         try {
