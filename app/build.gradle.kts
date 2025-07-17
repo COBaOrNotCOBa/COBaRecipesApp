@@ -3,8 +3,9 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.navigation.safe.args)
     alias(libs.plugins.kotlin.serialization)
-    id("org.jetbrains.kotlin.plugin.parcelize")
     alias(libs.plugins.ksp)
+    alias(libs.plugins.dagger.hilt)
+    id("org.jetbrains.kotlin.plugin.parcelize")
 }
 
 android {
@@ -64,4 +65,6 @@ dependencies {
     implementation(libs.glide)
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
 }
