@@ -7,6 +7,7 @@ import com.example.cobarecipesapp.data.CategoriesDao
 import com.example.cobarecipesapp.data.RecipeApiService
 import com.example.cobarecipesapp.data.RecipesDao
 import com.example.cobarecipesapp.data.RecipesRepository
+import com.example.cobarecipesapp.utils.UrlHelper
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
@@ -68,6 +69,11 @@ class RecipeModule {
 
 //    @Provides
 //    fun provideUrlHelper(): UrlHelper {
-//        return UrlHelper(RecipesRepository.BASE_URL)
+//        return UrlHelper()
 //    }
+
+    @Provides
+    fun provideUrlHelper(): UrlHelper {
+        return UrlHelper(RecipesRepository.BASE_IMAGES_URL)
+    }
 }

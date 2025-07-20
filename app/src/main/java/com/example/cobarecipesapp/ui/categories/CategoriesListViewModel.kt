@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CategoriesListViewModel @Inject constructor(
-    private val recipesRepository: RecipesRepository
+    private val recipesRepository: RecipesRepository,
 ) : ViewModel() {
 
     private var _categoriesState = MutableLiveData(CategoriesState())

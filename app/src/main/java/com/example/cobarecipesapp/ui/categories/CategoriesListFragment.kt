@@ -11,7 +11,9 @@ import androidx.navigation.fragment.findNavController
 import com.example.cobarecipesapp.R
 import com.example.cobarecipesapp.databinding.FragmentListCategoriesBinding
 import com.example.cobarecipesapp.ui.common.navigateWithAnimation
+import com.example.cobarecipesapp.utils.UrlHelper
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
@@ -23,6 +25,8 @@ class CategoriesListFragment : Fragment(R.layout.fragment_list_categories) {
 
     private val categoriesListViewModel: CategoriesListViewModel by viewModels()
     private lateinit var categoriesAdapter: CategoriesListAdapter
+    @Inject
+    lateinit var urlHelper: UrlHelper
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,7 +56,7 @@ class CategoriesListFragment : Fragment(R.layout.fragment_list_categories) {
     }
 
     private fun initAdapter() {
-        categoriesAdapter = CategoriesListAdapter()
+        categoriesAdapter = CategoriesListAdapter(urlHelper)
         categoriesAdapter.setOnItemClickListener(object :
             CategoriesListAdapter.OnItemClickListener {
             override fun onItemClick(categoryId: Int) {

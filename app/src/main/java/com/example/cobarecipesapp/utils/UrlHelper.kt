@@ -1,5 +1,9 @@
 package com.example.cobarecipesapp.utils
 
-class UrlHelper(private val baseUrl: String) {
-    fun getFullImageUrl(imageName: String) = "$baseUrl/images/$imageName"
+import javax.inject.Inject
+
+class UrlHelper @Inject constructor(private val baseImageUrl : String) {
+    fun getFullImageUrl(imageName: String): String {
+        return "$baseImageUrl$imageName"
+    }
 }
