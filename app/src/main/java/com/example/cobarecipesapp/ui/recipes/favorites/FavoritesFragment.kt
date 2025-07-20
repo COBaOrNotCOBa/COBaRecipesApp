@@ -10,11 +10,10 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.cobarecipesapp.R
 import com.example.cobarecipesapp.databinding.FragmentFavoritesBinding
-import com.example.cobarecipesapp.di.RecipeModule
-import com.example.cobarecipesapp.ui.categories.CategoriesListViewModel
 import com.example.cobarecipesapp.ui.common.navigateWithAnimation
 import com.example.cobarecipesapp.ui.recipes.recipeList.RecipesListAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import kotlin.getValue
 
 
@@ -27,8 +26,9 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
 
     private val favoritesViewModel: FavoritesViewModel by viewModels()
 //    private lateinit var favoritesViewModel: FavoritesViewModel
+
     private lateinit var favoritesAdapter: RecipesListAdapter
-    private lateinit var recipeModule: RecipeModule
+//    private lateinit var recipeModule: RecipeModule
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,7 +59,7 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
     }
 
     private fun initUI() {
-        favoritesAdapter = RecipesListAdapter(recipeModule.repository)
+//        favoritesAdapter = RecipesListAdapter(recipeModule.repository)
         initRecycler()
         initObserve()
     }

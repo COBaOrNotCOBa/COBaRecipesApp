@@ -15,7 +15,6 @@ class RecipesRepository @Inject constructor(
     private val recipesDao: RecipesDao,
     private val categoriesDao: CategoriesDao,
     private val recipeApiService: RecipeApiService,
-
 ) {
 
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
@@ -131,6 +130,6 @@ class RecipesRepository @Inject constructor(
 
     companion object {
         const val BASE_URL = "https://recipes.androidsprint.ru/api/"
-        private const val BASE_IMAGES_URL = "${BASE_URL}images/"
+        const val BASE_IMAGES_URL = "${BASE_URL}images/"
     }
 }

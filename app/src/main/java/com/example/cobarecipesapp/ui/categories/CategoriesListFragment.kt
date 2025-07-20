@@ -10,9 +10,9 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.cobarecipesapp.R
 import com.example.cobarecipesapp.databinding.FragmentListCategoriesBinding
-import com.example.cobarecipesapp.di.RecipeModule
 import com.example.cobarecipesapp.ui.common.navigateWithAnimation
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class CategoriesListFragment : Fragment(R.layout.fragment_list_categories) {
@@ -22,9 +22,9 @@ class CategoriesListFragment : Fragment(R.layout.fragment_list_categories) {
         get() = _binding ?: throw IllegalStateException("Binding is null")
 
     private val categoriesListViewModel: CategoriesListViewModel by viewModels()
-//    private lateinit var categoriesListViewModel: CategoriesListViewModel
     private lateinit var categoriesAdapter: CategoriesListAdapter
-    private lateinit var recipeModule: RecipeModule
+//    private lateinit var categoriesListViewModel: CategoriesListViewModel
+//    private lateinit var recipeModule: RecipeModule
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +58,7 @@ class CategoriesListFragment : Fragment(R.layout.fragment_list_categories) {
     }
 
     private fun initAdapter() {
-        categoriesAdapter = CategoriesListAdapter(recipeModule.repository)
+//        categoriesAdapter = CategoriesListAdapter(recipeModule.repository)
         categoriesAdapter.setOnItemClickListener(object :
             CategoriesListAdapter.OnItemClickListener {
             override fun onItemClick(categoryId: Int) {

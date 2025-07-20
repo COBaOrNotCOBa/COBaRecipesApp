@@ -17,6 +17,7 @@ import com.example.cobarecipesapp.di.RecipeModule
 import com.example.cobarecipesapp.ui.common.navigateWithAnimation
 import com.example.cobarecipesapp.ui.recipes.recipe.RecipeViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import kotlin.getValue
 
 @AndroidEntryPoint
@@ -29,8 +30,9 @@ class RecipesListFragment : Fragment(R.layout.fragment_list_recipes) {
     private val argsRecipeListFragment: RecipesListFragmentArgs by navArgs()
     private val recipesListViewModel: RecipesListViewModel by viewModels()
 //    private lateinit var recipesListViewModel: RecipesListViewModel
+
     private lateinit var recipesAdapter: RecipesListAdapter
-    private lateinit var recipeModule: RecipeModule
+//    private lateinit var recipeModule: RecipeModule
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,7 +68,7 @@ class RecipesListFragment : Fragment(R.layout.fragment_list_recipes) {
     }
 
     private fun initUI() {
-        recipesAdapter = RecipesListAdapter(recipeModule.repository)
+//        recipesAdapter = RecipesListAdapter(recipeModule.repository)
         initRecycler()
         initObserve()
     }

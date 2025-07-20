@@ -15,25 +15,23 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 abstract class AppDatabase : RoomDatabase() {
     abstract fun categoriesDao(): CategoriesDao
     abstract fun recipesDao(): RecipesDao
-
-    companion object {
-        private const val DATABASE_NAME = "recipes-database"
-
-        @Volatile
-        private var INSTANCE: AppDatabase? = null
-
-        @Provides
-        fun getDatabase(@ApplicationContext context: Context): AppDatabase {
-            return INSTANCE ?: synchronized(this) {
-                val instance = Room.databaseBuilder(
-                    context.applicationContext,
-                    AppDatabase::class.java,
-                    DATABASE_NAME
-                ).fallbackToDestructiveMigration(false)
-                    .build()
-                INSTANCE = instance
-                instance
-            }
-        }
-    }
 }
+//    companion object {
+//        private const val DATABASE_NAME = "recipes-database"
+//
+//        @Volatile
+//        private var INSTANCE: AppDatabase? = null
+//
+//        fun getDatabase(@ApplicationContext context: Context): AppDatabase {
+//            return INSTANCE ?: synchronized(this) {
+//                val instance = Room.databaseBuilder(
+//                    context.applicationContext,
+//                    AppDatabase::class.java,
+//                    DATABASE_NAME
+//                ).fallbackToDestructiveMigration(false)
+//                    .build()
+//                INSTANCE = instance
+//                instance
+//            }
+//        }
+//    }

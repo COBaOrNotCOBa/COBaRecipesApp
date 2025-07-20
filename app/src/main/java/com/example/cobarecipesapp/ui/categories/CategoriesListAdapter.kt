@@ -13,7 +13,7 @@ import com.example.cobarecipesapp.model.Category
 
 
 class CategoriesListAdapter(
-    private val recipesRepository: RecipesRepository,
+//    private val urlHelper: UrlHelper,
     private var dataSet: List<Category> = emptyList()
 ) : RecyclerView.Adapter<CategoriesListAdapter.ViewHolder>() {
 
@@ -35,7 +35,8 @@ class CategoriesListAdapter(
                 tvCategoryTitle.text = category.title
                 tvCategoryDescription.text = category.description
 
-                val categoryUrl = recipesRepository.getFullImageUrl(category.imageUrl)
+//                val categoryUrl1 = recipesRepository.getFullImageUrl(category.imageUrl)
+                val categoryUrl = RecipesRepository.BASE_IMAGES_URL + category.imageUrl
                 loadCategoryImage(categoryUrl)
 
                 val description = itemView.context.getString(
