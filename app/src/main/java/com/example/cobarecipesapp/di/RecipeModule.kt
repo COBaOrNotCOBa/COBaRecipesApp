@@ -18,19 +18,13 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import javax.inject.Singleton
 
 
 @Module
 @InstallIn(SingletonComponent::class)
 class RecipeModule {
 
-//    private val recipesDatabase by lazy { AppDatabase.getDatabase(context) }
-
-//    private val db = AppDatabase.getDatabase(context)
-
     @Provides
-//    @Singleton
     fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
         return Room.databaseBuilder(
             context,

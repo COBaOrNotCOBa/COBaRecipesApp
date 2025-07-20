@@ -13,7 +13,6 @@ import com.example.cobarecipesapp.databinding.FragmentFavoritesBinding
 import com.example.cobarecipesapp.ui.common.navigateWithAnimation
 import com.example.cobarecipesapp.ui.recipes.recipeList.RecipesListAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 import kotlin.getValue
 
 
@@ -59,7 +58,7 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
     }
 
     private fun initUI() {
-//        favoritesAdapter = RecipesListAdapter(recipeModule.repository)
+        favoritesAdapter = RecipesListAdapter()
         initRecycler()
         initObserve()
     }

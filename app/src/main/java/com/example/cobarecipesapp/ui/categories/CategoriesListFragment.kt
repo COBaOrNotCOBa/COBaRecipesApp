@@ -12,7 +12,7 @@ import com.example.cobarecipesapp.R
 import com.example.cobarecipesapp.databinding.FragmentListCategoriesBinding
 import com.example.cobarecipesapp.ui.common.navigateWithAnimation
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class CategoriesListFragment : Fragment(R.layout.fragment_list_categories) {
@@ -23,12 +23,6 @@ class CategoriesListFragment : Fragment(R.layout.fragment_list_categories) {
 
     private val categoriesListViewModel: CategoriesListViewModel by viewModels()
     private lateinit var categoriesAdapter: CategoriesListAdapter
-//    private lateinit var categoriesListViewModel: CategoriesListViewModel
-//    private lateinit var recipeModule: RecipeModule
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -58,7 +52,7 @@ class CategoriesListFragment : Fragment(R.layout.fragment_list_categories) {
     }
 
     private fun initAdapter() {
-//        categoriesAdapter = CategoriesListAdapter(recipeModule.repository)
+        categoriesAdapter = CategoriesListAdapter()
         categoriesAdapter.setOnItemClickListener(object :
             CategoriesListAdapter.OnItemClickListener {
             override fun onItemClick(categoryId: Int) {

@@ -43,7 +43,7 @@ class CategoriesListViewModel @Inject constructor(
                 recipesRepository.fetchCategoryById(categoryId)?.let { networkCategory ->
                     recipesRepository.saveCategory(networkCategory)
                     _selectedCategory.postValue(networkCategory)
-                } ?: _toastMessage.postValue("Ошибка загрузки категории")
+                } ?: _toastMessage.postValue("Ошибка сети")
             } catch (e: Exception) {
                 Log.e("CategoryListViewModel", "Ошибка загрузки категории", e)
                 _toastMessage.postValue("Ошибка загрузки категории")
