@@ -37,7 +37,6 @@ class CategoriesListFragment : Fragment(R.layout.fragment_list_categories) {
         super.onViewCreated(view, savedInstanceState)
 
         categoriesListViewModel.clearNavigation()
-        categoriesListViewModel.loadCategories()
         initUI()
     }
 
@@ -47,6 +46,7 @@ class CategoriesListFragment : Fragment(R.layout.fragment_list_categories) {
     }
 
     private fun initUI() {
+        categoriesListViewModel.loadCategories()
         initAdapter()
         initObserve()
     }
