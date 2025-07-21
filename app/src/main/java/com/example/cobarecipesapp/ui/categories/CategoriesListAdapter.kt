@@ -35,8 +35,6 @@ class CategoriesListAdapter(
                 tvCategoryTitle.text = category.title
                 tvCategoryDescription.text = category.description
 
-//                val categoryUrl1 = recipesRepository.getFullImageUrl(category.imageUrl)
-//                val categoryUrl = RecipesRepository.BASE_IMAGES_URL + category.imageUrl
                 val categoryUrl = urlHelper.getFullImageUrl(category.imageUrl)
                 loadCategoryImage(categoryUrl)
 

@@ -67,11 +67,6 @@ class RecipeModule {
         return retrofit.create(RecipeApiService::class.java)
     }
 
-//    @Provides
-//    fun provideUrlHelper(): UrlHelper {
-//        return UrlHelper()
-//    }
-
     @Provides
     fun provideUrlHelper(): UrlHelper {
         return UrlHelper(RecipesRepository.BASE_IMAGES_URL)

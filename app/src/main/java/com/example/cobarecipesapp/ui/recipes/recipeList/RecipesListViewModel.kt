@@ -43,10 +43,11 @@ class RecipesListViewModel @Inject constructor(
             recipesRepository.fetchCategoryById(categoryId)?.let { networkCategory ->
                 recipesRepository.saveCategory(networkCategory)
                 currentCategory = networkCategory
-            }
+                Log.d(TAG, "Категория успешно загружена из сети")
+            } ?: Log.e(TAG, "Ошибка сети loadCategory")
             _recipesListState.postValue(createState(emptyList()))
         } catch (e: Exception) {
-            Log.e("RecipesListViewModel", "Ошибка загрузки категории", e)
+            Log.e(TAG, "Ошибка загрузки категории", e)
             _toastMessage.postValue("Ошибка загрузки категории")
         }
     }
@@ -56,9 +57,10 @@ class RecipesListViewModel @Inject constructor(
             val cachedRecipes = recipesRepository.getRecipesByCategoryFromCache(categoryId)
             if (cachedRecipes.isNotEmpty()) {
                 _recipesListState.postValue(createState(cachedRecipes))
+                Log.d(TAG, "Рецепты успешно загружены из кэша")
             }
         } catch (e: Exception) {
-            Log.e("RecipesListViewModel", "Ошибка загрузки рецепта", e)
+            Log.e(TAG, "Ошибка загрузки рецепта showCachedRecipes", e)
             _toastMessage.postValue("Ошибка загрузки рецепта")
         }
     }
@@ -67,12 +69,16 @@ class RecipesListViewModel @Inject constructor(
         try {
             val currentRecipes = recipesRepository.getRecipesByCategoryFromCache(categoryId)
             val networkRecipes = recipesRepository.fetchRecipesByCategory(categoryId) ?: run {
+                Log.e(TAG, "Ошибка загрузки из сети refreshRecipesFromNetwork")
+                _toastMessage.postValue("Ошибка сети")
                 if (currentRecipes.isEmpty()) {
+                    Log.e(TAG, "Ошибка загрузки из сети и кэша refreshRecipesFromNetwork")
                     _toastMessage.postValue("Не удалось загрузить рецепты")
                 }
                 return
             }
 
+            Log.d(TAG, "Рецепты успешно загружены из сети")
             val recipesToSave = networkRecipes.map { networkRecipe ->
                 currentRecipes.find { it.id == networkRecipe.id }?.let { dbRecipe ->
                     networkRecipe.copy(
@@ -87,8 +93,8 @@ class RecipesListViewModel @Inject constructor(
             val finalRecipes = recipesRepository.getRecipesByCategoryFromCache(categoryId)
             _recipesListState.postValue(createState(finalRecipes))
         } catch (e: Exception) {
-            Log.e("RecipesListViewModel", "Ошибка сети", e)
-            _toastMessage.postValue("Ошибка сети")
+            Log.e(TAG, "Ошибка загрузки refreshRecipesFromNetwork", e)
+            _toastMessage.postValue("Ошибка загрузки")
         }
     }
 
@@ -100,6 +106,10 @@ class RecipesListViewModel @Inject constructor(
                 recipesRepository.getFullImageUrl(it)
             }
         )
+    }
+
+    companion object {
+        const val TAG = "RecipesListViewModel"
     }
 
     data class RecipesListState(

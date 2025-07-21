@@ -7,14 +7,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.cobarecipesapp.R
-import com.example.cobarecipesapp.data.RecipesRepository
 import com.example.cobarecipesapp.databinding.ItemRecipeBinding
 import com.example.cobarecipesapp.model.Recipe
+import com.example.cobarecipesapp.utils.UrlHelper
 
 
 class RecipesListAdapter(
-//    private val urlHelper: UrlHelper,
-//    private val recipesRepository: RecipesRepository,
+    private val urlHelper: UrlHelper,
     private var dataSet: List<Recipe> = emptyList()
 ) : RecyclerView.Adapter<RecipesListAdapter.ViewHolder>() {
 
@@ -34,8 +33,7 @@ class RecipesListAdapter(
         fun bind(recipe: Recipe) {
             binding.tvRecipeTitle.text = recipe.title
 
-//            val imageUrl2 = recipesRepository.getFullImageUrl(recipe.imageUrl)
-            val imageUrl = RecipesRepository.BASE_IMAGES_URL + recipe.imageUrl
+            val imageUrl = urlHelper.getFullImageUrl(recipe.imageUrl)
             loadRecipeImage(imageUrl)
 
             val description = itemView.context.getString(

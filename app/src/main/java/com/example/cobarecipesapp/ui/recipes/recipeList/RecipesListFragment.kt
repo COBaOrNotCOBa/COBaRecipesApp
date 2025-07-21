@@ -14,7 +14,9 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.cobarecipesapp.R
 import com.example.cobarecipesapp.databinding.FragmentListRecipesBinding
 import com.example.cobarecipesapp.ui.common.navigateWithAnimation
+import com.example.cobarecipesapp.utils.UrlHelper
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import kotlin.getValue
 
 @AndroidEntryPoint
@@ -26,17 +28,9 @@ class RecipesListFragment : Fragment(R.layout.fragment_list_recipes) {
 
     private val argsRecipeListFragment: RecipesListFragmentArgs by navArgs()
     private val recipesListViewModel: RecipesListViewModel by viewModels()
-//    private lateinit var recipesListViewModel: RecipesListViewModel
-
     private lateinit var recipesAdapter: RecipesListAdapter
-//    private lateinit var recipeModule: RecipeModule
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-//        appContainer = (requireActivity().application as RecipesApplication).appContainer
-//        recipesListViewModel = appContainer.recipesListViewModelFactory.create()
-    }
+    @Inject
+    lateinit var urlHelper: UrlHelper
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -65,7 +59,7 @@ class RecipesListFragment : Fragment(R.layout.fragment_list_recipes) {
     }
 
     private fun initUI() {
-        recipesAdapter = RecipesListAdapter()
+        recipesAdapter = RecipesListAdapter(urlHelper)
         initRecycler()
         initObserve()
     }

@@ -18,8 +18,6 @@ import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.cobarecipesapp.R
-import com.example.cobarecipesapp.RecipesApplication
-import com.example.cobarecipesapp.ui.recipes.favorites.FavoritesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
 
@@ -31,15 +29,9 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
         get() = _binding ?: throw IllegalStateException("Binding is null")
 
     private val recipeViewModel: RecipeViewModel by viewModels()
-//    private lateinit var recipeViewModel: RecipeViewModel
     private val argsRecipeFragment: RecipeFragmentArgs by navArgs()
     private lateinit var ingredientAdapter: IngredientsAdapter
     private lateinit var methodAdapter: MethodAdapter
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
