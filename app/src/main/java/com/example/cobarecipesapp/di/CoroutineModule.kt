@@ -9,8 +9,8 @@ import kotlinx.coroutines.Dispatchers
 import javax.inject.Qualifier
 
 
-@Qualifier
 @Retention(AnnotationRetention.BINARY)
+@Qualifier
 annotation class IoDispatcher
 
 @Module
