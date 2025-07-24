@@ -7,10 +7,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cobarecipesapp.data.RecipesRepository
 import com.example.cobarecipesapp.model.Recipe
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
-class RecipeViewModel(private val recipesRepository: RecipesRepository) : ViewModel() {
+@HiltViewModel
+class RecipeViewModel @Inject constructor(
+    private val recipesRepository: RecipesRepository
+) : ViewModel() {
 
     private val _recipeState = MutableLiveData(RecipeState())
     val recipeState: LiveData<RecipeState> = _recipeState
@@ -34,6 +39,7 @@ class RecipeViewModel(private val recipesRepository: RecipesRepository) : ViewMo
 
                 viewModelScope.launch {
                     recipesRepository.updateFavoriteStatus(recipe.id, newFavoriteStatus)
+                    Log.d(TAG, "Статус избранного обновлён у ${recipe.title}")
                 }
             }
         }
@@ -53,17 +59,25 @@ class RecipeViewModel(private val recipesRepository: RecipesRepository) : ViewMo
         try {
             recipesRepository.getRecipeByIdFromCache(recipeId)?.let { recipe ->
                 _recipeState.postValue(createRecipeState(recipe))
-            }
+                Log.d(TAG, "Рецепт успешно загружен из кэша")
+            } ?: Log.e(TAG, "Рецепт отсутствует в кэше")
         } catch (e: Exception) {
-            Log.e("RecipeViewModel", "Error loading cached recipe", e)
+            Log.e(TAG, "Ошибка загрузки рецепта из кэша", e)
         }
     }
 
     private suspend fun refreshRecipeFromNetwork(recipeId: Int) {
         try {
             val cachedRecipe = recipesRepository.getRecipeByIdFromCache(recipeId)
-            val networkRecipe = recipesRepository.fetchRecipeById(recipeId) ?: return
+            val networkRecipe = recipesRepository.fetchRecipeById(recipeId)
 
+            if (networkRecipe == null) {
+                Log.e(TAG, "Ошибка сети refreshRecipeFromNetwork")
+                _toastMessage.postValue("Ошибка сети")
+                return
+            }
+
+            Log.d(TAG, "Рецепт успешно загружен из сети")
             val currentRecipe = networkRecipe.copy(
                 isFavorite = cachedRecipe?.isFavorite ?: false,
                 categoryId = cachedRecipe?.categoryId ?: -1
@@ -72,10 +86,8 @@ class RecipeViewModel(private val recipesRepository: RecipesRepository) : ViewMo
             recipesRepository.saveRecipe(currentRecipe)
             _recipeState.postValue(createRecipeState(currentRecipe))
         } catch (e: Exception) {
-            Log.e("RecipeViewModel", "Network error", e)
-            if (_recipeState.value?.recipe == null) {
-                _toastMessage.postValue("Ошибка сети")
-            }
+            Log.e(TAG, "Ошибка загрузки refreshRecipeFromNetwork", e)
+            _toastMessage.postValue("Ошибка загрузки")
         }
     }
 
@@ -85,6 +97,10 @@ class RecipeViewModel(private val recipesRepository: RecipesRepository) : ViewMo
             portionsCount = _recipeState.value?.portionsCount ?: 1,
             recipeImageUrl = recipesRepository.getFullImageUrl(recipe.imageUrl)
         )
+    }
+
+    private companion object {
+        const val TAG = "RecipeViewModel"
     }
 
     data class RecipeState(

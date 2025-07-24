@@ -7,10 +7,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cobarecipesapp.data.RecipesRepository
 import com.example.cobarecipesapp.model.Category
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
-class CategoriesListViewModel(private val recipesRepository: RecipesRepository) : ViewModel() {
+@HiltViewModel
+class CategoriesListViewModel @Inject constructor(
+    private val recipesRepository: RecipesRepository,
+) : ViewModel() {
 
     private var _categoriesState = MutableLiveData(CategoriesState())
     val categoriesState: LiveData<CategoriesState> = _categoriesState
@@ -33,14 +38,18 @@ class CategoriesListViewModel(private val recipesRepository: RecipesRepository) 
             try {
                 recipesRepository.getCategoryFromCache(categoryId)?.let { category ->
                     _selectedCategory.postValue(category)
+                    Log.d(TAG, "Категория успешно загружена из кэша")
                 }
 
                 recipesRepository.fetchCategoryById(categoryId)?.let { networkCategory ->
                     recipesRepository.saveCategory(networkCategory)
                     _selectedCategory.postValue(networkCategory)
-                } ?: _toastMessage.postValue("Ошибка загрузки категории")
+                } ?: run {
+                    Log.e(TAG, "Ошибка сети loadCategoryById")
+                    _toastMessage.postValue("Ошибка сети")
+                }
             } catch (e: Exception) {
-                Log.e("CategoryListViewModel", "Ошибка загрузки категории", e)
+                Log.e(TAG, "Ошибка загрузки категории", e)
                 _toastMessage.postValue("Ошибка загрузки категории")
             }
         }
@@ -59,9 +68,10 @@ class CategoriesListViewModel(private val recipesRepository: RecipesRepository) 
             val cachedCategories = recipesRepository.getAllCategoriesFromCache()
             if (cachedCategories.isNotEmpty()) {
                 _categoriesState.postValue(CategoriesState(categories = cachedCategories))
+                Log.d(TAG, "Категории успешно загруженные из кэша")
             }
         } catch (e: Exception) {
-            Log.e("CategoryListViewModel", "Ошибка загрузки категорий из кэша", e)
+            Log.e(TAG, "Ошибка загрузки категорий из кэша", e)
             _toastMessage.postValue("Ошибка загрузки категорий")
         }
     }
@@ -71,11 +81,19 @@ class CategoriesListViewModel(private val recipesRepository: RecipesRepository) 
             recipesRepository.fetchAllCategories()?.let { networkCategories ->
                 recipesRepository.saveCategories(networkCategories)
                 _categoriesState.postValue(CategoriesState(categories = networkCategories))
-            } ?: _toastMessage.postValue("Ошибка сети")
+                Log.d(TAG, "Категории успешно загружены из сети")
+            } ?: run {
+                Log.e(TAG, "Ошибка загрузки категорий из сети")
+                _toastMessage.postValue("Ошибка сети")
+            }
         } catch (e: Exception) {
-            Log.e("CategoryListViewModel", "Ошибка загрузки категорий из сети", e)
-            _toastMessage.postValue("Ошибка сети")
+            Log.e(TAG, "Ошибка refreshCategoriesFromNetwork", e)
+            _toastMessage.postValue("Ошибка загрузки")
         }
+    }
+
+    private companion object {
+        const val TAG = "CategoriesListViewModel"
     }
 
     data class CategoriesState(

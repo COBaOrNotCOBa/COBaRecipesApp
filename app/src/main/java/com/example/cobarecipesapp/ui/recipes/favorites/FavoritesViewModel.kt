@@ -7,10 +7,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cobarecipesapp.data.RecipesRepository
 import com.example.cobarecipesapp.model.Recipe
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-
-class FavoritesViewModel(private val recipesRepository: RecipesRepository) : ViewModel() {
+@HiltViewModel
+class FavoritesViewModel @Inject constructor(
+    private val recipesRepository: RecipesRepository
+) : ViewModel() {
 
     private var _favoritesState = MutableLiveData(FavoritesState())
     val favoritesState: LiveData<FavoritesState> = _favoritesState
@@ -34,11 +38,13 @@ class FavoritesViewModel(private val recipesRepository: RecipesRepository) : Vie
             val cachedFavorites = recipesRepository.getFavoriteRecipesFromCache()
             if (cachedFavorites.isNotEmpty()) {
                 _favoritesState.postValue(FavoritesState(recipes = cachedFavorites))
+                Log.d(TAG, "Избранные успешно загруженны из кэша")
             } else {
                 _favoritesState.postValue(FavoritesState(recipes = emptyList()))
+                Log.d(TAG, "Список избранных пуст")
             }
         } catch (e: Exception) {
-            Log.e("FavoritesViewModel", "Ошибка загрузки из кэша", e)
+            Log.e(TAG, "Ошибка загрузки из кэша", e)
             _favoritesState.postValue(FavoritesState(recipes = emptyList()))
         }
     }
@@ -49,8 +55,15 @@ class FavoritesViewModel(private val recipesRepository: RecipesRepository) : Vie
             if (currentFavorites.isEmpty()) return
 
             val favoriteIds = recipesRepository.getFavoriteListFromCache()
-            val networkFavorites = recipesRepository.fetchFavoriteRecipes(favoriteIds) ?: return
+            val networkFavorites = recipesRepository.fetchFavoriteRecipes(favoriteIds)
 
+            if (networkFavorites == null) {
+                Log.e(TAG, "Ошибка сети refreshFavoritesFromNetwork")
+                _toastMessage.postValue("Ошибка сети")
+                return
+            }
+
+            Log.d(TAG, "Избранные успешно получиенны из сети")
             val updatedRecipes = currentFavorites.mapNotNull { cachedRecipe ->
                 networkFavorites.find { it.id == cachedRecipe.id }?.copy(
                     isFavorite = cachedRecipe.isFavorite,
@@ -61,9 +74,13 @@ class FavoritesViewModel(private val recipesRepository: RecipesRepository) : Vie
             recipesRepository.saveRecipes(updatedRecipes)
             _favoritesState.postValue(FavoritesState(recipes = updatedRecipes))
         } catch (e: Exception) {
-            Log.e("FavoritesViewModel", "Ошибка сети", e)
-            _toastMessage.postValue("Ошибка сети")
+            Log.e(TAG, "Ошибка загрузки refreshFavoritesFromNetwork", e)
+            _toastMessage.postValue("Ошибка загрузки")
         }
+    }
+
+    private companion object {
+        const val TAG = "FavoritesViewModel"
     }
 
     data class FavoritesState(

@@ -6,30 +6,27 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.cobarecipesapp.R
-import com.example.cobarecipesapp.RecipesApplication
 import com.example.cobarecipesapp.databinding.FragmentListCategoriesBinding
-import com.example.cobarecipesapp.di.AppContainer
 import com.example.cobarecipesapp.ui.common.navigateWithAnimation
+import com.example.cobarecipesapp.utils.UrlHelper
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 
+@AndroidEntryPoint
 class CategoriesListFragment : Fragment(R.layout.fragment_list_categories) {
 
     private var _binding: FragmentListCategoriesBinding? = null
     private val binding
         get() = _binding ?: throw IllegalStateException("Binding is null")
 
-    private lateinit var categoriesListViewModel: CategoriesListViewModel
+    private val categoriesListViewModel: CategoriesListViewModel by viewModels()
     private lateinit var categoriesAdapter: CategoriesListAdapter
-    private lateinit var appContainer: AppContainer
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        appContainer = (requireActivity().application as RecipesApplication).appContainer
-        categoriesListViewModel = appContainer.categoriesListViewModelFactory.create()
-    }
+    @Inject
+    lateinit var urlHelper: UrlHelper
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,7 +41,6 @@ class CategoriesListFragment : Fragment(R.layout.fragment_list_categories) {
         super.onViewCreated(view, savedInstanceState)
 
         categoriesListViewModel.clearNavigation()
-        categoriesListViewModel.loadCategories()
         initUI()
     }
 
@@ -54,13 +50,13 @@ class CategoriesListFragment : Fragment(R.layout.fragment_list_categories) {
     }
 
     private fun initUI() {
+        categoriesListViewModel.loadCategories()
         initAdapter()
         initObserve()
     }
 
     private fun initAdapter() {
-//        val appContainer = (requireActivity().application as RecipesApplication).appContainer
-        categoriesAdapter = CategoriesListAdapter(appContainer.repository)
+        categoriesAdapter = CategoriesListAdapter(urlHelper)
         categoriesAdapter.setOnItemClickListener(object :
             CategoriesListAdapter.OnItemClickListener {
             override fun onItemClick(categoryId: Int) {
