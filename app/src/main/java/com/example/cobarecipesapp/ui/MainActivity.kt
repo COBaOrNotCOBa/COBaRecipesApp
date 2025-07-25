@@ -11,6 +11,7 @@ import com.example.cobarecipesapp.databinding.ActivityMainBinding
 import com.example.cobarecipesapp.ui.common.navigateWithAnimation
 import com.example.cobarecipesapp.utils.ToastHelper
 import dagger.hilt.android.AndroidEntryPoint
+import android.content.pm.ActivityInfo
 
 
 @AndroidEntryPoint
@@ -22,6 +23,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
